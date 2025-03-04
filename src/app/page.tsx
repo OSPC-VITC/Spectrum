@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import Sponsors from '@/components/sections/Sponsors';
 import AboutSpectrum from '@/components/About';
 
+
 export default function Home() {
   return (
     <main className="bg-black min-h-screen">
@@ -26,6 +27,7 @@ export default function Home() {
       <OrganisersSection />
       <FAQsSection />
       <ContactSection />
+      
       <Footer />
     </main>
   );
