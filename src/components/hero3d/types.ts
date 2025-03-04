@@ -77,4 +77,4 @@ export interface RayMoveEvent {
   position: THREE.Vector3;
   direction: THREE.Vector3;
   normal: THREE.Vector3;
-} 
+}

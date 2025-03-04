@@ -3,111 +3,214 @@ import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   Code, Server, Database, Cpu, Layers, Share2, 
-  Zap, Hexagon, Bolt, Anchor, Rocket, Radio 
+  Rocket, Star, Globe, Compass, Zap 
 } from 'lucide-react';
 
-const TechIcon = ({ icon, x, y, rotation, scale, delay }) => {
+// Galaxy Background Component
+const GalaxyBackground: React.FC = () => {
+  const generateStars = (count: number) => {
+    return Array.from({ length: count }, (_, i) => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3,
+      delay: Math.random() * 5
+    }));
+  };
+
+  const stars = generateStars(150);
+
   return (
-    <motion.div
-      initial={{ 
-        opacity: 0, 
-        scale: 0,
-        x: 0,
-        y: 0,
-        rotate: 0
+    <div 
+      className="fixed inset-0 bg-black overflow-hidden z-0"
+      style={{
+        background: 'radial-gradient(ellipse at bottom, #1e2244 0%, #111827 100%)'
       }}
-      animate={{ 
-        opacity: [0, 1, 0.7, 1, 0],
-        scale: [0, 1.2, 1, 0.8, 0],
-        x: [0, x, x, 0],
-        y: [0, y, y, 0],
-        rotate: [0, rotation, -rotation, 0]
-      }}
-      transition={{
-        duration: 5,
-        repeat: Infinity,
-        delay: delay,
-        repeatType: "loop",
-        ease: "easeInOut"
-      }}
-      className="absolute will-change-transform"
     >
-      {React.cloneElement(icon, {
-        className: "opacity-70 hover:opacity-100 transition-opacity",
-        size: 32
-      })}
-    </motion.div>
+      {stars.map((star, index) => (
+        <motion.div
+          key={index}
+          className="absolute bg-white rounded-full"
+          style={{
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            left: `${star.x}%`,
+            top: `${star.y}%`
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0.5, 1, 0.5]
+          }}
+          transition={{
+            duration: 3,
+            delay: star.delay,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+        />
+      ))}
+    </div>
   );
 };
 
-const HackathonVisualization = () => {
-  const techIcons = [
-    { icon: <Zap className="text-yellow-400" />, x: 200, y: 100, rotation: 45, scale: 1.2, delay: 0 },
-    { icon: <Hexagon className="text-green-400" />, x: -150, y: -80, rotation: -30, scale: 1, delay: 0.5 },
-    { icon: <Bolt className="text-blue-400" />, x: 180, y: -120, rotation: 60, scale: 0.9, delay: 1 },
-    { icon: <Anchor className="text-red-400" />, x: -200, y: 90, rotation: -45, scale: 1.1, delay: 1.5 },
-    { icon: <Rocket className="text-purple-400" />, x: 150, y: 180, rotation: 30, scale: 1.3, delay: 2 },
-    { icon: <Radio className="text-indigo-400" />, x: -100, y: -150, rotation: -60, scale: 0.8, delay: 2.5 }
+// Animated Tech Icons
+const AnimatedTechIcons: React.FC = () => {
+  const icons = [
+    { 
+      icon: <Rocket className="text-purple-400" />, 
+      label: "Innovative Tech",
+      description: "Push the boundaries of what's possible"
+    },
+    { 
+      icon: <Star className="text-yellow-400" />, 
+      label: "Creative Solutions",
+      description: "Transform ideas into groundbreaking projects"
+    },
+    { 
+      icon: <Globe className="text-blue-400" />, 
+      label: "Global Impact",
+      description: "Solve real-world challenges"
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-8 mt-12">
+      {icons.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ 
+            scale: 1.05,
+            rotate: 5,
+            transition: { duration: 0.2 }
+          }}
+          viewport={{ once: true }}
+          className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center 
+          border border-white/10 hover:border-purple-500/50 transition-all duration-300
+          group cursor-pointer"
+        >
+          <div className="flex justify-center mb-4">
+            {React.cloneElement(item.icon, { 
+              size: 48, 
+              className: "group-hover:text-purple-400 transition-colors" 
+            })}
+          </div>
+          <h3 className="text-xl font-bold mb-2 text-white">{item.label}</h3>
+          <p className="text-gray-300 text-sm">{item.description}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// Hackathon Visualization Component
+const HackathonVisualization: React.FC = () => {
+  const codeSnippets = [
+    "function innovate() {",
+    "  const solution = createInnovation();",
+    "  return solution.transform(world);",
+    "}",
+    "",
+    "const hackathon = new Collaboration(",
+    "  creators.map(genius => genius.ideas)",
+    ");",
+    "",
+    "hackathon.solve(globalChallenges);"
   ];
 
   return (
     <motion.div 
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-      w-[600px] h-[600px] rounded-full"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ 
-        opacity: [0.7, 1, 0.7],
-        scale: [0.8, 1, 0.8],
-        rotate: [0, 360]
-      }}
-      transition={{
-        duration: 20,
-        repeat: Infinity,
-        repeatType: "loop",
-        ease: "linear"
-      }}
+      className="relative w-full h-[500px] overflow-hidden rounded-2xl bg-gray-900/70 backdrop-blur-xl border border-purple-900/30"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
     >
-      {/* Pulsing Gradient Background */}
-      <motion.div 
-        className="absolute inset-0 rounded-full bg-gradient-to-br 
-        from-indigo-500/20 via-purple-500/20 to-pink-500/20 blur-2xl"
-        animate={{
-          scale: [1, 1.1, 1],
-          rotate: [0, 10, -10, 0]
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
-      />
+      {/* Floating Code Particles */}
+      {[
+        { type: "</>", color: "text-blue-400" },
+        { type: "{}", color: "text-green-400" },
+        { type: "()=>", color: "text-pink-400" },
+        { type: "class", color: "text-yellow-400" },
+        { type: "new", color: "text-indigo-400" }
+      ].map((particle, index) => (
+        <motion.div
+          key={index}
+          initial={{ 
+            opacity: 0, 
+            x: Math.random() * 300,
+            y: Math.random() * 500,
+            scale: 0.5 
+          }}
+          animate={{ 
+            opacity: [0, 1, 0],
+            x: [
+              Math.random() * 300, 
+              Math.random() * 300, 
+              Math.random() * 300
+            ],
+            y: [
+              Math.random() * 500, 
+              Math.random() * 500, 
+              Math.random() * 500
+            ],
+            scale: [0.5, 1, 0.5]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            delay: index * 0.3,
+            repeatType: "loop"
+          }}
+          className={`absolute text-2xl font-bold ${particle.color} opacity-50`}
+        >
+          {particle.type}
+        </motion.div>
+      ))}
 
-      {/* Orbital Path Lines */}
-      <div className="absolute inset-0 rounded-full border-2 border-dashed border-indigo-500/20 animate-pulse" />
-      <div className="absolute inset-0 rounded-full border-2 border-dashed border-purple-500/20 rotate-45 animate-pulse" />
-
-      {/* Dynamic Tech Icons */}
-      <div className="absolute inset-0">
-        {techIcons.map((iconData, index) => (
-          <TechIcon key={index} {...iconData} />
-        ))}
+      {/* Animated Code Snippet */}
+      <div className="absolute inset-0 flex items-center justify-center p-8">
+        <motion.div 
+          className="bg-gray-800/70 rounded-xl p-6 max-w-xl w-full"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <div className="font-mono text-sm leading-relaxed">
+            {codeSnippets.map((line, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: 1, 
+                  x: 0,
+                  transition: { 
+                    delay: index * 0.2,
+                    duration: 0.5
+                  }
+                }}
+                className={`
+                  ${line.trim().startsWith('//') ? 'text-gray-500' : 'text-white'}
+                  ${line.includes('function') ? 'text-blue-400' : ''}
+                  ${line.includes('const') ? 'text-green-400' : ''}
+                `}
+              >
+                {line}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
-      {/* Central Glowing Core */}
-      <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-        w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 
-        rounded-full shadow-2xl shadow-indigo-500/50"
+      {/* Pulsing Hackathon Overlay */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-indigo-900/20 
+        backdrop-blur-sm rounded-2xl"
         animate={{
-          scale: [1, 1.1, 1],
-          boxShadow: [
-            '0 0 0 0 rgba(99,102,241,0.4)',
-            '0 0 30px 10px rgba(99,102,241,0.6)',
-            '0 0 0 0 rgba(99,102,241,0.4)'
-          ]
+          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.02, 1]
         }}
         transition={{
-          duration: 3,
+          duration: 5,
           repeat: Infinity,
           repeatType: "reverse"
         }}
@@ -116,9 +219,10 @@ const HackathonVisualization = () => {
   );
 };
 
-const AboutSpectrum = () => {
+// Main Component
+const AboutSpectrum: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
@@ -128,12 +232,15 @@ const AboutSpectrum = () => {
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
 
   return (
-    <div className="relative bg-[#0a0a0a] text-white min-h-screen flex items-center overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 relative z-10 flex items-center">
+    <div className="relative min-h-screen text-white overflow-hidden">
+      {/* Galaxy Background */}
+      <GalaxyBackground />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-12">
         <motion.div 
           ref={ref}
           style={{ opacity, scale }}
-          className="w-1/2 pr-16 z-20"
+          className="text-center"
         >
           <motion.h1 
             initial={{ opacity: 0, y: -50 }}
@@ -145,62 +252,75 @@ const AboutSpectrum = () => {
           >
             SPECTRUM HACKATHON
           </motion.h1>
+          
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-xl text-gray-300 leading-relaxed mb-8"
+            className="max-w-3xl mx-auto text-xl text-gray-300 leading-relaxed mb-12"
           >
-            Dive into a transformative experience where innovation meets impact. Spectrum is not just a hackathon—it's a launchpad for groundbreaking ideas that challenge the status quo and redefine technological possibilities.
+            Dive into a transformative experience where innovation meets impact. Spectrum is a launchpad for groundbreaking ideas that challenge the status quo and redefine technological possibilities.
           </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            className="flex justify-center"
           >
             <motion.button 
               onHoverStart={() => setIsHovered(true)}
               onHoverEnd={() => setIsHovered(false)}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 0 15px rgba(139,92,246,0.5)"
+              }}
+              whileTap={{ scale: 0.95 }}
               className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 
-              text-white px-8 py-3 rounded-full text-lg font-bold
+              text-white px-10 py-4 rounded-full text-lg font-bold
               hover:from-indigo-700 hover:to-purple-700
               transition-all duration-300 
               transform hover:-translate-y-1 hover:shadow-2xl"
             >
               <AnimatePresence>
-                {isHovered && (
+                {isHovered ? (
                   <motion.span
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     className="absolute inset-0 flex items-center justify-center"
                   >
-                    <Rocket className="mr-2" size={20} />
-                    Launch
+                    <Zap className="mr-2" size={20} />
+                    Launch Now
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="block"
+                  >
+                    Join Hackathon
                   </motion.span>
                 )}
               </AnimatePresence>
-              <motion.span
-                animate={{ opacity: isHovered ? 0 : 1 }}
-                className="block"
-              >
-                Join Hackathon
-              </motion.span>
             </motion.button>
           </motion.div>
         </motion.div>
 
-        <HackathonVisualization />
-      </div>
+        {/* Hackathon Visualization */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-24"
+        >
+          <HackathonVisualization />
+        </motion.div>
 
-      {/* Subtle Background Noise */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0 opacity-10"
-        style={{
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 250 250\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-          mixBlendMode: 'overlay'
-        }}
-      />
+        {/* Animated Tech Icons Section */}
+        <AnimatedTechIcons />
+      </div>
     </div>
   );
 };
