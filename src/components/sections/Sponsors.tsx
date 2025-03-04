@@ -51,7 +51,7 @@ const SponsorSection = ({ title, sponsors, textColor }: { title: string; sponsor
 
 export default function Sponsors() {
   return (
-    <div className="bg-inherit text-white py-8">
+    <div className="bg-inherit text-white py-7">
       <SponsorSection title="Gold Sponsors" sponsors={goldSponsors} textColor="text-yellow-400" />
       <SponsorSection title="Silver Sponsors" sponsors={silverSponsors} textColor="text-gray-300" />
       <SponsorSection  title="Bronze Sponsors" sponsors={bronzeSponsors} textColor="text-orange-600" />
