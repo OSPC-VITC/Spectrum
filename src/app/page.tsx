@@ -9,6 +9,7 @@ import FAQsSection from '@/components/sections/FAQsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/Footer';
 import Sponsors from '@/components/sections/Sponsors';
+import AboutSpectrum from '@/components/About';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Navbar />
       
       <AboutSection />
+      <AboutSpectrum />
       <TracksSection />
       <TimelineSection />
       <PrizesSection />
