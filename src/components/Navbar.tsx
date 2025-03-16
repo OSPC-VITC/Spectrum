@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import React from 'react';
 
 const navItems = [
   { name: 'About Us', href: '#about' },
@@ -45,6 +46,17 @@ export default function Navbar() {
       setActiveSection(targetId);
     }
   };
+
+  React.useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://apply.devfolio.co/v2/sdk.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+}, []);
 
   const handleScrollSpy = useCallback(() => {
     // Skip scroll spy if menu is open or on mobile
@@ -193,8 +205,17 @@ export default function Navbar() {
                 <div className="border-glow border-right"></div>
                 <div className="border-glow border-top"></div>
                 <div className="border-glow border-bottom"></div>
+
+                
               </a>
+              
             ))}
+            <div 
+                  className="apply-button ml-4" 
+                  data-hackathon-slug="spectrum25" 
+                  data-button-theme="light"
+                  style={{ height: '44px', width: '312px' }}
+                ></div>
           </div>
           
           {/* Mobile menu button */}
