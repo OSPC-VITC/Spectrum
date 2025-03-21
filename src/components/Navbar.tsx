@@ -41,7 +41,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
@@ -146,7 +146,7 @@ export default function Navbar() {
                             ? "text-purple-300 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1/2 after:h-0.5 after:bg-gradient-to-r after:from-purple-400 after:to-blue-500"
                             : "text-gray-300 hover:text-white hover:bg-white/5"
                         )}
-                        onClick={(e) => handleScroll(e as any, item.href)}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleScroll(e, item.href)}
                       >
                         <span className="z-10">{item.name}</span>
                         {activeSection === item.href.replace('#', '') && (
