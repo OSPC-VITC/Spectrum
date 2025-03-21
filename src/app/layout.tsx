@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Megrim } from 'next/font/google';
+import localFont from 'next/font/local';
+
 import "./globals.css";
 import ClientWrapper from '@/components/ClientWrapper'
 
@@ -11,6 +13,13 @@ const megrimFont = Megrim({
   display: 'swap',
   variable: '--font-megrim',
 });
+
+const Xeroda = localFont({
+  src: '../../public/fonts/Xeroda.otf', // Correct path
+  variable: '--font-Xeroda',
+  display: 'swap',
+});
+
 
 export const metadata: Metadata = {
   title: "Spectrum Hackathon - Innovation Meets Collaboration",
@@ -24,9 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${megrimFont.variable} scroll-smooth`} suppressHydrationWarning>
-      <body>
-        <ClientWrapper>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${megrimFont.variable} ${Xeroda.variable} scroll-smooth`} suppressHydrationWarning>
+<body className="font-Xeroda">
+<ClientWrapper>
           {children}
         </ClientWrapper>
       </body>

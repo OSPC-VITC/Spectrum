@@ -1,211 +1,379 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { motion, useAnimation, Variants } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import Image from 'next/image';
+import { 
+  Card, 
+  CardContent 
+} from "@/components/ui/card";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
+import { ExternalLink } from 'lucide-react';
 
-export default function SponsorsSection() {
-  return (
-    <section id="sponsors" className="min-h-screen pt-8 sm:pt-12 pb-12 sm:pb-16 bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <h2 className="text-center font-['Megrim'] text-white" style={{ fontSize: "4.3rem" }}>OUR SPONSORS</h2>
-        <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto mb-8" style={{ marginTop: "-1.5rem" }}></div>
+type SponsorTier = 'kernel' | 'stack' | 'script';
+type Sponsor = {
+  name: string;
+  tier: SponsorTier;
+  logo?: string;
+  website?: string;
+  description?: string;
+};
+
+type Partner = {
+  name: string;
+  logo?: string;
+  website?: string;
+  description?: string;
+};
+
+const SponsorsSection: React.FC = () => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    triggerOnce: false,
+    threshold: 0.1
+  });
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const titleVariants: Variants = {
+    hidden: { y: -50, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  const hoverVariants: Variants = {
+    initial: { scale: 1 },
+    hover: { 
+      scale: 1.05, 
+      boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
+      transition: { duration: 0.3 } 
+    }
+  };
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+    }
+  }, [controls, inView]);
+
+  const sponsors: Sponsor[] = [
+    { 
+      name: "Radisson BLU", 
+      tier: "kernel", 
+      logo: "/radissonblu.jpeg",
+      website: "https://www.radissonhotels.com/en-us/destination/india/chennai"
+    },
+    { 
+      name: "Devfolio", 
+      tier: "kernel", 
+      logo: "/Devfolio.png",
+      website: "https://devfolio.co/"
+    },
+    { 
+      name: "EthIndia", 
+      tier: "stack", 
+      logo: "/ethindia.svg",
+      website: "https://example.com/titlesponsor"
+    },
+    { 
+      name: "Aptos", 
+      tier: "stack", 
+      logo: "/aptos.png",
+      website: "https://www.aptos.com/"
+    },
+    { 
+      name: "polygon", 
+      tier: "stack", 
+      logo: "/polygon.png",
+      website: "https://polygon.technology/"
+    },
+    { 
+      name: "BlackBoxAI", 
+      tier: "script", 
+      logo: "/BlackBoxAI.png", 
+      website: "https://www.blackbox.ai/"
+    },
+  ];
+
+  const partners: Partner[] = [
+    { 
+      name: "Vertex", 
+      logo: "/vertex.png", 
+      website: "https://example.com/partner1" 
+    },
+    { 
+      name: "IBM Z", 
+      logo: "/IBMz.jpg", 
+      website: "https://ibm.com/ibmz" 
+    },
+  ];
+
+  const getSponsorsByTier = (tier: SponsorTier): Sponsor[] => {
+    return sponsors.filter(sponsor => sponsor.tier === tier);
+  };
+
+  const tierConfigs = {
+    kernel: { 
+      title: "Kernel 🥇", 
+      subtitle: "Gold Sponsors", 
+      titleColor: "from-amber-400 to-orange-500"
+    },
+    stack: { 
+      title: "Stack 🥈", 
+      subtitle: "Silver Sponsors", 
+      titleColor: "from-slate-300 to-slate-500"
+    },
+    script: { 
+      title: "Script 🥉", 
+      subtitle: "Bronze Sponsors", 
+      titleColor: "from-rose-400 to-amber-700"
+    }
+  };
+
+  // Unified card renderer for both sponsors and partners
+  const renderCard = (item: Sponsor | Partner, index: number) => {
+    const hasLogo = !!item.logo;
+    const hasWebsite = !!item.website;
+    
+    // Card content with centered logo and text
+    const renderCardContent = () => (
+      <CardContent className="p-6 h-full flex flex-col items-center justify-center">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full">
+          {hasLogo ? (
+            <div className="relative h-64 w-64 mb-4 flex items-center justify-center">
+              <Image 
+                src={item.logo || '/default-logo.png'}
+                alt={`${item.name} logo`}
+                width={128}
+                height={128}
+                className="rounded-full"
+              />
+            </div>
+          ) : (
+            <div className="h-32 w-32 mb-4 flex items-center justify-center bg-gray-800 rounded-full">
+              <span className="text-2xl font-bold text-gray-400">{item.name.charAt(0)}</span>
+            </div>
+          )}
+          
+          <h3 className="text-lg font-bold text-center text-gray-100">{item.name}</h3>
+          
+          {hasWebsite && (
+            <div className="flex items-center justify-center text-blue-400 text-xs hover:text-blue-300 transition-colors mt-4">
+              <ExternalLink size={14} className="mr-1" />
+              <span>Visit website</span>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    );
+
+    return (
+      <motion.div 
+        key={item.name}
+        className="flex justify-center"
+        variants={itemVariants}
+        initial="hidden"
+        animate="visible"
+        custom={index}
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.div
+                variants={hoverVariants}
+                initial="initial"
+                whileHover="hover"
+                className="w-full max-w-xs mx-auto"
+              >
+                <Card className="backdrop-blur-md bg-white/10 border border-white/20 overflow-hidden aspect-square shadow-lg w-full hover:shadow-xl hover:shadow-primary/20 transition-all">
+                  {hasWebsite ? (
+                    <a href={item.website} target="_blank" rel="noopener noreferrer" className="block h-full">
+                      {renderCardContent()}
+                    </a>
+                  ) : renderCardContent()}
+                </Card>
+              </motion.div>
+            </TooltipTrigger>
+            <TooltipContent>
+              {hasWebsite ? `Visit ${item.name}` : `Learn more about ${item.name}`}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </motion.div>
+    );
+  };
+
+  // Function to get the appropriate grid class based on item count
+  const getGridClass = (itemCount: number) => {
+    switch (itemCount) {
+      case 1:
+        return "grid-cols-1 place-items-center";
+      case 2:
+        return "grid-cols-1 md:grid-cols-2 place-items-center";
+      case 3:
+        return "grid-cols-1 md:grid-cols-3 place-items-center";
+      case 4:
+        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 place-items-center";
+      default:
+        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center";
+    }
+  };
+
+  const renderTierSection = (tier: SponsorTier) => {
+    const tierSponsors = getSponsorsByTier(tier);
+    if (tierSponsors.length === 0) return null;
+    const config = tierConfigs[tier];
+    const gridClass = getGridClass(tierSponsors.length);
+    
+    return (
+      <motion.div className="mb-16 w-full" variants={containerVariants}>
+        <motion.div
+          className="relative flex flex-col items-center mb-10"
+          variants={titleVariants}
+        >
+          <div className="max-w-4xl w-full text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-2">
+              <span className={`text-transparent bg-clip-text bg-gradient-to-r ${config.titleColor}`}>
+                {config.title}
+              </span>
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">{config.subtitle}</p>
+            <div className="h-px w-32 bg-gray-400 mx-auto"></div>
+          </div>
+        </motion.div>
         
-        <p className="text-center text-gray-400 text-base sm:text-lg mb-6 sm:mb-10 max-w-2xl mx-auto">
-          Meet the organizations empowering innovation at Spectrum. Our sponsors are the backbone of this hackathon, making incredible prizes and experiences possible.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-10 max-w-5xl mx-auto">
-          {/* Title Sponsor Box */}
-          <div className="sponsor-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="sponsor-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">💎</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">Title Sponsor</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">To Be Revealed</p>
-            </div>
-          </div>
-
-          {/* Gold Sponsor Box */}
-          <div className="sponsor-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="sponsor-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">✨</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">Gold Sponsor</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">To Be Revealed</p>
-            </div>
-          </div>
-
-          {/* Silver Sponsor Box */}
-          <div className="sponsor-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="sponsor-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">⭐</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">Silver Sponsor</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">To Be Revealed</p>
-            </div>
+        {/* Center align grid with equal spacing */}
+        <div className="flex justify-center w-full">
+          <div className={`${gridClass} grid max-w-5xl w-full gap-8 px-8 mx-auto`}>
+            {tierSponsors.map((sponsor, index) => renderCard(sponsor, index))}
+            {/* Add placeholder divs to ensure centering with odd numbers of items */}
+            {tierSponsors.length === 1 && <div className="hidden md:block"></div>}
+            {tierSponsors.length === 3 && tier !== 'script' && <div className="hidden lg:block"></div>}
           </div>
         </div>
+      </motion.div>
+    );
+  };
 
-        <div className="text-center">
-          <div className="inline-block relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <p className="relative text-base sm:text-lg text-gray-300 px-3 sm:px-4 py-1.5 sm:py-2">
-              More sponsorship opportunities available! Contact us to be part of Spectrum.
+  const renderPartnersSection = () => {
+    if (partners.length === 0) return null;
+    const gridClass = getGridClass(partners.length);
+    
+    return (
+      <motion.div className="mb-16 w-full" variants={containerVariants}>
+        <motion.div
+          className="relative flex flex-col items-center mb-10"
+          variants={titleVariants}
+        >
+          <div className="max-w-4xl w-full text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-2">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                Our Partners
+              </span>
+            </h3>
+            <p className="text-gray-400 text-sm mb-4">Collaborating to make Spectrum a success</p>
+            <div className="h-px w-32 bg-gray-400 mx-auto"></div>
+          </div>
+        </motion.div>
+        
+        {/* Center align grid with equal spacing */}
+        <div className="flex justify-center w-full">
+          <div className={`${gridClass} grid max-w-5xl w-full gap-8 px-8 mx-auto`}>
+            {partners.map((partner, index) => renderCard(partner, index))}
+            {/* Add placeholder divs to ensure centering with odd numbers of items */}
+            {partners.length === 1 && <div className="hidden md:block"></div>}
+            {partners.length === 3 && <div className="hidden lg:block"></div>}
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+  return (
+    <motion.section 
+      id="sponsors" 
+      className="py-20 bg-gradient-to-b from-gray-900 via-black to-black text-white relative overflow-hidden"
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={containerVariants}
+    >
+      {/* Background gradient effects */}
+      <div className="absolute top-40 left-1/4 w-64 h-64 rounded-full bg-purple-500/20 blur-3xl -translate-x-1/2"></div>
+      <div className="absolute bottom-40 right-1/4 w-80 h-80 rounded-full bg-blue-500/20 blur-3xl translate-x-1/2"></div>
+      
+      <div className="max-w-7xl mx-auto relative">
+        <motion.div variants={titleVariants} className="text-center mb-16">
+          <div className="max-w-3xl mx-auto px-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">
+              OUR SPONSORS
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-pink-400 to-purple-500 mx-auto mb-6"></div>
+            <p className="text-gray-400 text-lg">
+              Meet the organizations empowering innovation at Spectrum. Our sponsors are the backbone of this hackathon, making incredible prizes and experiences possible.
             </p>
           </div>
+        </motion.div>
+        
+        <div className="space-y-16 w-full">
+          {renderTierSection('kernel')}
+          {renderTierSection('stack')}
+          {renderTierSection('script')}
+          {renderPartnersSection()}
         </div>
+
+        <motion.div 
+          className="text-center mt-16"
+          variants={itemVariants}
+        >
+          <div className="max-w-2xl mx-auto px-8">
+            <Card className="relative bg-gradient-to-r from-pink-500 to-purple-500 backdrop-blur-md border-white/20 overflow-hidden">
+              <CardContent className="p-8 text-center">
+                <p className="text-white font-medium">
+                  More sponsorship opportunities available! Contact us to be part of Spectrum.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
       </div>
-
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-        <filter id="unopaq">
-          <feColorMatrix
-            values="1 0 0 0 0 
-                    0 1 0 0 0 
-                    0 0 1 0 0 
-                    0 0 0 3 0"
-          ></feColorMatrix>
-        </filter>
-      </svg>
-
-      <style jsx>{`
-        .sponsor-box {
-          position: relative;
-          background: #111;
-          aspect-ratio: 1;
-          width: 100%;
-          max-width: 280px;
-          margin: 0 auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @media (max-width: 640px) {
-          .sponsor-box {
-            max-width: 160px;
-            animation: none;
-          }
-          
-          .sponsor-content {
-            padding: 0.75rem;
-          }
-          
-          .a {
-            --t: -8px;
-            --w: 1px;
-          }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-
-        @keyframes floatMobile {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-1.5px); }
-        }
-
-        .sponsor-box:nth-child(2) {
-          animation-delay: -2s;
-        }
-
-        .sponsor-box:nth-child(3) {
-          animation-delay: -4s;
-        }
-
-        .sponsor-content {
-          position: relative;
-          z-index: 1;
-          color: white;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-          padding: 1.5rem;
-        }
-
-        .a {
-          pointer-events: none;
-          position: absolute;
-          --w: 2px;
-          --t: -20px;
-          --s: calc(var(--t) * -1);
-          --e: calc(100% + var(--t));
-          --g: #fff0, #fff3 var(--s), #fffa var(--s), #fff, #fffa var(--e),
-            #fff3 var(--e), #fff0;
-        }
-
-        .a::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(4px) url(#unopaq);
-          z-index: -2;
-        }
-
-        .a::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(10px) url(#unopaq);
-          z-index: -2;
-        }
-
-        .l {
-          left: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .r {
-          right: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .t {
-          top: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-
-        .b {
-          bottom: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-      `}</style>
-    </section>
+    </motion.section>
   );
-} 
+};
 
+export default SponsorsSection;

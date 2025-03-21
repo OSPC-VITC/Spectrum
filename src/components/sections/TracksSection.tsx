@@ -1,17 +1,28 @@
 'use client';
 
-import React from 'react';
-import './TracksSection.css';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
-type Track = {
+type TrackWithSingleImage = {
   title: string;
   description: string;
   outcome: string;
-} & (
-  | { image: string }
-  | { images: { left: string; right: string } }
-);
+  image: string;
+  images?: never;
+};
+
+type TrackWithDualImages = {
+  title: string;
+  description: string;
+  outcome: string;
+  image?: never;
+  images: { left: string; right: string };
+};
+
+type Track = TrackWithSingleImage | TrackWithDualImages;
 
 export default function TracksSection() {
   const tracks: Track[] = [
@@ -59,96 +70,256 @@ export default function TracksSection() {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Variants for animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const trackVariants = {
+    expanded: (i: number) => ({
+      flex: i === activeIndex ? 10 : 1,
+      transition: {
+        flex: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      }
+    }),
+    collapsed: { 
+      flex: 1,
+      transition: {
+        flex: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      }
+    }
+  };
+
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+    }
+  };
+
+  const titleVariants = {
+    vertical: { 
+      writingMode: "vertical-rl" as const,
+      rotate: 180,
+      x: "0%",
+      textAlign: "center" as const,
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+    },
+    horizontal: { 
+      writingMode: "horizontal-tb" as const,
+      rotate: 0,
+      x: "0%",
+      textAlign: "left" as const,
+      transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+    }
+  };
 
   return (
-    <section id="tracks" className="tracks-section bg-black text-white py-16">
-      <div className="w-full">
-        <h2 className="text-center font-['Megrim'] text-white" style={{ fontSize: "4.5rem" }}>TRACKS</h2>
-        <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto mb-16" style={{ marginTop: "-1.5rem" }}></div>
-        <div className="tracks-container mx-auto px-4">
-          <ul
-            id="tracks-list"
-            className="tracks-container grid gap-2 list-none p-0 m-0 w-[90vw] sm:w-[95vw] md:w-[820px] mx-auto"
-            style={{
-              gridTemplateColumns: tracks.map((_, i) => i === activeIndex ? '10fr' : '1fr').join(' '),
-            }}
-          >
-            {tracks.map((track, index) => (
-              <li
-                key={track.title}
-                data-active={index === activeIndex ? 'true' : 'false'}
-                className="relative overflow-hidden min-w-[2rem] rounded-lg border border-white/50 bg-black"
-                onMouseEnter={() => window.innerWidth > 640 && setActiveIndex(index)}
-                onClick={() => setActiveIndex(index)}
-              >
-                <article className="absolute inset-0 flex flex-col h-full">
-                  {/* Dark overlay for text visibility */}
-                  <div 
-                    className="absolute inset-0 z-5 pointer-events-none"
+    <section id="tracks" className="min-h-screen py-16 bg-black text-white">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-['Megrim'] text-6xl md:text-7xl lg:text-8xl text-white mb-2">TRACKS</h2>
+          <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
+        </motion.div>
+
+        {/* Desktop View */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="hidden sm:flex h-[450px] gap-2 max-w-[95vw] lg:max-w-6xl mx-auto"
+        >
+          {tracks.map((track, index) => (
+            <motion.div
+              key={track.title}
+              custom={index}
+              variants={trackVariants}
+              initial="collapsed"
+              animate="expanded"
+              className="relative overflow-hidden rounded-lg border border-purple-500/30 bg-black/80 backdrop-blur-sm flex-1 cursor-pointer"
+              style={{ flexGrow: index === activeIndex ? 10 : 1 }}
+              onClick={() => setActiveIndex(index)}
+              onMouseEnter={() => setActiveIndex(index)}
+            >
+              {/* Background images */}
+              {'images' in track ? (
+                <div className="absolute inset-0 w-full h-full">
+                  <Image
+                    src={track.images!.left}
+                    alt={`${track.title} - Left`}
+                    fill
+                    className="absolute inset-0 w-1/2 h-full object-cover pointer-events-none opacity-80"
                     style={{
-                      background: index === activeIndex 
-                        ? 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.7) 100%)'
-                        : 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%)'
+                      filter: 'brightness(0.8)',
+                      objectPosition: track.title === "AgriTech & MedTech" ? '75% center' : 'center'
                     }}
-                  ></div>
-                  
-                  {'images' in track ? (
-                    <div className="absolute inset-0 w-full h-full">
-                      <Image
-                        src={track.images.left}
-                        alt={`${track.title} - Left`}
-                        width={800}
-                        height={600}
-                        className={`absolute inset-0 w-1/2 h-full object-cover pointer-events-none opacity-80 ${
-                          track.title === "AgriTech & MedTech" ? "object-right" : ""
-                        }`}
-                        style={{
-                          filter: 'brightness(1.1)',
-                          ...(track.title === "AgriTech & MedTech" ? { objectPosition: '75% center' } : {})
-                        }}
-                        priority={index === 0}
-                      />
-                      <Image
-                        src={track.images.right}
-                        alt={`${track.title} - Right`}
-                        width={800}
-                        height={600}
-                        className={`absolute right-0 top-0 w-1/2 h-full object-cover pointer-events-none opacity-80 ${
-                          track.title === "AgriTech & MedTech" ? "object-right" : ""
-                        }`}
-                        style={{ filter: 'brightness(1.1)' }}
-                        priority={index === 0}
-                      />
-                    </div>
-                  ) : (
-                    <Image
-                      src={track.image}
-                      alt={track.title}
-                      width={800}
-                      height={600}
-                      className="absolute inset-0 object-cover w-full h-full opacity-100"
-                      style={{ filter: 'brightness(1.1)' }}
-                      priority={index === 0}
-                    />
+                    priority={index === 0}
+                  />
+                  <Image
+                    src={track.images!.right}
+                    alt={`${track.title} - Right`}
+                    fill
+                    className="absolute right-0 top-0 w-1/2 h-full object-cover pointer-events-none opacity-80"
+                    style={{ filter: 'brightness(0.8)' }}
+                    priority={index === 0}
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={track.image}
+                  alt={track.title}
+                  fill
+                  className="absolute inset-0 object-cover w-full h-full opacity-80"
+                  style={{ filter: 'brightness(0.8)' }}
+                  priority={index === 0}
+                />
+              )}
+
+              {/* Gradient overlay */}
+              <div 
+                className="absolute inset-0 z-10 pointer-events-none"
+                style={{
+                  background: index === activeIndex 
+                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.7) 100%)'
+                    : 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%)'
+                }}
+              ></div>
+
+              {/* Content */}
+              <div className="relative z-20 flex flex-col h-full p-4">
+                <motion.h3 
+                  variants={titleVariants}
+                  initial="vertical"
+                  animate={index === activeIndex ? "horizontal" : "vertical"}
+                  className="font-['Megrim'] text-sm md:text-lg uppercase tracking-wider font-medium text-white mb-2"
+                  style={{
+                    textShadow: '0 0 15px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0, 0, 0, 0.9)'
+                  }}
+                >
+                  {track.title}
+                </motion.h3>
+
+                <AnimatePresence>
+                  {index === activeIndex && (
+                    <motion.div
+                      variants={textVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit={{ opacity: 0, y: 10, transition: { duration: 0.2 } }}
+                      className="mt-auto"
+                    >
+                      <Badge className="bg-purple-600/80 hover:bg-purple-600 mb-3">Track {index + 1}</Badge>
+                      <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
+                      <p className="text-sm leading-tight text-gray-300 italic">
+                        <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
+                      </p>
+                    </motion.div>
                   )}
-                  
-                  <div className="relative z-10 flex flex-col h-full p-4">
-                    <h3 className="track-title megrim-regular text-sm md:text-base uppercase font-mono whitespace-nowrap opacity-100">
-                      {track.title}
-                    </h3>
-                    <div className="description-container mt-auto">
-                      <p className="text-xs md:text-sm leading-tight opacity-80 text-gray-300 mb-2">{track.description}</p>
-                      <p className="text-xs md:text-sm leading-tight opacity-80 text-gray-300">{track.outcome}</p>
-                    </div>
-                  </div>
-                </article>
-              </li>
-            ))}
-          </ul>
-        </div>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Mobile View */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible" 
+          className="sm:hidden flex flex-col gap-2 max-w-full"
+        >
+          {tracks.map((track, index) => (
+            <motion.div
+              key={track.title}
+              layout
+              className="relative overflow-hidden rounded-lg border border-purple-500/30 bg-black/80 backdrop-blur-sm cursor-pointer"
+              animate={{ 
+                height: index === activeIndex ? 400 : 80 
+              }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              onClick={() => setActiveIndex(index)}
+            >
+              {/* Background images */}
+              {'images' in track ? (
+                <div className="absolute inset-0 w-full h-full">
+                  <Image
+                    src={track.images!.left}
+                    alt={`${track.title} - Left`}
+                    fill
+                    className="absolute inset-0 w-1/2 h-full object-cover pointer-events-none opacity-70"
+                    style={{ filter: 'brightness(0.7)' }}
+                    priority={index === 0}
+                  />
+                  <Image
+                    src={track.images!.right}
+                    alt={`${track.title} - Right`}
+                    fill
+                    className="absolute right-0 top-0 w-1/2 h-full object-cover pointer-events-none opacity-70"
+                    style={{ filter: 'brightness(0.7)' }}
+                    priority={index === 0}
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={track.image}
+                  alt={track.title}
+                  fill
+                  className="absolute inset-0 object-cover w-full h-full opacity-70"
+                  style={{ filter: 'brightness(0.7)' }}
+                  priority={index === 0}
+                />
+              )}
+
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-black/60 z-10"></div>
+
+              {/* Content */}
+              <div className="relative z-20 flex flex-col h-full p-4">
+                <h3 className="font-['Megrim'] text-base sm:text-lg uppercase tracking-wider font-medium text-white"
+                  style={{
+                    textShadow: '0 0 15px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0, 0, 0, 0.9)'
+                  }}
+                >
+                  {track.title}
+                </h3>
+
+                <AnimatePresence>
+                  {index === activeIndex && (
+                    <motion.div
+                      variants={textVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                      className="mt-6"
+                    >
+                      <Badge className="bg-purple-600/80 hover:bg-purple-600 mb-3">Track {index + 1}</Badge>
+                      <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
+                      <p className="text-sm leading-tight text-gray-300 italic">
+                        <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
-} 
-
+}

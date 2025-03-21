@@ -3,6 +3,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Menu, X } from 'lucide-react';
 
 const navItems = [
   { name: 'About Us', href: '#about' },
@@ -30,24 +40,25 @@ const throttle = <T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [scrolled, setScrolled] = useState(false);
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
     if (element) {
-      // Use native scroll for maximum performance
+      // Use smooth scrolling for better UX
       const top = element.offsetTop - 64; // 64px for navbar height
       window.scrollTo({
         top,
-        behavior: 'auto'
+        behavior: 'smooth'
       });
       setIsOpen(false);
       setActiveSection(targetId);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://apply.devfolio.co/v2/sdk.js';
     script.async = true;
@@ -56,9 +67,16 @@ export default function Navbar() {
     return () => {
       document.body.removeChild(script);
     }
-}, []);
+  }, []);
 
   const handleScrollSpy = useCallback(() => {
+    // Check if scrolled past a threshold to change navbar style
+    if (window.scrollY > 10) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+    
     // Skip scroll spy if menu is open or on mobile
     if (isOpen || window.innerWidth <= 768) return;
 
@@ -89,180 +107,155 @@ export default function Navbar() {
   }, [handleScrollSpy]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-[2px] text-white shadow-md">
-      <style jsx>{`
-        .nav-link {
-          position: relative;
-          cursor: pointer;
-          background: transparent;
-          color: #fff;
-        }
-
-        .nav-link-text {
-          position: relative;
-          z-index: 1;
-        }
-
-        .border-glow {
-          pointer-events: none;
-          position: absolute;
-          opacity: 0;
-          --w: 2px;
-          --t: -40px;
-          --s: calc(var(--t) * -1);
-          --e: calc(100% + var(--t));
-          --g: #fff0, #fff3 var(--s), #fffa var(--s), #fff, #fffa var(--e),
-            #fff3 var(--e), #fff0;
-          transition: opacity 0.3s ease;
-        }
-
-        .nav-link:hover .border-glow {
-          opacity: 1;
-        }
-
-        .border-glow::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(4px);
-          z-index: -2;
-        }
-
-        .border-glow::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(10px);
-          z-index: -2;
-        }
-
-        .border-left {
-          left: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .border-right {
-          right: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .border-top {
-          top: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-
-        .border-bottom {
-          bottom: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-
-        @media (max-width: 768px) {
-          .nav-link {
-            padding: 0.75rem 1rem;
-          }
-          
-          .nav-link-text {
-            font-size: 0.875rem;
-          }
-        }
-      `}</style>
+    <motion.nav 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled 
+          ? "bg-black/70 backdrop-blur-md shadow-lg" 
+          : "bg-black/30 backdrop-blur-[2px]"
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0 flex items-center space-x-4">
-              <Image src="/csed.png" alt="CSED Logo" width={60} height={60} className="h-14 w-auto" />
-              <Image src="/ospc.png" alt="OSPC Logo" width={60} height={60} className="h-14 w-auto" />
-            </div>
-          </div>
+          <button
+            className="flex items-center space-x-2"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            <span className="text-white font-bold text-xl">SPECTRUM</span>
+          </button>
           
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                onClick={(e) => handleScroll(e, item.href)}
-                className={`nav-link px-3 py-2 rounded-md text-sm font-medium ${
-                  activeSection === item.href.replace('#', '') ? 'text-purple-400' : 'text-gray-300'
-                }`}
-              >
-                <span className="nav-link-text">{item.name}</span>
-                <div className="border-glow border-left"></div>
-                <div className="border-glow border-right"></div>
-                <div className="border-glow border-top"></div>
-                <div className="border-glow border-bottom"></div>
-
-                
-              </a>
-              
-            ))}
-            <div 
-                  className="apply-button ml-4" 
-                  data-hackathon-slug="spectrum25" 
-                  data-button-theme="light"
-                  style={{ height: '44px', width: '312px' }}
-                ></div>
+          <div className="hidden md:flex items-center space-x-1">
+            <TooltipProvider>
+              {navItems.map((item, index) => (
+                <Tooltip key={item.name}>
+                  <TooltipTrigger asChild>
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index, duration: 0.3 }}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={cn(
+                          "relative px-3 py-2 rounded-md text-sm font-medium",
+                          activeSection === item.href.replace('#', '')
+                            ? "text-purple-300 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1/2 after:h-0.5 after:bg-gradient-to-r after:from-purple-400 after:to-blue-500"
+                            : "text-gray-300 hover:text-white hover:bg-white/5"
+                        )}
+                        onClick={(e) => handleScroll(e as any, item.href)}
+                      >
+                        <span className="z-10">{item.name}</span>
+                        {activeSection === item.href.replace('#', '') && (
+                          <div className="absolute inset-0 bg-purple-900/20 rounded-md backdrop-blur-sm" />
+                        )}
+                      </Button>
+                    </motion.div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="bg-black/80 backdrop-blur-md border-purple-800/50 text-white">
+                    Navigate to {item.name}
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.3 }}
+              className="ml-4"
+            >
+              <div 
+                className="apply-button" 
+                data-hackathon-slug="spectrum25" 
+                data-button-theme="light"
+                style={{ height: '44px', width: '180px' }}
+              ></div>
+            </motion.div>
           </div>
           
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-purple-900/20 focus:outline-none transition-colors duration-200"
+              className="text-gray-400 hover:text-white hover:bg-purple-900/20 focus:outline-none"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
-              {!isOpen ? (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
-            </button>
+              {!isOpen ? <Menu className="h-6 w-6" /> : <X className="h-6 w-6" />}
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden fixed inset-x-0 top-16 transform ${
-          isOpen ? 'translate-y-0 opacity-100 visible' : '-translate-y-full opacity-0 invisible'
-        } transition-all duration-300 ease-in-out bg-black/90 backdrop-blur-lg z-50`}
-      >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          {navItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              onClick={(e) => handleScroll(e, item.href)}
-              className={`block w-full text-left px-4 py-3 rounded-md text-base font-medium transition-colors duration-200 ${
-                activeSection === item.href.replace('#', '') 
-                  ? 'text-white bg-black/40' 
-                  : 'text-gray-300 hover:bg-black/40 hover:text-white'
-              }`}
+      {/* Mobile menu with Framer Motion */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden fixed inset-x-0 top-16 bg-black/90 backdrop-blur-lg z-50 border-t border-purple-900/30"
+          >
+            <motion.div 
+              className="px-2 pt-2 pb-3 space-y-1 sm:px-3"
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+              initial="hidden"
+              animate="show"
             >
-              {item.name}
-            </a>
-          ))}
-        </div>
-      </div>
-    </nav>
+              {navItems.map((item) => (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => handleScroll(e, item.href)}
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    show: { opacity: 1, x: 0 }
+                  }}
+                  className={cn(
+                    "block w-full text-left px-4 py-3 rounded-md text-base font-medium transition-colors duration-200",
+                    activeSection === item.href.replace('#', '')
+                      ? "text-white bg-purple-900/30 border-l-2 border-purple-400"
+                      : "text-gray-300 hover:bg-black/40 hover:text-white"
+                  )}
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  show: { opacity: 1, y: 0 }
+                }}
+                className="px-4 py-4"
+              >
+                <div 
+                  className="apply-button" 
+                  data-hackathon-slug="spectrum25" 
+                  data-button-theme="light"
+                  style={{ height: '44px', width: '100%' }}
+                ></div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
-} 
+}
