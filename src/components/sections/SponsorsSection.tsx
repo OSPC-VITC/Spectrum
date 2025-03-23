@@ -361,15 +361,7 @@ const SponsorsSection: React.FC = () => {
           className="text-center mt-16"
           variants={itemVariants}
         >
-          <div className="max-w-2xl mx-auto px-8">
-            <Card className="relative bg-gradient-to-r from-pink-500 to-purple-500 backdrop-blur-md border-white/20 overflow-hidden">
-              <CardContent className="p-8 text-center">
-                <p className="text-white font-medium">
-                  More sponsorship opportunities available! Contact us to be part of Spectrum.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          
         </motion.div>
       </div>
     </motion.section>
