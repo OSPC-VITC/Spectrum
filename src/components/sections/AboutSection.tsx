@@ -59,6 +59,15 @@ const AboutSection: React.FC = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+  const floatingAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  };
   
   const titleText = "SPECTRUM";
   const titleLetters = titleText.split("");
@@ -245,24 +254,14 @@ const AboutSection: React.FC = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              <motion.div 
-                className="relative inline-flex items-center justify-center"
-                animate={{ 
-                  y: [0, -10, 0], 
-                  rotate: [0, 2, 0, -2, 0], 
-                }}
-                transition={{ 
-                  duration: 5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full blur-xl opacity-50 scale-[1.2] group-hover:opacity-70 duration-500 animate-pulse"></div>
-                <div className="relative flex items-center justify-center h-20 w-20 rounded-full bg-black bg-opacity-50 backdrop-blur-md border border-purple-500/20">
-                  <Zap className="h-8 w-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400" />
-                  <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-[10px] font-bold">24H</span>
+              <motion.div animate={floatingAnimation} className="inline-block mb-5">
+              <div className="relative">
+                <div className="inline-block h-14 w-14 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 blur-md opacity-70"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold tracking-wide text-lg">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">24H</span>
                 </div>
-              </motion.div>
+              </div>
+            </motion.div>
             </motion.div>
             
             <h2 className="text-4xl md:text-6xl lg:text-7xl mb-6 text-center font-bold tracking-wider leading-tight">
