@@ -123,7 +123,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
             className="flex items-center space-x-2"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <span className="text-white font-bold text-xl">SPECTRUM</span>
+          <img src="/logo.png" alt="Spectrum Logo" className="h-8" />
           </button>
           
           {/* Desktop menu */}

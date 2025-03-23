@@ -108,7 +108,7 @@ const SponsorsSection: React.FC = () => {
       name: "EthIndia", 
       tier: "stack", 
       logo: "/ethindia.svg",
-      website: "https://example.com/titlesponsor"
+      website: "https://ethindia.co"
     },
     { 
       name: "Aptos", 
@@ -134,7 +134,7 @@ const SponsorsSection: React.FC = () => {
     { 
       name: "Vertex", 
       logo: "/vertex.png", 
-      website: "https://example.com/partner1" 
+      website: "https://www.instagram.com/vertex_innovate/" 
     },
     { 
       name: "IBM Z", 

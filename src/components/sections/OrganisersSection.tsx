@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { TwitterLogoIcon, LinkedInLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
+import { GlobeIcon } from 'lucide-react';
 
 
 interface Organizer {
@@ -109,6 +110,7 @@ const OrganisersSection: React.FC = () => {
                           {platform === 'twitter' && <TwitterLogoIcon className="h-6 w-6" />}
                           {platform === 'linkedin' && <LinkedInLogoIcon className="h-6 w-6" />}
                           {platform === 'github' && <GitHubLogoIcon className="h-6 w-6" />}
+                          {platform === 'website' && <GlobeIcon className="h-6 w-6" />}
                         </a>
                       ))}
                     </div>
