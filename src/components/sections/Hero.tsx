@@ -364,104 +364,63 @@ const HeroSection: React.FC = () => {
           <p className="text-cyan-300/90 mt-4 font-light tracking-wider text-lg md:text-xl animate-fadeIn">INNOVATION • TECHNOLOGY • ENTREPRENEURSHIP</p>
         </div>
         
-        {/* Centered countdown with enhanced styling */}
-        <div className="w-full max-w-4xl flex justify-center transform transition-all duration-1000 ease-out animate-float4" style={{animationDelay: '0.5s'}}>
-          <div className="relative bg-gradient-to-b from-black/60 to-black/40 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/40 overflow-hidden group hover:border-cyan-400/60 transition-all duration-500">
-            {/* Animated background glow */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-blue-500/20 to-cyan-400/20 rounded-lg blur-2xl opacity-40 animate-pulse"></div>
-            
-            {/* Corner decorations - enhanced */}
-            <div className="absolute top-0 left-0 w-20 h-20">
-              <div className="absolute top-0 left-0 w-px h-12 bg-gradient-to-b from-cyan-400/90 to-transparent"></div>
-              <div className="absolute top-0 left-0 w-12 h-px bg-gradient-to-r from-cyan-400/90 to-transparent"></div>
-            </div>
-            <div className="absolute bottom-0 right-0 w-20 h-20">
-              <div className="absolute bottom-0 right-0 w-px h-12 bg-gradient-to-t from-cyan-400/90 to-transparent"></div>
-              <div className="absolute bottom-0 right-0 w-12 h-px bg-gradient-to-l from-cyan-400/90 to-transparent"></div>
-            </div>
-            <div className="absolute top-0 right-0 w-20 h-20">
-              <div className="absolute top-0 right-0 w-px h-12 bg-gradient-to-b from-purple-400/90 to-transparent"></div>
-              <div className="absolute top-0 right-0 w-12 h-px bg-gradient-to-l from-purple-400/90 to-transparent"></div>
-            </div>
-            <div className="absolute bottom-0 left-0 w-20 h-20">
-              <div className="absolute bottom-0 left-0 w-px h-12 bg-gradient-to-t from-purple-400/90 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-12 h-px bg-gradient-to-r from-purple-400/90 to-transparent"></div>
-            </div>
-            
-            <h2 className="text-2xl font-bold text-center mb-6 text-white group-hover:text-cyan-300 transition-colors">Event Starts In</h2>
-            
-            <div className="grid grid-cols-4 gap-4 md:gap-6">
-              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
-                <div className="relative bg-gradient-to-b from-purple-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-purple-500/30 overflow-hidden group-hover:border-purple-500/60 transition-all duration-300">
-                  <span className="text-3xl font-mono font-bold text-white group-hover:text-purple-300 transition-colors relative z-10">{countdown.days.toString().padStart(2, '0')}</span>
-                  <div className="absolute inset-0 bg-purple-600/20 animate-pulse opacity-40"></div>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"></div>
-                  
-                  {/* Animated particle effect */}
-                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1"></div>
-                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2"></div>
-                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3"></div>
-                </div>
-                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-purple-300 transition-colors">Days</span>
-              </div>
-              
-              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
-                <div className="relative bg-gradient-to-b from-blue-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-blue-500/30 overflow-hidden group-hover:border-blue-500/60 transition-all duration-300">
-                  <span className="text-3xl font-mono font-bold text-white group-hover:text-blue-300 transition-colors relative z-10">{countdown.hours.toString().padStart(2, '0')}</span>
-                  <div className="absolute inset-0 bg-blue-600/20 animate-pulse opacity-40 delay-75"></div>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-100"></div>
-                  
-                  {/* Animated particle effect */}
-                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.2s'}}></div>
-                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.3s'}}></div>
-                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '0.4s'}}></div>
-                </div>
-                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-blue-300 transition-colors">Hours</span>
-              </div>
-              
-              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
-                <div className="relative bg-gradient-to-b from-cyan-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-cyan-500/30 overflow-hidden group-hover:border-cyan-500/60 transition-all duration-300">
-                  <span className="text-3xl font-mono font-bold text-white group-hover:text-cyan-300 transition-colors relative z-10">{countdown.minutes.toString().padStart(2, '0')}</span>
-                  <div className="absolute inset-0 bg-cyan-600/20 animate-pulse opacity-40 delay-150"></div>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-200"></div>
-                  
-                  {/* Animated particle effect */}
-                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.5s'}}></div>
-                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.6s'}}></div>
-                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '0.7s'}}></div>
-                </div>
-                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-cyan-300 transition-colors">Mins</span>
-              </div>
-              
-              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
-                <div className="relative bg-gradient-to-b from-pink-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-pink-500/30 overflow-hidden group-hover:border-pink-500/60 transition-all duration-300">
-                  <span className="text-3xl font-mono font-bold text-white group-hover:text-pink-300 transition-colors relative z-10">{countdown.seconds.toString().padStart(2, '0')}</span>
-                  <div className="absolute inset-0 bg-pink-600/20 animate-pulse opacity-40 delay-200"></div>
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-300"></div>
-                  
-                  {/* Animated particle effect */}
-                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.8s'}}></div>
-                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.9s'}}></div>
-                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '1s'}}></div>
-                </div>
-                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-pink-300 transition-colors">Secs</span>
-              </div>
-            </div>
-            
-            <div className="mt-6 text-center">
-              <span className="text-cyan-300 font-semibold text-base px-6 py-2 rounded-full bg-cyan-900/30 border border-cyan-500/30 inline-block transform transition-all duration-500 hover:scale-110 hover:bg-cyan-900/40 hover:border-cyan-400/50">
-                April 11-12, 2025
-              </span>
-            </div>
-            
-            {/* Quick action buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-          
-              
-              
-                </div>
-                </div>
-              </div>
+        <div className="w-full max-w-4xl flex flex-col items-center justify-center">
+  <div className="grid grid-cols-4 gap-4 md:gap-8 text-center">
+    {/* Days */}
+    <div className="flex flex-col items-center">
+      <div className="bg-black border border-gray-700 p-4 w-24 h-24 flex items-center justify-center mb-2 rounded-lg">
+        <span className="text-4xl font-mono font-bold text-white">
+          {countdown.days.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-sm text-gray-300 uppercase tracking-wider">Days</span>
+    </div>
+    
+    {/* Hours */}
+    <div className="flex flex-col items-center">
+      <div className="bg-black border border-gray-700 p-4 w-24 h-24 flex items-center justify-center mb-2 rounded-lg">
+        <span className="text-4xl font-mono font-bold text-white">
+          {countdown.hours.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-sm text-gray-300 uppercase tracking-wider">Hours</span>
+    </div>
+    
+    {/* Minutes */}
+    <div className="flex flex-col items-center">
+      <div className="bg-black border border-gray-700 p-4 w-24 h-24 flex items-center justify-center mb-2 rounded-lg">
+        <span className="text-4xl font-mono font-bold text-white">
+          {countdown.minutes.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-sm text-gray-300 uppercase tracking-wider">Minutes</span>
+    </div>
+    
+    {/* Seconds */}
+    <div className="flex flex-col items-center">
+      <div className="bg-black border border-gray-700 p-4 w-24 h-24 flex items-center justify-center mb-2 rounded-lg">
+        <span className="text-4xl font-mono font-bold text-white">
+          {countdown.seconds.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-sm text-gray-300 uppercase tracking-wider">Seconds</span>
+    </div>
+  </div>
+  
+  {/* Register Now button */}
+  <div className="mt-12">
+    <button className="bg-black border border-white text-white hover:bg-white hover:text-black transition-colors px-10 py-3 font-medium rounded-lg">
+      Register Now
+    </button>
+  </div>
+  
+  {/* Event date */}
+  <div className="mt-6 text-center">
+    <span className="text-white text-lg">
+      April 11-12, 2025
+    </span>
+  </div>
+</div>
               </div>
             </div>
             );
