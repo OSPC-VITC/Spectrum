@@ -3,6 +3,8 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Megrim } from 'next/font/google';
 import localFont from 'next/font/local';
+import { Analytics } from '@vercel/analytics/next';
+
 
 import "./globals.css";
 import ClientWrapper from '@/components/ClientWrapper'
@@ -174,6 +176,7 @@ export default function RootLayout({
       <body>
         <ClientWrapper>
           {children}
+          <Analytics />
         </ClientWrapper>
       </body>
     </html>
