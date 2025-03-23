@@ -453,18 +453,9 @@ const HeroSection: React.FC = () => {
             
             {/* Quick action buttons */}
             <div className="flex justify-center gap-4 mt-8">
-              <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-bold text-base hover:shadow-lg hover:shadow-purple-500/30 transform transition duration-500 hover:scale-105 hover:translate-y-1 relative overflow-hidden group">
-                <span className="relative z-10 flex items-center gap-2">
-                  Register Now
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></span>
-              </button>
+          
               
-              <button className="px-8 py-3 bg-transparent border border-purple-500/50 text-white rounded-full font-bold text-base hover:bg-purple-500/10 transition hover:border-purple-400 group">
-                  </button>
+              
                 </div>
                 </div>
               </div>

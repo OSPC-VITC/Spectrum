@@ -304,11 +304,9 @@ const AboutSection: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <p className="mb-4">
-                SPECTRUM isn&apos;t just a hackathon—it&apos;s a dynamic fusion of innovation, technology, and entrepreneurship. We challenge participants to push boundaries, craft groundbreaking solutions, and transform bold ideas into reality. With a focus on real-world impact, Spectrum is where vision meets execution.
+              SPECTRUM is not your average hackathon – it’s a dynamic fusion of innovation, technology, and entrepreneurship. We challenge participants to push boundaries, craft groundbreaking solutions, and transform bold ideas into reality. With a focus on real-world impact, Spectrum is where vision meets execution.
               </p>
-              <p className="text-purple-400 font-semibold italic">
-                Get ready to innovate, collaborate, and shape the future—one breakthrough at a time!
-              </p>
+             
             </motion.div>
           </motion.div>
           
@@ -404,194 +402,11 @@ const AboutSection: React.FC = () => {
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
           >
-            <motion.div 
-              variants={cardVariants}
-              whileHover="hover"
-              className="group"
-            >
-              <Card className="relative rounded-xl border-0 bg-gradient-to-br from-indigo-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-indigo-900/20 h-full flex flex-col">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 border border-indigo-500/10 group-hover:border-indigo-500/20 rounded-xl transition-colors duration-300"></div>
-                <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full group-hover:bg-indigo-500/10 transition-all duration-300"></div>
-                <CardContent className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-center mb-5">
-                    <motion.span 
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/20 to-indigo-900/20 backdrop-blur-sm group-hover:from-indigo-500/30 group-hover:to-indigo-900/30 transition-all duration-300 shadow-md overflow-hidden"
-                      variants={iconVariants}
-                      whileHover="hover"
-                    >
-                      <motion.div
-                        initial={{ scale: 0.8 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Eye className="h-7 w-7 text-indigo-400" />
-                      </motion.div>
-                      <motion.div 
-                        className="absolute inset-0 bg-indigo-500/10 rounded-full"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: [0, 1.5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 2.8 }}
-                      />
-                    </motion.span>
-                    <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide  text-white">Innovation Battlefield</h3>
-                  </div>
-                  <p className="text-base text-gray-300 leading-relaxed mb-5 flex-1">
-                    SPECTRUM brings together technology and entrepreneurship in a 24-hour innovation battlefield where bold ideas transform into game-changing solutions with real-world impact and vision meets execution.
-                  </p>
-                  <motion.div
-                    className="flex justify-end mt-auto"
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button variant="ghost" className="text-white p-0 h-auto hover:text-indigo-300 transition-colors flex items-center gap-2 group/btn">
-                      <span>Learn More</span>
-                      <motion.div
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 0.5 }}
-                      >
-                        <ArrowRight className="h-4 w-4" />
-                      </motion.div>
-                    </Button>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            <motion.div 
-              variants={cardVariants}
-              whileHover="hover"
-              className="group"
-            >
-              <Card className="relative rounded-xl border-0 bg-gradient-to-br from-purple-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-purple-900/20 h-full flex flex-col">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 border border-purple-500/10 group-hover:border-purple-500/20 rounded-xl transition-colors duration-300"></div>
-                <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full group-hover:bg-purple-500/10 transition-all duration-300"></div>
-                <CardContent className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-center mb-5">
-                    <motion.span 
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-purple-900/20 backdrop-blur-sm group-hover:from-purple-500/30 group-hover:to-purple-900/30 transition-all duration-300 shadow-md overflow-hidden"
-                      variants={iconVariants}
-                      whileHover="hover"
-                    >
-                      <motion.div
-                        initial={{ scale: 0.8 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Users className="h-7 w-7 text-purple-400" />
-                      </motion.div>
-                      <motion.div 
-                        className="absolute inset-0 bg-purple-500/10 rounded-full"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: [0, 1.5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3.2 }}
-                      />
-                    </motion.span>
-                    <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide  text-white">Powerful Partnerships</h3>
-                  </div>
-                  <p className="text-base text-gray-300 leading-relaxed mb-5 flex-1">
-                    Backed by OSPC x CSED, Vertex Innovate, Blackbox AI, and IBM Z, SPECTRUM brings together industry leaders to support the next generation of innovators and disruptors.
-                  </p>
-                  <motion.div
-                    className="flex justify-end mt-auto"
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button variant="ghost" className="text-white p-0 h-auto hover:text-purple-300 transition-colors flex items-center gap-2 group/btn">
-                      <span>Our Partners</span>
-                      <motion.div
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 0.5 }}
-                      >
-                        <ArrowRight className="h-4 w-4" />
-                      </motion.div>
-                    </Button>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-            
-            <motion.div 
-              variants={cardVariants}
-              whileHover="hover"
-              className="group"
-            >
-              <Card className="relative rounded-xl border-0 bg-gradient-to-br from-blue-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-blue-900/20 h-full flex flex-col">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 border border-blue-500/10 group-hover:border-blue-500/20 rounded-xl transition-colors duration-300"></div>
-                <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full group-hover:bg-blue-500/10 transition-all duration-300"></div>
-                <CardContent className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-center mb-5">
-                    <motion.span 
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-900/20 backdrop-blur-sm group-hover:from-blue-500/30 group-hover:to-blue-900/30 transition-all duration-300 shadow-md overflow-hidden"
-                      variants={iconVariants}
-                      whileHover="hover"
-                    >
-                      <motion.div
-                        initial={{ scale: 0.8 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <Award className="h-7 w-7 text-blue-400" />
-                      </motion.div>
-                      <motion.div 
-                        className="absolute inset-0 bg-blue-500/10 rounded-full"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: [0, 1.5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3.8 }}
-                      />
-                    </motion.span>
-                    <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide  text-white">IBM Z Speaker Session</h3>
-                  </div>
-                  <p className="text-base text-gray-300 leading-relaxed mb-5 flex-1">
-                    IBM Z adds to the thrill with an exclusive speaker session, delivering expert insights, cutting-edge trends, and guidance to fuel your entrepreneurial journey and empower your innovative solutions.
-                  </p>
-                  <motion.div
-                    className="flex justify-end mt-auto"
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                                      <Button variant="ghost" className="text-white p-0 h-auto hover:text-blue-300 transition-colors flex items-center gap-2 group/btn">
-                      <span>Explore Session</span>
-                      <motion.div
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 0.5 }}
-                      >
-                        <ArrowRight className="h-4 w-4" />
-                      </motion.div>
-                    </Button>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
+              
           </motion.div>
           
           {/* Call-to-action button */}
-          <motion.div 
-            className="mt-24 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <motion.div
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              <Button 
-                className="relative rounded-full px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/30"
-              >
-                <span className="relative z-10">Join SPECTRUM Now</span>
-                <motion.div 
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1.2 }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-                />
-              </Button>
-            </motion.div>
-          </motion.div>
+          
         </motion.div>
       </div>
     </section>
