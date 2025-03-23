@@ -197,11 +197,13 @@ const HeroSection: React.FC = () => {
       });
       
       // Handle shooting stars - more frequent
+      // Handle shooting stars - more frequent
       shootingStarTimer++;
-      if (shootingStarTimer > 70 && Math.random() > 0.98) {
+      if (shootingStarTimer > 30 && Math.random() > 0.9) { 
         createShootingStar();
         shootingStarTimer = 0;
       }
+
       
       shootingStars.forEach((shootingStar, index) => {
         if (!shootingStar.active) return;
@@ -322,7 +324,7 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full  bg-black overflow-hidden pt-20">
+    <div className="relative w-full bg-black overflow-hidden pt-20">
       {/* Canvas background */}
       <canvas 
         ref={canvasRef} 
