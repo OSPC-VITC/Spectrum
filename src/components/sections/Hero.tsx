@@ -10,50 +10,20 @@ interface CountdownState {
   seconds: number;
 }
 
-interface Node {
+interface Star {
   x: number;
   y: number;
   radius: number;
-  color: string;
-  velocity: {
-    x: number;
-    y: number;
-  };
-  pulseSpeed: number;
-  pulseSize: number;
-  connectionsCount: number;
-  lastPulseTime: number;
+  brightness: number;
+  speed: number;
 }
 
-interface EnergyCenter {
-  x: number;
-  y: number;
+interface OrbitingElement {
+  angle: number;
+  distance: number;
   radius: number;
-  color: string;
-  pulseRadius: number;
-  maxPulseRadius: number;
-  pulseOpacity: number;
-  pulseSpeed: number;
-  lastPulseTime: number;
-  pulseDuration: number;
-}
-
-interface DataFlow {
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  progress: number;
   speed: number;
   color: string;
-  size: number;
-  completed: boolean;
-}
-
-interface ColorRGB {
-  r: number;
-  g: number;
-  b: number;
 }
 
 const HeroSection: React.FC = () => {
@@ -66,7 +36,7 @@ const HeroSection: React.FC = () => {
     seconds: 0
   });
   const [mounted, setMounted] = useState<boolean>(false);
-  
+
   // Calculate countdown to April 11, 2025
   useEffect(() => {
     const hackathonDate = new Date('April 11, 2025 09:00:00').getTime();
@@ -96,7 +66,7 @@ const HeroSection: React.FC = () => {
     setMounted(true);
   }, []);
 
-  // WebGL Neural Network Visualization
+  // Starry background animation with shooting stars
   useEffect(() => {
     if (!canvasRef.current) return;
     
@@ -114,144 +84,71 @@ const HeroSection: React.FC = () => {
     setCanvasDimensions();
     window.addEventListener('resize', setCanvasDimensions);
     
-    // Create nodes for the neural network visualization
-    const nodeCount = window.innerWidth < 768 ? 80 : 150;
-    const nodes: Node[] = [];
-    const connectionDistance = window.innerWidth < 768 ? 150 : 200;
+    // Create stars for the space background
+    const starCount = window.innerWidth < 768 ? 300 : 600;
+    const stars: Star[] = [];
     
-    // Color palette
-    const colors: ColorRGB[] = [
-      { r: 112, g: 0, b: 255 },    // Purple
-      { r: 0, g: 255, b: 255 },    // Cyan
-      { r: 255, g: 0, b: 255 }     // Pink
-    ];
-    
-    // Create neural network nodes
-    for (let i = 0; i < nodeCount; i++) {
-      const colorIndex = Math.floor(Math.random() * colors.length);
-      const color = colors[colorIndex];
-      
-      nodes.push({
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        color: `rgba(${color.r}, ${color.g}, ${color.b}, ${Math.random() * 0.5 + 0.3})`,
-        velocity: {
-          x: (Math.random() - 0.5) * 0.7,
-          y: (Math.random() - 0.5) * 0.7
-        },
-        pulseSpeed: Math.random() * 0.02 + 0.01,
-        pulseSize: Math.random() * 0.5 + 0.5,
-        connectionsCount: 0,
-        lastPulseTime: Math.random() * 5000  // Random start time for pulse animation
+        radius: Math.random() * 1.8 + 0.5,
+        brightness: Math.random() * 0.5 + 0.5,
+        speed: Math.random() * 0.3 + 0.1
       });
     }
     
-    // Add energy centers (hubs) for the neural network
-    const energyCenters: EnergyCenter[] = [];
-    const centerCount = window.innerWidth < 768 ? 3 : 5;
+    // Create shooting stars
+    const shootingStars: {
+      x: number;
+      y: number;
+      length: number;
+      speed: number;
+      angle: number;
+      active: boolean;
+      ttl: number;
+    }[] = [];
     
-    for (let i = 0; i < centerCount; i++) {
-      const colorIndex = Math.floor(Math.random() * colors.length);
-      const color = colors[colorIndex];
+    const createShootingStar = () => {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * (canvas.height / 2); // More coverage
       
-      energyCenters.push({
-        x: canvas.width * (0.2 + Math.random() * 0.6), // Keep centers within middle 60% of screen
-        y: canvas.height * (0.2 + Math.random() * 0.6),
-        radius: Math.random() * 5 + 8,
-        color: `rgba(${color.r}, ${color.g}, ${color.b}, 0.8)`,
-        pulseRadius: 0,
-        maxPulseRadius: connectionDistance * 0.8,
-        pulseOpacity: 0.5,
-        pulseSpeed: Math.random() * 0.02 + 0.01,
-        lastPulseTime: 0,
-        pulseDuration: 3000 + Math.random() * 2000
+      shootingStars.push({
+        x,
+        y,
+        length: Math.random() * 100 + 70, // Longer trails
+        speed: Math.random() * 12 + 10, // Faster
+        angle: Math.PI / 4 + Math.random() * Math.PI / 6,
+        active: true,
+        ttl: Math.random() * 60 + 60 // Live longer
       });
+    };
+    
+    // Create multiple shooting stars to start
+    for (let i = 0; i < 3; i++) {
+      createShootingStar();
     }
     
-    // Mouse interaction
-    let mouseX = 0;
-    let mouseY = 0;
-    let mouseRadius = 200;
+    // Create orbiting elements around the title
+    const orbitingElements: OrbitingElement[] = [];
+    const orbitRadius = 220; // Increased distance from the center
+    const orbitCount = 10; // More orbiting elements
     
-    // Track mouse position
-    const trackMouse = (e: MouseEvent): void => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-    
-    window.addEventListener('mousemove', trackMouse);
-    
-    // Data flows - energy packets traveling along neural paths
-    const dataFlows: DataFlow[] = [];
-    const maxDataFlows = window.innerWidth < 768 ? 10 : 20;
-    
-    const createDataFlow = (): void => {
-      // Only create new flows if we're under the limit
-      if (dataFlows.length >= maxDataFlows) return;
-      
-      // Select random source and target nodes
-      const sourceIndex = Math.floor(Math.random() * nodes.length);
-      let targetIndex;
-      do {
-        targetIndex = Math.floor(Math.random() * nodes.length);
-      } while (targetIndex === sourceIndex);
-      
-      const source = nodes[sourceIndex];
-      const target = nodes[targetIndex];
-      
-      // Only create flow if nodes are close enough
-      const dx = target.x - source.x;
-      const dy = target.y - source.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < connectionDistance * 1.5) {
-        // Choose a random color from the palette
-        const colorIndex = Math.floor(Math.random() * colors.length);
-        const color = colors[colorIndex];
-        
-        dataFlows.push({
-          sourceX: source.x,
-          sourceY: source.y,
-          targetX: target.x,
-          targetY: target.y,
-          progress: 0,
-          speed: Math.random() * 0.01 + 0.005,
-          color: `rgba(${color.r}, ${color.g}, ${color.b}, 0.7)`,
-          size: Math.random() * 2 + 1,
-          completed: false
-        });
-      }
-    };
-    
-    // Randomly create data flows
-    setInterval(() => {
-      if (Math.random() > 0.5) {
-        createDataFlow();
-      }
-    }, 300);
-    
-    // Create energy pulse from center
-    const createEnergyPulse = (centerIndex: number): void => {
-      const center = energyCenters[centerIndex];
-      
-      // Reset pulse
-      center.pulseRadius = 10;
-      center.pulseOpacity = 0.5;
-      center.lastPulseTime = Date.now();
-    };
-    
-    // Regularly emit pulses from energy centers
-    energyCenters.forEach((center, index) => {
-      setInterval(() => {
-        createEnergyPulse(index);
-      }, center.pulseDuration);
-    });
+    for (let i = 0; i < orbitCount; i++) {
+      orbitingElements.push({
+        angle: (i / orbitCount) * Math.PI * 2, // Evenly spaced angles
+        distance: orbitRadius + Math.random() * 60 - 30,
+        radius: Math.random() * 4 + 2,
+        speed: Math.random() * 0.02 + 0.008,
+        color: `rgba(${100 + Math.random() * 155}, ${100 + Math.random() * 155}, ${200 + Math.random() * 55}, 0.8)`
+      });
+    }
     
     // Animation loop
     let lastUpdateTime = 0;
     const framesPerSecond = 60;
     const frameInterval = 1000 / framesPerSecond;
+    let shootingStarTimer = 0;
     
     function animate(currentTime: number): void {
       requestAnimationFrame(animate);
@@ -263,222 +160,156 @@ const HeroSection: React.FC = () => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Create radial gradient for background
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 0,
-        canvas.width / 2, canvas.height / 2, canvas.width * 0.7
-      );
-      gradient.addColorStop(0, 'rgba(30, 0, 60, 0.5)');
-      gradient.addColorStop(1, 'rgba(0, 0, 30, 0.8)');
-      
-      // Fill background
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw connections between close nodes
-      for (let i = 0; i < nodes.length; i++) {
-        nodes[i].connectionsCount = 0;
+      // Draw stars with enhanced twinkling
+      stars.forEach(star => {
+        // Move stars downward very slowly
+        star.y += star.speed * 0.5;
         
-        for (let j = i + 1; j < nodes.length; j++) {
-          const node1 = nodes[i];
-          const node2 = nodes[j];
-          
-          const dx = node2.x - node1.x;
-          const dy = node2.y - node1.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < connectionDistance) {
-            // Increase connection counter
-            node1.connectionsCount++;
-            node2.connectionsCount++;
-            
-            // Calculate opacity based on distance
-            const opacity = 1 - (distance / connectionDistance);
-            
-            // Draw line with gradient
-            const gradient = ctx.createLinearGradient(node1.x, node1.y, node2.x, node2.y);
-            gradient.addColorStop(0, node1.color.replace(/[^,]+(?=\))/, (opacity * 0.5).toString()));
-            gradient.addColorStop(1, node2.color.replace(/[^,]+(?=\))/, (opacity * 0.5).toString()));
-            
-            ctx.beginPath();
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = Math.min(opacity * 1.5, 1);
-            ctx.moveTo(node1.x, node1.y);
-            ctx.lineTo(node2.x, node2.y);
-            ctx.stroke();
-          }
-        }
-      }
-      
-      // Update and draw nodes
-      nodes.forEach(node => {
-        // Move nodes
-        node.x += node.velocity.x;
-        node.y += node.velocity.y;
+        // Enhanced twinkling effect
+        star.brightness += (Math.random() - 0.5) * 0.08;
+        star.brightness = Math.max(0.3, Math.min(1, star.brightness));
         
-        // Handle bounds
-        if (node.x < 0 || node.x > canvas.width) node.velocity.x *= -1;
-        if (node.y < 0 || node.y > canvas.height) node.velocity.y *= -1;
-        
-        // Mouse interaction - gentle repulsion
-        const dx = mouseX - node.x;
-        const dy = mouseY - node.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < mouseRadius) {
-          const force = (1 - distance / mouseRadius) * 0.05;
-          node.velocity.x -= dx * force / distance;
-          node.velocity.y -= dy * force / distance;
-          
-          // Limit velocity
-          const maxVelocity = 1.5;
-          const currentVelocity = Math.sqrt(node.velocity.x * node.velocity.x + node.velocity.y * node.velocity.y);
-          if (currentVelocity > maxVelocity) {
-            node.velocity.x = (node.velocity.x / currentVelocity) * maxVelocity;
-            node.velocity.y = (node.velocity.y / currentVelocity) * maxVelocity;
-          }
+        // Reset star position if it goes off screen
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
         }
         
-        // Calculate pulsing effect
-        const timeFactor = currentTime * node.pulseSpeed;
-        const pulseSize = node.radius * (1 + Math.sin(timeFactor) * 0.3 * node.pulseSize);
-        
-        // Draw node
+        // Draw star with slight glow
         ctx.beginPath();
-        ctx.arc(node.x, node.y, pulseSize, 0, Math.PI * 2);
-        ctx.fillStyle = node.color;
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness})`;
         ctx.fill();
         
-        // Draw glow for highly connected nodes
-        if (node.connectionsCount > 3) {
-          const glowSize = pulseSize * (1.5 + node.connectionsCount * 0.1);
-          const glowOpacity = 0.1 + Math.min(node.connectionsCount * 0.02, 0.4);
-          
-          const glow = ctx.createRadialGradient(
-            node.x, node.y, pulseSize,
-            node.x, node.y, glowSize
-          );
-          
-          // Extract RGB from node color
-          const colorMatch = node.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (colorMatch) {
-            const r = colorMatch[1];
-            const g = colorMatch[2];
-            const b = colorMatch[3];
-            
-            glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${glowOpacity})`);
-            glow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-            
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
-            ctx.fillStyle = glow;
-            ctx.fill();
-          }
-        }
-      });
-      
-      // Update and draw energy centers
-      energyCenters.forEach(center => {
-        // Draw center node
-        ctx.beginPath();
-        ctx.arc(center.x, center.y, center.radius * (1 + Math.sin(currentTime * center.pulseSpeed) * 0.3), 0, Math.PI * 2);
-        ctx.fillStyle = center.color;
-        ctx.fill();
-        
-        // Draw outer glow
-        const glowSize = center.radius * 3;
-        const glow = ctx.createRadialGradient(
-          center.x, center.y, center.radius,
-          center.x, center.y, glowSize
-        );
-        
-        // Extract RGB from center color
-        const colorMatch = center.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (colorMatch) {
-          const r = colorMatch[1];
-          const g = colorMatch[2];
-          const b = colorMatch[3];
-          
-          glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.4)`);
-          glow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-          
+        // Add glow for some stars
+        if (star.radius > 1.2) {
           ctx.beginPath();
-          ctx.arc(center.x, center.y, glowSize, 0, Math.PI * 2);
+          ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
+          const glow = ctx.createRadialGradient(
+            star.x, star.y, star.radius * 0.5,
+            star.x, star.y, star.radius * 2
+          );
+          glow.addColorStop(0, `rgba(255, 255, 255, ${star.brightness * 0.5})`);
+          glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
           ctx.fillStyle = glow;
           ctx.fill();
         }
+      });
+      
+      // Handle shooting stars - more frequent
+      shootingStarTimer++;
+      if (shootingStarTimer > 70 && Math.random() > 0.98) {
+        createShootingStar();
+        shootingStarTimer = 0;
+      }
+      
+      shootingStars.forEach((shootingStar, index) => {
+        if (!shootingStar.active) return;
         
-        // Update and draw pulse wave
-        if (center.pulseRadius > 0) {
-          center.pulseRadius += 1.5;
-          center.pulseOpacity = Math.max(0, 0.5 - (center.pulseRadius / center.maxPulseRadius) * 0.5);
-          
-          if (center.pulseRadius > center.maxPulseRadius) {
-            center.pulseRadius = 0;
-          }
-          
-          // Draw pulse wave
-          if (center.pulseRadius > 0 && center.pulseOpacity > 0) {
-            ctx.beginPath();
-            ctx.arc(center.x, center.y, center.pulseRadius, 0, Math.PI * 2);
-            ctx.strokeStyle = center.color.replace(/[^,]+(?=\))/, center.pulseOpacity.toString());
-            ctx.lineWidth = 2;
-            ctx.stroke();
-          }
+        // Update position
+        shootingStar.x += Math.cos(shootingStar.angle) * shootingStar.speed;
+        shootingStar.y += Math.sin(shootingStar.angle) * shootingStar.speed;
+        
+        // Draw shooting star
+        ctx.beginPath();
+        ctx.moveTo(shootingStar.x, shootingStar.y);
+        
+        // Calculate tail end point
+        const tailX = shootingStar.x - Math.cos(shootingStar.angle) * shootingStar.length;
+        const tailY = shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.length;
+        
+        // Create gradient for the tail with more vibrant colors
+        const gradient = ctx.createLinearGradient(
+          shootingStar.x, shootingStar.y, tailX, tailY
+        );
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        gradient.addColorStop(0.2, 'rgba(155, 190, 255, 0.6)');
+        gradient.addColorStop(0.6, 'rgba(120, 140, 255, 0.4)');
+        gradient.addColorStop(1, 'rgba(100, 100, 255, 0)');
+        
+        ctx.lineTo(tailX, tailY);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 3; // Thicker line
+        ctx.stroke();
+        
+        // Add a more pronounced glowing head
+        ctx.beginPath();
+        ctx.arc(shootingStar.x, shootingStar.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fill();
+        
+        // Add a subtle glow around the head
+        ctx.beginPath();
+        ctx.arc(shootingStar.x, shootingStar.y, 6, 0, Math.PI * 2);
+        const headGlow = ctx.createRadialGradient(
+          shootingStar.x, shootingStar.y, 1,
+          shootingStar.x, shootingStar.y, 6
+        );
+        headGlow.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
+        headGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = headGlow;
+        ctx.fill();
+        
+        // Decrease time to live
+        shootingStar.ttl--;
+        
+        // Remove if off screen or expired
+        if (
+          shootingStar.x < 0 ||
+          shootingStar.x > canvas.width ||
+          shootingStar.y < 0 ||
+          shootingStar.y > canvas.height ||
+          shootingStar.ttl <= 0
+        ) {
+          shootingStar.active = false;
+          shootingStars.splice(index, 1);
         }
       });
       
-      // Update and draw data flows
-      for (let i = dataFlows.length - 1; i >= 0; i--) {
-        const flow = dataFlows[i];
+      // Draw orbiting elements around the title
+      if (titleRef.current) {
+        const titleRect = titleRef.current.getBoundingClientRect();
+        const centerX = titleRect.left + titleRect.width / 2;
+        const centerY = titleRect.top + titleRect.height / 2;
         
-        // Update progress
-        flow.progress += flow.speed;
-        
-        if (flow.progress >= 1) {
-          flow.completed = true;
-          dataFlows.splice(i, 1);
-          continue;
-        }
-        
-        // Calculate current position
-        const x = flow.sourceX + (flow.targetX - flow.sourceX) * flow.progress;
-        const y = flow.sourceY + (flow.targetY - flow.sourceY) * flow.progress;
-        
-        // Draw energy packet
-        ctx.beginPath();
-        ctx.arc(x, y, flow.size, 0, Math.PI * 2);
-        ctx.fillStyle = flow.color;
-        ctx.fill();
-        
-        // Draw trailing glow
-        const trailLength = 0.1; // 10% of the path
-        const trailStart = Math.max(0, flow.progress - trailLength);
-        
-        if (trailStart > 0) {
-          const startX = flow.sourceX + (flow.targetX - flow.sourceX) * trailStart;
-          const startY = flow.sourceY + (flow.targetY - flow.sourceY) * trailStart;
+        orbitingElements.forEach(element => {
+          // Update angle for revolution
+          element.angle += element.speed;
           
-          const gradient = ctx.createLinearGradient(startX, startY, x, y);
+          // Calculate position with slight wobble effect
+          const wobble = Math.sin(currentTime * 0.001 + element.angle) * 15;
+          const x = centerX + Math.cos(element.angle) * (element.distance + wobble);
+          const y = centerY + Math.sin(element.angle) * (element.distance + wobble);
           
-          // Extract RGB from flow color
-          const colorMatch = flow.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (colorMatch) {
-            const r = colorMatch[1];
-            const g = colorMatch[2];
-            const b = colorMatch[3];
-            
-            gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
-            gradient.addColorStop(1, flow.color);
-            
+          // Draw orbiting element with enhanced glow
+          ctx.beginPath();
+          ctx.arc(x, y, element.radius, 0, Math.PI * 2);
+          ctx.fillStyle = element.color;
+          ctx.fill();
+          
+          // Add stronger glow
+          ctx.beginPath();
+          ctx.arc(x, y, element.radius * 3.5, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(
+            x, y, element.radius,
+            x, y, element.radius * 3.5
+          );
+          gradient.addColorStop(0, element.color);
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = gradient;
+          ctx.fill();
+          
+          // Draw a longer and more pronounced trail
+          const trailLength = 12;
+          for (let i = 0; i < trailLength; i++) {
+            const trailX = centerX + Math.cos(element.angle - i * 0.08) * (element.distance + Math.sin((currentTime * 0.001) - i * 0.1) * 15);
+            const trailY = centerY + Math.sin(element.angle - i * 0.08) * (element.distance + Math.sin((currentTime * 0.001) - i * 0.1) * 15);
             ctx.beginPath();
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = flow.size * 1.5;
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(x, y);
-            ctx.stroke();
+            ctx.arc(trailX, trailY, element.radius * (1 - i / trailLength), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${element.color.slice(5, -1)}, ${0.8 * (1 - i / trailLength)})`;
+            ctx.fill();
           }
-        }
+        });
       }
     }
     
@@ -487,172 +318,157 @@ const HeroSection: React.FC = () => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', setCanvasDimensions);
-      window.removeEventListener('mousemove', trackMouse);
     };
   }, []);
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-b from-black to-purple-950/30 overflow-hidden">
+    <div className="relative w-full  bg-black overflow-hidden pt-20">
       {/* Canvas background */}
       <canvas 
         ref={canvasRef} 
         className="absolute top-0 left-0 w-full h-full z-0"
       />
       
-      {/* Glass effect hero content */}
-      <div className={`relative z-10 w-full h-full flex flex-col items-center justify-center px-4 md:px-8 transition-opacity duration-1000 ease-in-out ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-        {/* SPECTRUM title centered and larger */}
-        <div className="w-full text-center mb-8 md:mb-12">
-          <h1 
-            ref={titleRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight relative inline-block"
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 animate-pulse">
-              SPECTRUM
-            </span>
-            {/* Animated glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-blue-500/20 to-cyan-400/20 rounded-lg blur-xl opacity-30 animate-pulse"></div>
-          </h1>
-        </div>
-        
-        <div className="max-w-5xl w-full">
-          <div className="bg-black/40 backdrop-blur-lg p-6 md:p-10 rounded-xl border border-purple-500/20 shadow-xl transform transition-all duration-700 ease-out hover:border-purple-500/40 hover:shadow-purple-500/5">
-            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
-              {/* Left side: Content */}
-              <div className="flex-1 space-y-4 md:space-y-6">
-                {/* Subtitle with typing effect */}
-                <div className="h-12 md:h-16">
-                  <p className="text-base md:text-lg text-gray-200 leading-relaxed max-w-2xl relative overflow-hidden after:absolute after:right-0 after:top-0 after:bg-gradient-to-l after:from-black after:to-transparent after:w-8 after:h-full">
-                    A 24-hour innovation battlefield where technology meets entrepreneurship, and bold ideas become game-changing solutions.
-                  </p>
-                </div>
-                
-                <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-gray-400">
-                  <span className="flex items-center gap-2 hover:text-purple-400 transition-colors duration-300">
-                    <span className="h-2 w-2 rounded-full bg-purple-500 animate-ping"></span>
-                    OSPC x CSED
-                  </span>
-                  <span className="flex items-center gap-2 hover:text-blue-400 transition-colors duration-300">
-                    <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                    Vertex Innovate
-                  </span>
-                  <span className="flex items-center gap-2 hover:text-cyan-400 transition-colors duration-300">
-                    <span className="h-2 w-2 rounded-full bg-cyan-500"></span>
-                    Blackbox AI
-                  </span>
-                  <span className="flex items-center gap-2 hover:text-pink-400 transition-colors duration-300">
-                    <span className="h-2 w-2 rounded-full bg-pink-500"></span>
-                    IBM Z
-                  </span>
-                </div>
-                
-                <div className="flex flex-wrap gap-3 pt-2 md:pt-4">
-                  <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-bold text-base hover:opacity-90 transform transition hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 relative overflow-hidden group">
-                    <span className="relative z-10">Register Now</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></span>
-                  </button>
-                  <button className="px-6 py-3 bg-transparent border border-purple-500/50 text-white rounded-lg font-bold text-base hover:bg-purple-500/10 transition hover:border-purple-400 relative overflow-hidden group">
-                    <span className="relative z-10">Learn More</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Right side: Countdown with animation */}
-              <div className="flex-shrink-0 w-full md:w-auto mt-4 md:mt-0 transform transition-all duration-700 ease-out hover:scale-105">
-                <div className="bg-black/30 backdrop-blur-sm p-4 md:p-5 rounded-lg border border-cyan-500/20 relative overflow-hidden">
-                  {/* Animated background glow */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/10 via-blue-500/10 to-cyan-400/10 rounded-lg blur-xl opacity-30 animate-pulse"></div>
-                  
-                  <h2 className="text-lg font-bold text-center mb-2 text-gray-100">Event Starts In</h2>
-                  
-                  <div className="grid grid-cols-4 gap-2 md:gap-3">
-                    <div className="flex flex-col items-center transform transition hover:scale-110 duration-300">
-                      <div className="bg-gradient-to-b from-purple-900/60 to-black/60 p-3 rounded-lg w-14 h-14 flex items-center justify-center mb-1 border border-purple-500/10 relative overflow-hidden">
-                        <span className="text-xl font-mono font-bold text-white relative z-10">{countdown.days.toString().padStart(2, '0')}</span>
-                        <div className="absolute inset-0 bg-purple-600/20 animate-pulse opacity-30"></div>
-                      </div>
-                      <span className="text-xs text-gray-400">DAYS</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center transform transition hover:scale-110 duration-300">
-                      <div className="bg-gradient-to-b from-blue-900/60 to-black/60 p-3 rounded-lg w-14 h-14 flex items-center justify-center mb-1 border border-blue-500/10 relative overflow-hidden">
-                        <span className="text-xl font-mono font-bold text-white relative z-10">{countdown.hours.toString().padStart(2, '0')}</span>
-                        <div className="absolute inset-0 bg-blue-600/20 animate-pulse opacity-30 delay-75"></div>
-                      </div>
-                      <span className="text-xs text-gray-400">HOURS</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center transform transition hover:scale-110 duration-300">
-                      <div className="bg-gradient-to-b from-cyan-900/60 to-black/60 p-3 rounded-lg w-14 h-14 flex items-center justify-center mb-1 border border-cyan-500/10 relative overflow-hidden">
-                        <span className="text-xl font-mono font-bold text-white relative z-10">{countdown.minutes.toString().padStart(2, '0')}</span>
-                        <div className="absolute inset-0 bg-cyan-600/20 animate-pulse opacity-30 delay-150"></div>
-                      </div>
-                      <span className="text-xs text-gray-400">MINS</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center transform transition hover:scale-110 duration-300">
-                      <div className="bg-gradient-to-b from-pink-900/60 to-black/60 p-3 rounded-lg w-14 h-14 flex items-center justify-center mb-1 border border-pink-500/10 relative overflow-hidden">
-                        <span className="text-xl font-mono font-bold text-white relative z-10">{countdown.seconds.toString().padStart(2, '0')}</span>
-                        <div className="absolute inset-0 bg-pink-600/20 animate-pulse opacity-30 delay-200"></div>
-                      </div>
-                      <span className="text-xs text-gray-400">SECS</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-3 text-center">
-                    <span className="text-cyan-400 font-semibold text-sm relative overflow-hidden inline-block">
-                      April 11-12, 2025
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent transform translate-x-full animate-[shiftLeft_3s_ease-in-out_infinite]"></span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Feature highlights with float animation */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-          <div className="flex flex-wrap gap-3 justify-center">
-            <div className="bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-purple-500/10 flex items-center gap-2 transform transition-all duration-500 hover:bg-black/50 hover:border-purple-500/30 hover:scale-105 animate-[float_6s_ease-in-out_infinite]">
-              <div className="h-6 w-6 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-xs">
-                24
-              </div>
-              <span className="text-gray-300 text-sm">Hour Innovation</span>
-            </div>
-            
-            <div className="bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-blue-500/10 flex items-center gap-2 transform transition-all duration-500 hover:bg-black/50 hover:border-blue-500/30 hover:scale-105 animate-[float_6s_ease-in-out_infinite_0.5s]">
-              <div className="h-6 w-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xs">
-                $
-              </div>
-              <span className="text-gray-300 text-sm">High-value Prizes</span>
-            </div>
-            
-            <div className="bg-black/30 backdrop-blur-sm p-3 rounded-lg border border-cyan-500/10 flex items-center gap-2 transform transition-all duration-500 hover:bg-black/50 hover:border-cyan-500/30 hover:scale-105 animate-[float_6s_ease-in-out_infinite_1s]">
-              <div className="h-6 w-6 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
-                +
-              </div>
-              <span className="text-gray-300 text-sm">Unique Experience</span>
-            </div>
-          </div>
-        </div>
+      {/* Enhanced light rays effect */}
+      <div className="absolute inset-0 z-0 overflow-hidden opacity-30">
+        <div className="absolute -inset-[200px] bg-gradient-radial from-purple-900/40 via-transparent to-transparent blur-3xl transform translate-x-1/4 translate-y-1/4 animate-pulse"></div>
+        <div className="absolute -inset-[200px] bg-gradient-radial from-blue-900/30 via-transparent to-transparent blur-3xl transform -translate-x-1/4 -translate-y-1/4 animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute -inset-[150px] bg-gradient-radial from-cyan-900/20 via-transparent to-transparent blur-2xl animate-pulse" style={{animationDelay: '2s'}}></div>
       </div>
       
-      {/* Custom animation keyframes style */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
+      {/* Main content */}
+      <div className={`relative z-10 w-full h-full flex flex-col items-center justify-start px-4 md:px-8 transition-all duration-1500 ease-in-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        {/* Logo/title centered with enhanced styling and increased size */}
+        <div className="w-full text-center mb-14 md:mb-20 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-96 bg-gradient-radial from-purple-600/30 via-blue-500/15 to-transparent rounded-full blur-3xl animate-pulse"></div>
+          
+          <h1 
+            ref={titleRef}
+            className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block animate-float3"
+          >
+            <img
+              className="w-[450px] md:w-[700px] lg:w-[800px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 animate-float3"
+              src="/logo.png"
+              alt="Hackathon Logo"
+            />
+            {/* Enhanced animated glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 via-blue-500/40 to-cyan-400/40 rounded-lg blur-3xl opacity-70 animate-pulse"></div>
+          </h1>
+          
+          {/* Tagline with animation */}
+          <p className="text-cyan-300/90 mt-4 font-light tracking-wider text-lg md:text-xl animate-fadeIn">INNOVATION • TECHNOLOGY • ENTREPRENEURSHIP</p>
+        </div>
         
-        @keyframes shiftLeft {
-          0%, 100% { transform: translateX(100%); }
-          50% { transform: translateX(-100%); }
-        }
-      `}</style>
-    </div>
-  );
-};
+        {/* Centered countdown with enhanced styling */}
+        <div className="w-full max-w-4xl flex justify-center transform transition-all duration-1000 ease-out animate-float4" style={{animationDelay: '0.5s'}}>
+          <div className="relative bg-gradient-to-b from-black/60 to-black/40 backdrop-blur-xl p-8 rounded-2xl border border-cyan-500/40 overflow-hidden group hover:border-cyan-400/60 transition-all duration-500">
+            {/* Animated background glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-blue-500/20 to-cyan-400/20 rounded-lg blur-2xl opacity-40 animate-pulse"></div>
+            
+            {/* Corner decorations - enhanced */}
+            <div className="absolute top-0 left-0 w-20 h-20">
+              <div className="absolute top-0 left-0 w-px h-12 bg-gradient-to-b from-cyan-400/90 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-12 h-px bg-gradient-to-r from-cyan-400/90 to-transparent"></div>
+            </div>
+            <div className="absolute bottom-0 right-0 w-20 h-20">
+              <div className="absolute bottom-0 right-0 w-px h-12 bg-gradient-to-t from-cyan-400/90 to-transparent"></div>
+              <div className="absolute bottom-0 right-0 w-12 h-px bg-gradient-to-l from-cyan-400/90 to-transparent"></div>
+            </div>
+            <div className="absolute top-0 right-0 w-20 h-20">
+              <div className="absolute top-0 right-0 w-px h-12 bg-gradient-to-b from-purple-400/90 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-12 h-px bg-gradient-to-l from-purple-400/90 to-transparent"></div>
+            </div>
+            <div className="absolute bottom-0 left-0 w-20 h-20">
+              <div className="absolute bottom-0 left-0 w-px h-12 bg-gradient-to-t from-purple-400/90 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 w-12 h-px bg-gradient-to-r from-purple-400/90 to-transparent"></div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-center mb-6 text-white group-hover:text-cyan-300 transition-colors">Event Starts In</h2>
+            
+            <div className="grid grid-cols-4 gap-4 md:gap-6">
+              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
+                <div className="relative bg-gradient-to-b from-purple-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-purple-500/30 overflow-hidden group-hover:border-purple-500/60 transition-all duration-300">
+                  <span className="text-3xl font-mono font-bold text-white group-hover:text-purple-300 transition-colors relative z-10">{countdown.days.toString().padStart(2, '0')}</span>
+                  <div className="absolute inset-0 bg-purple-600/20 animate-pulse opacity-40"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"></div>
+                  
+                  {/* Animated particle effect */}
+                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1"></div>
+                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2"></div>
+                  <div className="absolute w-1 h-1 bg-purple-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3"></div>
+                </div>
+                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-purple-300 transition-colors">Days</span>
+              </div>
+              
+              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
+                <div className="relative bg-gradient-to-b from-blue-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-blue-500/30 overflow-hidden group-hover:border-blue-500/60 transition-all duration-300">
+                  <span className="text-3xl font-mono font-bold text-white group-hover:text-blue-300 transition-colors relative z-10">{countdown.hours.toString().padStart(2, '0')}</span>
+                  <div className="absolute inset-0 bg-blue-600/20 animate-pulse opacity-40 delay-75"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-100"></div>
+                  
+                  {/* Animated particle effect */}
+                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.2s'}}></div>
+                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.3s'}}></div>
+                  <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '0.4s'}}></div>
+                </div>
+                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-blue-300 transition-colors">Hours</span>
+              </div>
+              
+              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
+                <div className="relative bg-gradient-to-b from-cyan-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-cyan-500/30 overflow-hidden group-hover:border-cyan-500/60 transition-all duration-300">
+                  <span className="text-3xl font-mono font-bold text-white group-hover:text-cyan-300 transition-colors relative z-10">{countdown.minutes.toString().padStart(2, '0')}</span>
+                  <div className="absolute inset-0 bg-cyan-600/20 animate-pulse opacity-40 delay-150"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-200"></div>
+                  
+                  {/* Animated particle effect */}
+                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.5s'}}></div>
+                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.6s'}}></div>
+                  <div className="absolute w-1 h-1 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '0.7s'}}></div>
+                </div>
+                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-cyan-300 transition-colors">Mins</span>
+              </div>
+              
+              <div className="flex flex-col items-center transform transition-all duration-500 hover:scale-110">
+                <div className="relative bg-gradient-to-b from-pink-900/50 to-black/50 p-3 rounded-lg w-20 h-20 flex items-center justify-center mb-3 border border-pink-500/30 overflow-hidden group-hover:border-pink-500/60 transition-all duration-300">
+                  <span className="text-3xl font-mono font-bold text-white group-hover:text-pink-300 transition-colors relative z-10">{countdown.seconds.toString().padStart(2, '0')}</span>
+                  <div className="absolute inset-0 bg-pink-600/20 animate-pulse opacity-40 delay-200"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left delay-300"></div>
+                  
+                  {/* Animated particle effect */}
+                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle1" style={{animationDelay: '0.8s'}}></div>
+                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle2" style={{animationDelay: '0.9s'}}></div>
+                  <div className="absolute w-1 h-1 bg-pink-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 animate-particle3" style={{animationDelay: '1s'}}></div>
+                </div>
+                <span className="text-sm text-gray-300 uppercase tracking-wider group-hover:text-pink-300 transition-colors">Secs</span>
+              </div>
+            </div>
+            
+            <div className="mt-6 text-center">
+              <span className="text-cyan-300 font-semibold text-base px-6 py-2 rounded-full bg-cyan-900/30 border border-cyan-500/30 inline-block transform transition-all duration-500 hover:scale-110 hover:bg-cyan-900/40 hover:border-cyan-400/50">
+                April 11-12, 2025
+              </span>
+            </div>
+            
+            {/* Quick action buttons */}
+            <div className="flex justify-center gap-4 mt-8">
+              <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-bold text-base hover:shadow-lg hover:shadow-purple-500/30 transform transition duration-500 hover:scale-105 hover:translate-y-1 relative overflow-hidden group">
+                <span className="relative z-10 flex items-center gap-2">
+                  Register Now
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></span>
+              </button>
+              
+              <button className="px-8 py-3 bg-transparent border border-purple-500/50 text-white rounded-full font-bold text-base hover:bg-purple-500/10 transition hover:border-purple-400 group">
+                  </button>
+                </div>
+                </div>
+              </div>
+              </div>
+            </div>
+            );
+          };
 
-export default HeroSection;
+          export default HeroSection;
