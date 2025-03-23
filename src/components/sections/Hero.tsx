@@ -361,7 +361,7 @@ const HeroSection: React.FC = () => {
           </h1>
           
           {/* Tagline with animation */}
-          <p className="text-cyan-300/90 mt-4 font-light tracking-wider text-lg md:text-xl animate-fadeIn">INNOVATION • TECHNOLOGY • ENTREPRENEURSHIP</p>
+          <p className="text-cyan-300/90 mt-4 font-light tracking-wider text-2xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
         </div>
         
         <div className="w-full max-w-4xl flex flex-col items-center justify-center">
@@ -408,11 +408,7 @@ const HeroSection: React.FC = () => {
   </div>
   
   {/* Register Now button */}
-  <div className="mt-12">
-    <button className="bg-black border border-white text-white hover:bg-white hover:text-black transition-colors px-10 py-3 font-medium rounded-lg">
-      Register Now
-    </button>
-  </div>
+  
   
   {/* Event date */}
   <div className="mt-6 text-center">
