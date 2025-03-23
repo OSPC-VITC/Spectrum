@@ -1,5 +1,4 @@
 import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/sections/HeroSection';
 import AboutSection from '@/components/sections/AboutSection';
 import TracksSection from '@/components/sections/TracksSection';
 import TimelineSection from '@/components/sections/TimelineSection';
@@ -9,6 +8,7 @@ import OrganisersSection from '@/components/sections/OrganisersSection';
 import FAQsSection from '@/components/sections/FAQsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/Footer';
+import HeroSection from '@/components/sections/Hero';
 
 export default function Home() {
   return (
