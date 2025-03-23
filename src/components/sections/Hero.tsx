@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 // Define proper types for the component
 interface CountdownState {
@@ -348,10 +349,12 @@ const HeroSection: React.FC = () => {
             ref={titleRef}
             className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block animate-float3"
           >
-            <img
+            <Image
               className="w-[450px] md:w-[700px] lg:w-[800px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 animate-float3"
               src="/logo.png"
               alt="Hackathon Logo"
+              width={800}
+              height={800}
             />
             {/* Enhanced animated glow effect */}
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 via-blue-500/40 to-cyan-400/40 rounded-lg blur-3xl opacity-70 animate-pulse"></div>

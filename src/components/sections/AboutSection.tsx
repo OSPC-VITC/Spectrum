@@ -2,8 +2,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Bolt, Shield, Clipboard, Eye, Mic, ChevronRight, Zap, Calendar, Users, Award } from "lucide-react";
+import { Calendar, Shield } from "lucide-react"; // Only keep the icons you use
 
 const AboutSection: React.FC = () => {
   const ref = useRef(null);
@@ -14,7 +13,6 @@ const AboutSection: React.FC = () => {
   });
   
   const parallaxY = useTransform(scrollYProgress, [0, 1], ['-50px', '50px']);
-  const parallaxScale = useTransform(scrollYProgress, [0, 1], [0.95, 1.05]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   
   // Animation variants
@@ -113,19 +111,6 @@ const AboutSection: React.FC = () => {
         duration: 1 
       } 
     }
-  };
-  
-  const buttonVariants = {
-    initial: { scale: 1 },
-    hover: { 
-      scale: 1.05,
-      transition: { 
-        duration: 0.3,
-        ease: "easeOut",
-        yoyo: 10
-      }
-    },
-    tap: { scale: 0.98 }
   };
 
   return (
@@ -304,9 +289,11 @@ const AboutSection: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <p className="mb-4">
-              SPECTRUM is not your average hackathon – it’s a dynamic fusion of innovation, technology, and entrepreneurship. We challenge participants to push boundaries, craft groundbreaking solutions, and transform bold ideas into reality. With a focus on real-world impact, Spectrum is where vision meets execution.
+                SPECTRUM isn&apos;t just a hackathon—it&apos;s a dynamic fusion of innovation, technology, and entrepreneurship. We challenge participants to push boundaries, craft groundbreaking solutions, and transform bold ideas into reality. With a focus on real-world impact, Spectrum is where vision meets execution.
               </p>
-             
+              <p className="text-purple-400 font-semibold italic">
+                Get ready to innovate, collaborate, and shape the future—one breakthrough at a time!
+              </p>
             </motion.div>
           </motion.div>
           
@@ -350,7 +337,7 @@ const AboutSection: React.FC = () => {
                     <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide text-white">The Event</h3>
                   </div>
                   <p className="text-base md:text-lg text-gray-300 leading-relaxed">
-                    Presented to you by <span className="text-purple-400 font-medium">OSPC x CSED</span>, with <span className="text-blue-400 font-medium">Vertex Innovate</span> and <span className="text-purple-400 font-medium">IBMz</span> as our community partners, this electrifying event on <span className="text-white font-semibold">April 11-12</span> is built to ignite disruptors. Backed by <span className="text-blue-400 font-medium">Blackbox AI</span>, we're creating a platform for groundbreaking innovation.
+                    With high-impact tracks, we push participants to think like founders, craft scalable solutions, and tackle pressing challenges. But it doesn&apos;t stop there—we&apos;re redefining the hackathon experience with live music, flash mobs, and immersive activities that ignite creativity and energy.
                   </p>
                 </CardContent>
               </Card>
@@ -386,27 +373,15 @@ const AboutSection: React.FC = () => {
                         transition={{ duration: 2, repeat: Infinity, repeatDelay: 3.5 }}
                       />
                     </motion.span>
-                    <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide  text-white">Our Approach</h3>
+                    <h3 className="text-2xl font-['Megrim'] ml-5 font-semibold tracking-wide text-white">Our Approach</h3>
                   </div>
                   <p className="text-base md:text-lg text-gray-300 leading-relaxed">
-                    With <span className="text-blue-400 font-medium">high-impact tracks</span>, SPECTRUM pushes participants to think like founders, build scalable solutions, and create real-world impact. But it&apos;s more than problem-solving—we&apos;re redefining hackathons with <span className="text-white font-semibold">music, flash mobs, and immersive experiences</span> that ignite creativity and boundless energy.
+                    Elevating the excitement, IBM Z presents an exclusive speaker session, offering expert insights, cutting-edge trends, and practical guidance to empower your entrepreneurial journey.
                   </p>
                 </CardContent>
               </Card>
             </motion.div>
           </motion.div>
-          
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 px-3 md:px-0 mx-auto max-w-lg md:max-w-none"
-            variants={cardContainerVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-              
-          </motion.div>
-          
-          {/* Call-to-action button */}
-          
         </motion.div>
       </div>
     </section>
