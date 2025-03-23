@@ -1,211 +1,178 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function PrizesSection() {
   return (
-    <section id="prizes" className="min-h-screen pt-8 sm:pt-12 pb-12 sm:pb-16 bg-black text-white relative overflow-hidden">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-      </div>
+    <section id="prizes" className="min-h-screen py-16 bg-gradient-to-b from-black to-indigo-950 text-white relative overflow-hidden">
+      {/* Simple background with subtle gradient */}
+      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <h2 className="text-center font-['Megrim'] text-white" style={{ fontSize: "4.3rem" }}>EXPECT BIG PRIZES</h2>
-        <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto mb-8" style={{ marginTop: "-1.5rem" }}></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          className="mb-12 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-['Megrim'] text-white text-6xl md:text-7xl mb-2">INTERSTELLAR PRIZES</h2>
+          <div className="h-1 w-32 bg-gradient-to-r from-purple-400 via-blue-500 to-cyan-400 mx-auto"></div>
+        </motion.div>
         
-        <p className="text-center text-gray-400 text-base sm:text-lg mb-6 sm:mb-10 max-w-2xl mx-auto">
-          Get ready for an incredible prize pool! Our sponsors are preparing something extraordinary for the most innovative and impactful projects.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md mb-12 max-w-3xl mx-auto shadow-lg">
+            <CardContent className="pt-6">
+              <p className="text-center text-gray-200 text-base sm:text-lg mb-2">
+                Get ready for an <span className="text-cyan-300">out-of-this-world</span> prize pool! Our sponsors are preparing something extraordinary for the most innovative and impactful projects.
+              </p>
+              <p className="text-center text-gray-300 text-sm sm:text-base">
+                Winners will launch their careers into new dimensions.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-10 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12 max-w-5xl mx-auto">
           {/* First Prize Box */}
-          <div className="prize-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="prize-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">🏆</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">First Prize</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">Coming Soon</p>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="group"
+          >
+            <motion.div
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+            >
+              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
+                {/* Prize gradient overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0"
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                {/* Border glow */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
+                
+                <CardContent className="flex flex-col items-center justify-center h-full text-center p-6 z-10">
+                  <motion.div 
+                    className="text-5xl sm:text-6xl mb-3 sm:mb-4"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    🏆
+                  </motion.div>
+                  <CardTitle className="text-xl sm:text-2xl mb-1 sm:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 to-amber-500">First Prize</CardTitle>
+                  <Badge className="bg-indigo-900/40 hover:bg-indigo-900/60 text-gray-200">Coming Soon</Badge>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
 
           {/* Second Prize Box */}
-          <div className="prize-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="prize-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">🥈</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">Second Prize</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">Coming Soon</p>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="group"
+          >
+            <motion.div
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+            >
+              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
+                {/* Prize gradient overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0"
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                {/* Border glow */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-blue-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-blue-500/50 to-transparent"></div>
+                
+                <CardContent className="flex flex-col items-center justify-center h-full text-center p-6 z-10">
+                  <motion.div 
+                    className="text-5xl sm:text-6xl mb-3 sm:mb-4"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    🥈
+                  </motion.div>
+                  <CardTitle className="text-xl sm:text-2xl mb-1 sm:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-gray-300 to-gray-400">Second Prize</CardTitle>
+                  <Badge className="bg-indigo-900/40 hover:bg-indigo-900/60 text-gray-200">Coming Soon</Badge>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
 
           {/* Third Prize Box */}
-          <div className="prize-box relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <div className="prize-content">
-              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">🥉</div>
-              <h3 className="text-lg sm:text-xl font-bold mb-0 sm:mb-1">Third Prize</h3>
-              <p className="text-gray-300 text-xs sm:text-sm">Coming Soon</p>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="group"
+          >
+            <motion.div
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+            >
+              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
+                {/* Prize gradient overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 opacity-0"
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                {/* Border glow */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-cyan-500/50 to-transparent"></div>
+                <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-cyan-500/50 to-transparent"></div>
+                
+                <CardContent className="flex flex-col items-center justify-center h-full text-center p-6 z-10">
+                  <motion.div 
+                    className="text-5xl sm:text-6xl mb-3 sm:mb-4"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    🥉
+                  </motion.div>
+                  <CardTitle className="text-xl sm:text-2xl mb-1 sm:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-amber-700 to-amber-600">Third Prize</CardTitle>
+                  <Badge className="bg-indigo-900/40 hover:bg-indigo-900/60 text-gray-200">Coming Soon</Badge>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
         </div>
 
-        <div className="text-center">
-          <div className="inline-block relative">
-            <div className="a l"></div>
-            <div className="a r"></div>
-            <div className="a t"></div>
-            <div className="a b"></div>
-            <p className="relative text-base sm:text-lg text-gray-300 px-3 sm:px-4 py-1.5 sm:py-2">
-              More exciting prizes and special mentions to be announced!
-            </p>
-          </div>
-        </div>
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <Card className="inline-block bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md shadow-lg">
+            <CardContent className="py-4">
+              <p className="text-base sm:text-lg text-cyan-100">
+                More exciting prizes and <span className="text-cyan-300">cosmic surprises</span> to be announced!
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
-
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-        <filter id="unopaq">
-          <feColorMatrix
-            values="1 0 0 0 0 
-                    0 1 0 0 0 
-                    0 0 1 0 0 
-                    0 0 0 3 0"
-          ></feColorMatrix>
-        </filter>
-      </svg>
-
-      <style jsx>{`
-        .prize-box {
-          position: relative;
-          background: #111;
-          aspect-ratio: 1;
-          width: 100%;
-          max-width: 280px;
-          margin: 0 auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @media (max-width: 640px) {
-          .prize-box {
-            max-width: 160px;
-            animation: none;
-          }
-          
-          .prize-content {
-            padding: 0.75rem;
-          }
-          
-          .a {
-            --t: -8px;
-            --w: 1px;
-          }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-
-        @keyframes floatMobile {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-1.5px); }
-        }
-
-        .prize-box:nth-child(2) {
-          animation-delay: -2s;
-        }
-
-        .prize-box:nth-child(3) {
-          animation-delay: -4s;
-        }
-
-        .prize-content {
-          position: relative;
-          z-index: 1;
-          color: white;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-          padding: 1.5rem;
-        }
-
-        .a {
-          pointer-events: none;
-          position: absolute;
-          --w: 2px;
-          --t: -20px;
-          --s: calc(var(--t) * -1);
-          --e: calc(100% + var(--t));
-          --g: #fff0, #fff3 var(--s), #fffa var(--s), #fff, #fffa var(--e),
-            #fff3 var(--e), #fff0;
-        }
-
-        .a::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(4px) url(#unopaq);
-          z-index: -2;
-        }
-
-        .a::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: inherit;
-          filter: blur(10px) url(#unopaq);
-          z-index: -2;
-        }
-
-        .l {
-          left: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .r {
-          right: -2px;
-          background: linear-gradient(var(--g));
-          top: var(--t);
-          bottom: var(--t);
-          width: var(--w);
-        }
-
-        .t {
-          top: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-
-        .b {
-          bottom: -2px;
-          background: linear-gradient(90deg, var(--g));
-          left: var(--t);
-          right: var(--t);
-          height: var(--w);
-        }
-      `}</style>
     </section>
   );
-} 
-
+}

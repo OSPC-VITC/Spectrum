@@ -6,46 +6,117 @@ import { Card, CardContent } from '@/components/ui/card';
 interface TimelineEvent {
   time: string;
   title: string;
+  description?: string;
 }
 
-interface RainEffectBoxProps {
+interface GlassmorphicCardProps {
   title: string;
   time: string;
+  description?: string;
+  isLeft: boolean;
 }
 
-// This is a simplified version of your RainEffectBox component
-const RainEffectBox: React.FC<RainEffectBoxProps> = ({ title, time }) => {
+// Enhanced glassmorphic card component
+const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({ title, time, description, isLeft }) => {
   return (
-    <Card className="bg-black/40 backdrop-blur-sm border border-purple-500/20 overflow-hidden relative group hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      <CardContent className="p-6">
-        <h3 className="text-lg font-bold text-white mb-1">{title}</h3>
-        <p className="text-purple-300">{time}</p>
+    <Card className="backdrop-blur-md bg-white/10 border border-white/20 overflow-hidden relative group transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/30 rounded-xl">
+      {/* Inner glow on hover */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      {/* Glass shine effect */}
+      <div className="absolute -inset-full h-[200%] w-[200%] rotate-45 translate-x-1/2 -translate-y-1/2 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-1000 mix-blend-overlay"></div>
+      
+      {/* Subtle moving particles effect inside card */}
+      <div className="absolute inset-0 overflow-hidden opacity-20">
+        {[...Array(5)].map((_, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-white/30"
+            style={{
+              width: `${Math.random() * 6 + 2}px`,
+              height: `${Math.random() * 6 + 2}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${Math.random() * 10 + 10}s linear infinite`,
+              opacity: Math.random() * 0.5 + 0.2
+            }}
+          />
+        ))}
+      </div>
+      
+      <CardContent className="p-6 relative z-10">
+        <div className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}>
+          <span className="text-purple-300 text-sm font-medium tracking-wider mb-2">{time}</span>
+          <h3 className="text-xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">{title}</h3>
+          {description && <p className="text-blue-100/80 text-sm">{description}</p>}
+        </div>
       </CardContent>
+      
+      {/* Bottom highlight border */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-blue-500 opacity-60"></div>
     </Card>
   );
 };
 
 const TimelineSection: React.FC = () => {
+  // Enhanced events with descriptions
   const events: TimelineEvent[] = [
-    { time: "10:00 AM", title: "Opening Ceremony" },
-    { time: "11:00 AM", title: "Team Formation" },
-    { time: "12:00 PM", title: "Hacking Begins" },
-    { time: "3:00 PM", title: "Mentor Sessions" },
-    { time: "6:00 PM", title: "First Checkpoint" },
-    { time: "10:00 PM", title: "Midnight Surprise Event" },
-    { time: "8:00 AM", title: "Final Submissions" },
-    { time: "10:00 AM", title: "Judging Starts" },
-    { time: "12:00 PM", title: "Closing Ceremony" },
+    { 
+      time: "10:00 AM", 
+      title: "Opening Ceremony", 
+      description: "Welcome address and introduction to the hackathon rules and prizes." 
+    },
+    { 
+      time: "11:00 AM", 
+      title: "Team Formation", 
+      description: "Find teammates and brainstorm project ideas together." 
+    },
+    { 
+      time: "12:00 PM", 
+      title: "Hacking Begins", 
+      description: "Start building your innovative solutions and prototypes." 
+    },
+    { 
+      time: "3:00 PM", 
+      title: "Mentor Sessions", 
+      description: "Get guidance from industry experts to refine your projects." 
+    },
+    { 
+      time: "6:00 PM", 
+      title: "First Checkpoint", 
+      description: "Share your progress and get early feedback from judges." 
+    },
+    { 
+      time: "10:00 PM", 
+      title: "Midnight Surprise Event", 
+      description: "A special challenge with exclusive prizes for participants." 
+    },
+    { 
+      time: "8:00 AM", 
+      title: "Final Submissions", 
+      description: "Complete your projects and prepare your presentations." 
+    },
+    { 
+      time: "10:00 AM", 
+      title: "Judging Starts", 
+      description: "Present your solutions to our panel of expert judges." 
+    },
+    { 
+      time: "12:00 PM", 
+      title: "Closing Ceremony", 
+      description: "Award announcements and celebration of achievements." 
+    }
   ];
 
   const timelineRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(timelineRef, { once: false, amount: 0.2 });
+  const isInView = useInView(timelineRef, { once: false, amount: 0.1 });
   const controls = useAnimation();
 
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
+    } else {
+      controls.start("hidden");
     }
   }, [isInView, controls]);
 
@@ -53,39 +124,84 @@ const TimelineSection: React.FC = () => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.15
       }
     }
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.7,
         ease: "easeOut"
       }
     }
   };
 
   return (
-    <section id="timeline" className="min-h-screen py-16 bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="timeline" className="min-h-screen py-24 bg-black text-white overflow-hidden relative">
+      {/* Subtle animated background with grid pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM5MzNFQzUiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzBoMnYyaC0yek0zMCAzNmgydjJoLTJ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+      </div>
+      
+      {/* Main background gradients */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/10 to-black"></div>
+      
+      {/* Animated nebula-like background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+        {/* Large blurred gradient areas */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl opacity-30 animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl opacity-30 animate-pulse-slow" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-3/4 left-3/4 w-64 h-64 bg-indigo-600/15 rounded-full blur-3xl opacity-20 animate-pulse-slow" style={{ animationDelay: "4s" }}></div>
+        <div className="absolute top-2/4 right-0 w-72 h-72 bg-violet-600/15 rounded-full blur-3xl opacity-20 animate-pulse-slow" style={{ animationDelay: "1s" }}></div>
+        
+        {/* Subtle digital rain effect */}
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          {[...Array(20)].map((_, i) => (
+            <div 
+              key={i}
+              className="absolute w-px h-16 bg-gradient-to-b from-transparent via-purple-400 to-transparent"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: "-5%",
+                opacity: Math.random() * 0.5 + 0.1,
+                animation: `rain ${Math.random() * 10 + 10}s linear infinite`,
+                animationDelay: `${Math.random() * 10}s`
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      
+      {/* Content container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="text-center mb-20"
         >
-          <h2 className="font-['Megrim'] text-6xl md:text-7xl lg:text-8xl text-white mb-2">TIMELINE</h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
+          <h2 className="font-['Megrim'] text-6xl md:text-7xl lg:text-8xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 mb-4">TIMELINE</h2>
+          <div className="h-1 w-32 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto"></div>
+          <p className="mt-6 text-blue-100/70 max-w-2xl mx-auto">Follow our event schedule to make the most of your hackathon experience</p>
         </motion.div>
         
         <div ref={timelineRef} className="relative">
-          {/* Timeline center line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-purple-600 to-blue-600"></div>
+          {/* Timeline center line with glowing effect */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-purple-600 via-blue-500 to-purple-600 opacity-50"></div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-2 bg-gradient-to-b from-purple-600 via-blue-500 to-purple-600 blur-md opacity-30"></div>
+          
+          {/* Horizontal connecting lines */}
+          {events.map((_, index) => (
+            <div 
+              key={`line-${index}`}
+              className={`absolute left-1/2 w-12 h-0.5 ${index % 2 === 0 ? "-translate-x-full" : ""} top-[${(index * 124) + 24}px] bg-gradient-to-r ${index % 2 === 0 ? "from-transparent to-purple-500/50" : "from-purple-500/50 to-transparent"}`}
+            />
+          ))}
           
           <motion.div
             variants={containerVariants}
@@ -97,22 +213,30 @@ const TimelineSection: React.FC = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className={`mb-12 flex items-center ${
+                className={`mb-16 flex items-center ${
                   index % 2 === 0 ? "flex-row" : "flex-row-reverse"
                 }`}
               >
                 {/* Timeline item */}
-                <div className={`w-1/2 ${index % 2 === 0 ? "pr-12 text-right" : "pl-12"}`}>
-                  <RainEffectBox title={event.title} time={event.time} />
+                <div className={`w-1/2 ${index % 2 === 0 ? "pr-12" : "pl-12"}`}>
+                  <GlassmorphicCard 
+                    title={event.title} 
+                    time={event.time} 
+                    description={event.description}
+                    isLeft={index % 2 === 0}
+                  />
                 </div>
                 
-                {/* Timeline dot */}
+                {/* Enhanced timeline dot with pulse animation */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
                   <motion.div 
-                    className="w-4 h-4 rounded-full bg-purple-500 z-10"
-                    whileHover={{ scale: 1.5 }}
+                    className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 z-10 flex items-center justify-center"
+                    whileHover={{ scale: 1.8 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                  />
+                  >
+                    <div className="absolute w-full h-full rounded-full bg-purple-500 animate-ping opacity-75"></div>
+                    <div className="w-3 h-3 rounded-full bg-white"></div>
+                  </motion.div>
                 </div>
                 
                 {/* Empty space for the other side */}
@@ -121,7 +245,19 @@ const TimelineSection: React.FC = () => {
             ))}
           </motion.div>
         </div>
+        
+        {/* Bottom decorative element */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-12 flex justify-center"
+        >
+          <div className="h-1 w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
+        </motion.div>
       </div>
+      
+     
     </section>
   );
 };
