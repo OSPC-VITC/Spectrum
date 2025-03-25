@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn, smoothScrollToSection } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { 
   Tooltip,
@@ -45,17 +45,9 @@ export default function Navbar() {
 const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
-    const element = document.getElementById(targetId);
-    if (element) {
-      // Use smooth scrolling for better UX
-      const top = element.offsetTop - 64; // 64px for navbar height
-      window.scrollTo({
-        top,
-        behavior: 'smooth'
-      });
-      setIsOpen(false);
-      setActiveSection(targetId);
-    }
+    smoothScrollToSection(targetId);
+    setIsOpen(false);
+    setActiveSection(targetId);
   };
 
   useEffect(() => {
@@ -122,14 +114,21 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
         <div className="flex justify-between h-16">
           <button
             className="flex items-center space-x-2"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Reset section fade effects
+              document.querySelectorAll('section[id]').forEach(section => {
+                section.classList.remove('section-fade-out');
+                section.classList.add('section-fade-in');
+              });
+            }}
           >
             <Image 
               src="/logo.png" 
               alt="Spectrum Logo" 
-              width={32} 
-              height={32} 
-              className="h-8 w-auto"
+              width={140} 
+              height={40} 
+              className="h-10 w-auto drop-shadow-lg hover:scale-105 transition-transform duration-300"
             />
           </button>
           

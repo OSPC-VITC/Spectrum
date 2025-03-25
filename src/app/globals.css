@@ -236,6 +236,58 @@ html {
 section {
   will-change: auto;
   transform: translate3d(0, 0, 0);
+  position: relative;
+  transition: background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Section fade transition classes */
+.section-fade-in {
+  opacity: 1;
+  transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-fade-out {
+  opacity: 0.75;
+  transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Section background transition overlay */
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: inherit;
+  opacity: 0;
+  transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Gradient overlay for smooth transitions */
+section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+section:target::before {
+  opacity: 1;
+}
+
+/* Add a blend transition when entering a section */
+section:target::after {
+  opacity: 0.6;
 }
 
 section[id] {
@@ -394,13 +446,17 @@ section > div > h3 {
   }
 
   * {
-    transition-duration: 0.2s !important;
-    animation-duration: 0.2s !important;
+    transition-duration: 0.5s !important;
+    animation-duration: 0.5s !important;
   }
 
   section {
     transform: translate3d(0, 0, 0);
-    transition: none !important;
+    transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  .section-fade-in, .section-fade-out {
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) !important;
   }
 
   .nav-link, .border-glow {
@@ -437,5 +493,144 @@ section > div > h3 {
     font-size: 3rem;
     margin-bottom: 1.5rem;
     line-height: 1;
+  }
+}
+
+/* Section transition states */
+.scrolling-to {
+  position: relative;
+  z-index: 5;
+}
+
+.scrolling-to::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(128, 90, 213, 0.1), rgba(59, 130, 246, 0.1));
+  opacity: 0;
+  animation: fadeGradient 1.5s forwards;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes fadeGradient {
+  0% { opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* Target section styles to enhance the blend effect */
+section[id$="-target"] {
+  animation: targetSection 1s forwards;
+}
+
+@keyframes targetSection {
+  0% { background-color: rgba(0, 0, 0, 0.9); }
+  100% { background-color: inherit; }
+}
+
+/* Add a smooth fade in for section content when scrolled to */
+section.section-fade-in > * {
+  animation: fadeInContent 1s forwards;
+}
+
+@keyframes fadeInContent {
+  from { 
+    opacity: 0.7; 
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Star Sparkle Effects
+   ========================================================================== */
+
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes rotateStar {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  filter: blur(1px);
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  animation: sparkle 1.5s infinite ease-in-out;
+}
+
+.sparkle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: linear-gradient(45deg, transparent 45%, white 45%, white 55%, transparent 55%),
+              linear-gradient(135deg, transparent 45%, white 45%, white 55%, transparent 55%);
+  animation: rotateStar 6s infinite linear;
+}
+
+.star-field {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.star-field canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  transform: translate3d(0, 0, 0);
+  image-rendering: optimizeQuality;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .star-field canvas {
+    opacity: 0.6 !important;
+  }
+}
+
+/* Ensure the whole screen gets stars even at extreme zoom levels */
+@media (min-width: 2000px) {
+  .star-field canvas {
+    transform: scale(1.2);
+    transform-origin: center;
   }
 }

@@ -73,7 +73,7 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
         {backgroundImage && (
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500"
-            style={{ 
+            style={{
               backgroundImage: `url(${backgroundImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
@@ -83,9 +83,9 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-purple-900/60 mix-blend-overlay"></div>
-
-        <CardContent className="p-6 relative z-10">
-          <div className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}>
+      
+      <CardContent className="p-6 relative z-10">
+        <div className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}>
             {icon && (
               <div className={`mb-3 ${highlight ? 'text-purple-300' : 'text-blue-300'}`}>
                 {icon}
@@ -127,9 +127,9 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
                 {description}
               </motion.p>
             )}
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </CardContent>
+    </Card>
     </motion.div>
   );
 };
@@ -268,7 +268,7 @@ const TimelineSection: React.FC = () => {
                 </div>
                 
                 {/* Animated timeline dot with more dynamic effect */}
-                <motion.div 
+                  <motion.div 
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   transition={{ 
@@ -291,7 +291,7 @@ const TimelineSection: React.FC = () => {
                     />
                     <div className="w-4 h-4 rounded-full bg-white"></div>
                   </div>
-                </motion.div>
+                  </motion.div>
                 
                 <div className="w-1/2"></div>
               </motion.div>
