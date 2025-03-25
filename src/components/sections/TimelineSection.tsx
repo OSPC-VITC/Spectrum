@@ -18,6 +18,25 @@ interface GlassmorphicCardProps {
 
 // Enhanced glassmorphic card component
 const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({ title, time, description, isLeft }) => {
+  // Generate deterministic particles
+  const particles = Array.from({ length: 5 }, (_, i) => {
+    const seed = 54321 + i;
+    const r1 = seededRandom(seed);
+    const r2 = seededRandom(seed + 1);
+    const r3 = seededRandom(seed + 2);
+    const r4 = seededRandom(seed + 3);
+    const r5 = seededRandom(seed + 4);
+    
+    return {
+      width: `${r1 * 4 + 2}px`,
+      height: `${r2 * 5 + 2}px`,
+      top: `${r3 * 100}%`,
+      left: `${r4 * 100}%`,
+      duration: r5 * 10 + 10,
+      opacity: r1 * 0.5 + 0.2
+    };
+  });
+
   return (
     <Card className="backdrop-blur-md bg-white/10 border border-white/20 overflow-hidden relative group transition-all duration-500 hover:shadow-xl hover:shadow-purple-500/30 rounded-xl">
       {/* Inner glow on hover */}
@@ -28,17 +47,17 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({ title, time, descri
       
       {/* Subtle moving particles effect inside card */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
-        {[...Array(5)].map((_, i) => (
+        {particles.map((particle, i) => (
           <div 
             key={i}
             className="absolute rounded-full bg-white/30"
             style={{
-              width: `${Math.random() * 6 + 2}px`,
-              height: `${Math.random() * 6 + 2}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animation: `float ${Math.random() * 10 + 10}s linear infinite`,
-              opacity: Math.random() * 0.5 + 0.2
+              width: particle.width,
+              height: particle.height,
+              top: particle.top,
+              left: particle.left,
+              animation: `float ${particle.duration}s linear infinite`,
+              opacity: particle.opacity
             }}
           />
         ))}
@@ -57,6 +76,12 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({ title, time, descri
     </Card>
   );
 };
+
+// Seeded random number generator
+function seededRandom(seed: number) {
+  const x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
 
 const TimelineSection: React.FC = () => {
   // Enhanced events with descriptions
@@ -141,6 +166,22 @@ const TimelineSection: React.FC = () => {
     }
   };
 
+  // Generate deterministic rain drops
+  const rainDrops = Array.from({ length: 20 }, (_, i) => {
+    const seed = 12345 + i;
+    const r1 = seededRandom(seed);
+    const r2 = seededRandom(seed + 1);
+    const r3 = seededRandom(seed + 2);
+    const r4 = seededRandom(seed + 3);
+    
+    return {
+      left: `${r1 * 100}%`,
+      opacity: r2 * 0.5 + 0.1,
+      duration: r3 * 10 + 10,
+      delay: r4 * 10
+    };
+  });
+
   return (
     <section id="timeline" className="min-h-screen py-24 bg-black text-white overflow-hidden relative">
       {/* Subtle animated background with grid pattern */}
@@ -161,16 +202,16 @@ const TimelineSection: React.FC = () => {
         
         {/* Subtle digital rain effect */}
         <div className="absolute inset-0 overflow-hidden opacity-30">
-          {[...Array(20)].map((_, i) => (
+          {rainDrops.map((drop, i) => (
             <div 
               key={i}
               className="absolute w-px h-16 bg-gradient-to-b from-transparent via-purple-400 to-transparent"
               style={{
-                left: `${Math.random() * 100}%`,
+                left: drop.left,
                 top: "-5%",
-                opacity: Math.random() * 0.5 + 0.1,
-                animation: `rain ${Math.random() * 10 + 10}s linear infinite`,
-                animationDelay: `${Math.random() * 10}s`
+                opacity: drop.opacity,
+                animation: `rain ${drop.duration}s linear infinite`,
+                animationDelay: `${drop.delay}s`
               }}
             />
           ))}
