@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const navItems = [
   { name: 'About Us', href: '#about' },
@@ -123,7 +124,13 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
             className="flex items-center space-x-2"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-          <img src="/logo.png" alt="Spectrum Logo" className="h-8" />
+            <Image 
+              src="/logo.png" 
+              alt="Spectrum Logo" 
+              width={32} 
+              height={32} 
+              className="h-8 w-auto"
+            />
           </button>
           
           {/* Desktop menu */}
