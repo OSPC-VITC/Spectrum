@@ -137,66 +137,71 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
 const TimelineSection: React.FC = () => {
   const events: TimelineEvent[] = [
     { 
-      time: "10:00 AM", 
-      title: "Opening Ceremony", 
-      description: "Welcome address and introduction to the hackathon rules and prizes.",
+      time: "April 11, 8:00 AM", 
+      title: "Registration", 
+      description: "Check-in and registration begins for all participants.",
       icon: <Clock size={24} />,
-      backgroundImage: "/api/placeholder/800/600?text=Opening+Ceremony"
+      backgroundImage: "/api/placeholder/800/600?text=Registration"
     },
     { 
-      time: "11:00 AM", 
-      title: "Team Formation", 
-      description: "Find teammates and brainstorm project ideas together.",
-      backgroundImage: "/api/placeholder/800/600?text=Team+Formation"
+      time: "April 11, 10:00 AM", 
+      title: "Inauguration", 
+      description: "Opening ceremony and welcome address.",
+      backgroundImage: "/api/placeholder/800/600?text=Inauguration"
     },
     { 
-      time: "12:00 PM", 
-      title: "Hacking Begins", 
-      description: "Start building your innovative solutions and prototypes.",
+      time: "April 11, 11:00 AM", 
+      title: "Hackathon Begins", 
+      description: "Official start of the hackathon - begin working on your projects!",
       highlight: true,
       icon: <Star size={24} />,
-      backgroundImage: "/api/placeholder/800/600?text=Hacking+Begins"
+      backgroundImage: "/api/placeholder/800/600?text=Hackathon+Begins"
     },
     { 
-      time: "3:00 PM", 
-      title: "Mentor Sessions", 
-      description: "Get guidance from industry experts to refine your projects.",
-      backgroundImage: "/api/placeholder/800/600?text=Mentor+Sessions"
+      time: "April 11, 3:00 PM", 
+      title: "Speaker Session & Review", 
+      description: "Inspiring talk from industry experts followed by project review.",
+      backgroundImage: "/api/placeholder/800/600?text=Speaker+Session"
     },
     { 
-      time: "6:00 PM", 
-      title: "First Checkpoint", 
-      description: "Share your progress and get early feedback from judges.",
-      backgroundImage: "/api/placeholder/800/600?text=First+Checkpoint"
+      time: "April 11, 7:00 PM", 
+      title: "Dinner Break", 
+      description: "Time to recharge with dinner.",
+      backgroundImage: "/api/placeholder/800/600?text=Dinner"
     },
     { 
-      time: "10:00 PM", 
-      title: "Midnight Surprise Event", 
-      description: "A special challenge with exclusive prizes for participants.",
+      time: "April 11, 10:00 PM", 
+      title: "Review Round 1", 
+      description: "First project review milestone.",
       icon: <Award size={24} />,
-      backgroundImage: "/api/placeholder/800/600?text=Midnight+Event"
+      backgroundImage: "/api/placeholder/800/600?text=Review+1"
     },
     { 
-      time: "8:00 AM", 
-      title: "Final Submissions", 
-      description: "Complete your projects and prepare your presentations.",
-      backgroundImage: "/api/placeholder/800/600?text=Final+Submissions"
+      time: "April 12, 12:00 AM", 
+      title: "Dance/Music Flashmob", 
+      description: "Take a fun break with music and dance!",
+      backgroundImage: "/api/placeholder/800/600?text=Flashmob"
     },
     { 
-      time: "10:00 AM", 
-      title: "Judging Starts", 
-      description: "Present your solutions to our panel of expert judges.",
-      backgroundImage: "/api/placeholder/800/600?text=Judging+Begins"
+      time: "April 12, 10:00 AM", 
+      title: "Final Judging", 
+      description: "Present your projects to the panel of judges.",
+      highlight: true,
+      icon: <Award size={24} />,
+      backgroundImage: "/api/placeholder/800/600?text=Final+Judging"
     },
     { 
-      time: "12:00 PM", 
+      time: "April 12, 2:00 PM", 
       title: "Closing Ceremony", 
-      description: "Award announcements and celebration of achievements.",
+      description: "Results announcement and celebration of achievements.",
+      highlight: true,
+      icon: <Award size={24} />,
       backgroundImage: "/api/placeholder/800/600?text=Closing+Ceremony"
     }
-  ];
+];
 
   return (
+    <div id="timeline">
     <motion.section 
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -304,6 +309,7 @@ const TimelineSection: React.FC = () => {
         </motion.div>
       </div>
     </motion.section>
+    </div>
   );
 };
 
