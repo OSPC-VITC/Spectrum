@@ -9,8 +9,6 @@ import FAQsSection from '@/components/sections/FAQsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/sections/Hero';
-import Video from '@/components/sections/video';
-import VideoSection from '@/components/sections/video';
 
 export default function Home() {
   return (
@@ -18,7 +16,6 @@ export default function Home() {
       <Navbar />
       <div className="space-y-0 pt-16">
         <HeroSection />
-        <VideoSection />
         <AboutSection />
         <TracksSection />
         <TimelineSection />

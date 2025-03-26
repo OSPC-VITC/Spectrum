@@ -6,6 +6,7 @@ import { AuroraBackground } from '@/components/ui/aurora-background';
 import { ParallaxStars } from '@/components/ui/parallax-stars';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { HeroScrollDemo } from './HeroScrollDemo';
 
 // Define proper types for the component
 interface CountdownState {
@@ -48,9 +49,9 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <AuroraBackground className="w-full overflow-hidden bg-black pt-4 pb-0 md:py-12 md:pt-4 h-[100vh] md:min-h-[90vh] flex flex-col justify-start md:justify-between">
-      {/* Parallax Stars Background - Hidden on mobile */}
-      <div className="hidden md:block">
+    <AuroraBackground className="w-full overflow-hidden bg-black pt-4 pb-0 md:py-12 md:pt-4 md:pb-0 h-auto min-h-[100vh] md:min-h-[140vh] flex flex-col justify-start md:justify-between">
+      {/* Parallax Stars Background - Visible on all devices */}
+      <div className="star-field">
         <ParallaxStars />
       </div>
       
@@ -68,18 +69,18 @@ const HeroSection: React.FC = () => {
       
       {/* Main content */}
       <motion.div 
-        className={`relative z-20 w-full h-full flex flex-col items-center justify-between px-4 md:px-8 pt-2 md:pt-0 pb-4`}
+        className={`relative z-20 w-full h-full flex flex-col items-center justify-between px-4 md:px-8 pt-4 md:pt-0 pb-0`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
         {/* Logo/title centered with enhanced styling and increased size */}
-        <div className="w-full text-center relative pt-0 md:pt-0 mb-0">
+        <div className="w-full text-center relative pt-10 md:pt-0 mb-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-96 bg-gradient-radial from-purple-600/30 via-blue-500/15 to-transparent rounded-full blur-3xl animate-pulse"></div>
           
           <h1 className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block mb-0">
             <Image
-              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-2 md:mt-0"
+              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-6 md:mt-0"
               src="/logo.png"
               alt="Hackathon Logo"
               width={1000}
@@ -95,87 +96,87 @@ const HeroSection: React.FC = () => {
         
         {/* Main container with evenly distributed elements */}
         <div className="w-full flex-1 flex flex-col justify-evenly items-center">
-          {/* Middle section with countdown */}
-          <div className="w-full max-w-4xl flex flex-col items-center">
-            <div className="grid grid-cols-4 gap-4 md:gap-8 text-center w-full px-2 md:px-0">
-              {/* Days */}
-              <div className="flex flex-col items-center w-full">
-                <div className="timer-container w-full">
-                  <div className="a l"></div>
-                  <div className="a r"></div>
-                  <div className="a t"></div>
-                  <div className="a b"></div>
-                  <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-3xl md:text-4xl font-mono text-gray-200">
-                      {countdown.days.toString().padStart(2, '0')}
-                    </span>
-                  </div>
+          {/* Mobile layout - elements styled to fit mobile view with register at bottom */}
+          <div className="flex flex-col md:hidden w-full min-h-[85vh] justify-center items-center space-y-6">
+            {/* Middle section with countdown for mobile - at the top with spacing */}
+            <div className="w-full max-w-4xl flex flex-col items-center mt-4">
+              <div className="grid grid-cols-4 gap-4 text-center w-full px-2">
+            {/* Days */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-3xl font-mono text-gray-200">
+                    {countdown.days.toString().padStart(2, '0')}
+                  </span>
                 </div>
-                <span className="text-sm md:text-sm text-white uppercase tracking-wider mt-2">Days</span>
               </div>
-              
-              {/* Hours */}
-              <div className="flex flex-col items-center w-full">
-                <div className="timer-container w-full">
-                  <div className="a l"></div>
-                  <div className="a r"></div>
-                  <div className="a t"></div>
-                  <div className="a b"></div>
-                  <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-3xl md:text-4xl font-mono text-gray-200">
-                      {countdown.hours.toString().padStart(2, '0')}
-                    </span>
-                  </div>
+              <span className="text-sm text-white uppercase tracking-wider mt-2">Days</span>
+            </div>
+            
+            {/* Hours */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-3xl font-mono text-gray-200">
+                    {countdown.hours.toString().padStart(2, '0')}
+                  </span>
                 </div>
-                <span className="text-sm md:text-sm text-white uppercase tracking-wider mt-2">Hours</span>
               </div>
-              
-              {/* Minutes */}
-              <div className="flex flex-col items-center w-full">
-                <div className="timer-container w-full">
-                  <div className="a l"></div>
-                  <div className="a r"></div>
-                  <div className="a t"></div>
-                  <div className="a b"></div>
-                  <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-3xl md:text-4xl font-mono text-gray-200">
-                      {countdown.minutes.toString().padStart(2, '0')}
-                    </span>
-                  </div>
+              <span className="text-sm text-white uppercase tracking-wider mt-2">Hours</span>
+            </div>
+            
+            {/* Minutes */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-3xl font-mono text-gray-200">
+                    {countdown.minutes.toString().padStart(2, '0')}
+                  </span>
                 </div>
-                <span className="text-sm md:text-sm text-white uppercase tracking-wider mt-2">Minutes</span>
               </div>
-              
-              {/* Seconds */}
-              <div className="flex flex-col items-center w-full">
-                <div className="timer-container w-full">
-                  <div className="a l"></div>
-                  <div className="a r"></div>
-                  <div className="a t"></div>
-                  <div className="a b"></div>
-                  <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-3xl md:text-4xl font-mono text-gray-200">
-                      {countdown.seconds.toString().padStart(2, '0')}
-                    </span>
-                  </div>
+              <span className="text-sm text-white uppercase tracking-wider mt-2">Minutes</span>
+            </div>
+            
+            {/* Seconds */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-3xl font-mono text-gray-200">
+                    {countdown.seconds.toString().padStart(2, '0')}
+                  </span>
                 </div>
-                <span className="text-sm md:text-sm text-white uppercase tracking-wider mt-2">Seconds</span>
+              </div>
+              <span className="text-sm text-white uppercase tracking-wider mt-2">Seconds</span>
+                </div>
               </div>
             </div>
-          </div>
             
-          {/* Event details and register button with equal spacing */}
-          <div className="w-full flex flex-col items-center justify-center gap-0 md:gap-0 -mt-12 md:mt-0">
-            {/* Calendar and Location Container - pushed up further in mobile */}
-            <div className="flex flex-col items-center gap-3 md:gap-2">
+            {/* Calendar and Location Container for mobile - with spacing */}
+            <div className="flex flex-col items-center gap-3">
               <motion.div 
                 className="flex items-center justify-center space-x-2"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <FaCalendarAlt className="text-purple-400 text-2xl md:text-2xl" />
-                <span className="text-white text-xl md:text-xl font-medium">
+                <FaCalendarAlt className="text-purple-400 text-2xl" />
+                <span className="text-white text-xl font-medium">
                   April 11-12, 2025
                 </span>
               </motion.div>
@@ -185,16 +186,15 @@ const HeroSection: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                <FaMapMarkerAlt className="text-purple-400 text-2xl md:text-2xl" />
-                <span className="text-white text-xl md:text-xl font-medium">
+                <FaMapMarkerAlt className="text-purple-400 text-2xl" />
+                <span className="text-white text-xl font-medium">
                   MG Auditorium, VIT Chennai
                 </span>
               </motion.div>
             </div>
             
-            {/* Register Button - separated to maintain spacing */}
+            {/* Register Button for mobile - with spacing */}
             <motion.div
-              className="mt-6 md:mt-8"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
@@ -211,13 +211,151 @@ const HeroSection: React.FC = () => {
                   <div className="a t"></div>
                   <div className="a b"></div>
                   <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-xl md:text-2xl text-gray-200">
+                    <span className="text-xl text-gray-200">
                       REGISTER NOW
                     </span>
                   </div>
                 </div>
               </a>
             </motion.div>
+            
+            {/* Mobile-only video section with proper spacing */}
+            <div className="w-full h-[200px] mt-12 mb-0">
+              <HeroScrollDemo />
+            </div>
+          </div>
+          
+          {/* Desktop layout - elements in one container with proper spacing */}
+          <div className="hidden md:flex md:flex-col md:w-full md:items-center md:mt-12 md:space-y-14">
+            {/* Middle section with countdown */}
+            <div className="w-full max-w-4xl flex flex-col items-center">
+              <div className="grid grid-cols-4 gap-8 text-center w-full px-0">
+                {/* Days */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                    <div className="a l"></div>
+                    <div className="a r"></div>
+                    <div className="a t"></div>
+                    <div className="a b"></div>
+                    <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-4xl font-mono text-gray-200">
+                        {countdown.days.toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-sm text-white uppercase tracking-wider mt-2">Days</span>
+                </div>
+                
+                {/* Hours */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                    <div className="a l"></div>
+                    <div className="a r"></div>
+                    <div className="a t"></div>
+                    <div className="a b"></div>
+                    <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-4xl font-mono text-gray-200">
+                        {countdown.hours.toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-sm text-white uppercase tracking-wider mt-2">Hours</span>
+                </div>
+                
+                {/* Minutes */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                    <div className="a l"></div>
+                    <div className="a r"></div>
+                    <div className="a t"></div>
+                    <div className="a b"></div>
+                    <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-4xl font-mono text-gray-200">
+                        {countdown.minutes.toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-sm text-white uppercase tracking-wider mt-2">Minutes</span>
+                </div>
+                
+                {/* Seconds */}
+                <div className="flex flex-col items-center w-full">
+                  <div className="timer-container w-full">
+                    <div className="a l"></div>
+                    <div className="a r"></div>
+                    <div className="a t"></div>
+                    <div className="a b"></div>
+                    <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-4xl font-mono text-gray-200">
+                        {countdown.seconds.toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-sm text-white uppercase tracking-wider mt-2">Seconds</span>
+                </div>
+              </div>
+            </div>
+              
+            {/* Event details and register button */}
+            <div className="w-full flex flex-col items-center justify-center">
+              {/* Calendar and Location Container */}
+              <div className="flex flex-col items-center gap-2 mb-8">
+                <motion.div 
+                  className="flex items-center justify-center space-x-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                >
+                  <FaCalendarAlt className="text-purple-400 text-2xl" />
+                  <span className="text-white text-xl font-medium">
+              April 11-12, 2025
+            </span>
+                </motion.div>
+                <motion.div 
+                  className="flex items-center justify-center space-x-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                >
+                  <FaMapMarkerAlt className="text-purple-400 text-2xl" />
+                  <span className="text-white text-xl font-medium">
+                    MG Auditorium, VIT Chennai
+                  </span>
+                </motion.div>
+              </div>
+              
+              {/* Register Button */}
+              <motion.div
+                className="mb-12"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
+                <a 
+                  href="https://spectrum25.devfolio.co/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block relative group"
+                >
+                  <div className="timer-container register-btn">
+                    <div className="a l"></div>
+                    <div className="a r"></div>
+                    <div className="a t"></div>
+                    <div className="a b"></div>
+                    <div className="timer-content p-4 flex items-center justify-center">
+                      <span className="text-2xl text-gray-200">
+                        REGISTER NOW
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              </motion.div>
+            </div>
+            
+            {/* Hero Scroll Video Demo */}
+            <div className="w-full mt-0 mb-0">
+              <HeroScrollDemo />
+            </div>
           </div>
         </div>
       </motion.div>

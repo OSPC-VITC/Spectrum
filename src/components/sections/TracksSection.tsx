@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 type TrackWithSingleImage = {
   title: string;
@@ -158,33 +159,47 @@ export default function TracksSection() {
               {/* Background images */}
               {'images' in track ? (
                 <div className="absolute inset-0 w-full h-full">
-                  <Image
-                    src={track.images!.left}
-                    alt={`${track.title} - Left`}
-                    fill
-                    className="absolute inset-0 w-1/2 h-full object-cover pointer-events-none opacity-80"
-                    style={{
-                      filter: 'brightness(0.8)',
-                      objectPosition: track.title === "AgriTech & MedTech" ? '75% center' : 'center'
-                    }}
-                    priority={index === 0}
-                  />
-                  <Image
-                    src={track.images!.right}
-                    alt={`${track.title} - Right`}
-                    fill
-                    className="absolute right-0 top-0 w-1/2 h-full object-cover pointer-events-none opacity-80"
-                    style={{ filter: 'brightness(0.8)' }}
-                    priority={index === 0}
-                  />
+                  <div className="absolute inset-0 w-1/2 h-full">
+                    <Image
+                      src={track.images!.left}
+                      alt={`${track.title} - Left`}
+                      fill
+                      className="object-cover"
+                      style={{
+                        opacity: index === activeIndex ? 0.9 : 0.7,
+                        filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)',
+                        objectPosition: track.title === "AgriTech & MedTech" ? '85% center' : 
+                                       track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
+                      }}
+                      priority={index === 0}
+                    />
+                  </div>
+                  <div className="absolute right-0 w-1/2 h-full">
+                    <Image
+                      src={track.images!.right}
+                      alt={`${track.title} - Right`}
+                      fill
+                      className="object-cover"
+                      style={{
+                        opacity: index === activeIndex ? 0.9 : 0.7,
+                        filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)',
+                        objectPosition: track.title === "AgriTech & MedTech" ? '95% center' : 
+                                     track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
+                      }}
+                      priority={index === 0}
+                    />
+                  </div>
                 </div>
               ) : (
                 <Image
                   src={track.image}
                   alt={track.title}
                   fill
-                  className="absolute inset-0 object-cover w-full h-full opacity-80"
-                  style={{ filter: 'brightness(0.8)' }}
+                  className="absolute inset-0 object-cover w-full h-full"
+                  style={{
+                    opacity: index === activeIndex ? 0.9 : 0.7,
+                    filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)'
+                  }}
                   priority={index === 0}
                 />
               )}
@@ -194,20 +209,23 @@ export default function TracksSection() {
                 className="absolute inset-0 z-10 pointer-events-none"
                 style={{
                   background: index === activeIndex 
-                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.7) 100%)'
+                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.5) 100%)'
                     : 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%)'
                 }}
               ></div>
 
-              {/* Content */}
-              <div className="relative z-20 flex flex-col h-full p-4">
+              {/* Desktop View Content */}
+              <div className={cn(
+                "relative z-20 h-full p-6 flex flex-col",
+                index === activeIndex ? "justify-between" : "justify-start"
+              )}>
                 <motion.h3 
                   variants={titleVariants}
                   initial="vertical"
                   animate={index === activeIndex ? "horizontal" : "vertical"}
                   className="font-['Megrim'] text-sm md:text-lg uppercase tracking-wider font-medium text-white mb-2"
                   style={{
-                    textShadow: '0 0 15px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0, 0, 0, 0.9)'
+                    textShadow: '0 0 15px rgba(255, 255, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.9)'
                   }}
                 >
                   {track.title}
@@ -240,7 +258,7 @@ export default function TracksSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible" 
-          className="sm:hidden flex flex-col gap-2 max-w-full"
+          className="sm:hidden flex flex-col gap-4 max-w-full px-4"
         >
           {tracks.map((track, index) => (
             <motion.div
@@ -256,62 +274,88 @@ export default function TracksSection() {
               {/* Background images */}
               {'images' in track ? (
                 <div className="absolute inset-0 w-full h-full">
-                  <Image
-                    src={track.images!.left}
-                    alt={`${track.title} - Left`}
-                    fill
-                    className="absolute inset-0 w-1/2 h-full object-cover pointer-events-none opacity-70"
-                    style={{ filter: 'brightness(0.7)' }}
-                    priority={index === 0}
-                  />
-                  <Image
-                    src={track.images!.right}
-                    alt={`${track.title} - Right`}
-                    fill
-                    className="absolute right-0 top-0 w-1/2 h-full object-cover pointer-events-none opacity-70"
-                    style={{ filter: 'brightness(0.7)' }}
-                    priority={index === 0}
-                  />
+                  <div className="absolute inset-0 w-1/2 h-full">
+                    <Image
+                      src={track.images!.left}
+                      alt={`${track.title} - Left`}
+                      fill
+                      className="object-cover"
+                      style={{
+                        opacity: index === activeIndex ? 0.9 : 0.7,
+                        filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)',
+                        objectPosition: track.title === "AgriTech & MedTech" ? '85% center' : 
+                                       track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
+                      }}
+                      priority={index === 0}
+                    />
+                  </div>
+                  <div className="absolute right-0 w-1/2 h-full">
+                    <Image
+                      src={track.images!.right}
+                      alt={`${track.title} - Right`}
+                      fill
+                      className="object-cover"
+                      style={{
+                        opacity: index === activeIndex ? 0.9 : 0.7,
+                        filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)',
+                        objectPosition: track.title === "AgriTech & MedTech" ? '95% center' : 
+                                     track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
+                      }}
+                      priority={index === 0}
+                    />
+                  </div>
                 </div>
               ) : (
                 <Image
                   src={track.image}
                   alt={track.title}
                   fill
-                  className="absolute inset-0 object-cover w-full h-full opacity-70"
-                  style={{ filter: 'brightness(0.7)' }}
+                  className="absolute inset-0 object-cover w-full h-full"
+                  style={{
+                    opacity: index === activeIndex ? 0.9 : 0.7,
+                    filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)',
+                    objectPosition: track.title === "IoT & Smart Technologies" ? '80% center' : 'center'
+                  }}
                   priority={index === 0}
                 />
               )}
 
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-black/60 z-10"></div>
+              <div className="absolute inset-0 bg-black/50 z-10"></div>
 
-              {/* Content */}
+              {/* Mobile Content */}
               <div className="relative z-20 flex flex-col h-full p-4">
-                <h3 className="font-['Megrim'] text-base sm:text-lg uppercase tracking-wider font-medium text-white"
-                  style={{
-                    textShadow: '0 0 15px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0, 0, 0, 0.9)'
-                  }}
-                >
-                  {track.title}
-                </h3>
-
                 <AnimatePresence>
-                  {index === activeIndex && (
+                  {index === activeIndex ? (
                     <motion.div
                       variants={textVariants}
                       initial="hidden"
                       animate="visible"
                       exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                      className="mt-6"
+                      className="flex flex-col h-full"
                     >
-                      <Badge className="bg-purple-600/80 hover:bg-purple-600 mb-3">Track {index + 1}</Badge>
-                      <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
-                      <p className="text-sm leading-tight text-gray-300 italic">
-                        <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
-                      </p>
+                      <h3 className="font-['Megrim'] text-base sm:text-lg uppercase tracking-wider font-medium text-white mb-3"
+                        style={{
+                          textShadow: '0 0 15px rgba(255, 255, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.9)'
+                        }}
+                      >
+                        {track.title}
+                      </h3>
+                      <div className="mt-auto">
+                        <Badge className="bg-purple-600/80 hover:bg-purple-600 w-fit mb-3">Track {index + 1}</Badge>
+                        <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
+                        <p className="text-sm leading-tight text-gray-300 italic">
+                          <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
+                        </p>
+                      </div>
                     </motion.div>
+                  ) : (
+                    <h3 className="font-['Megrim'] text-base sm:text-lg uppercase tracking-wider font-medium text-white"
+                      style={{
+                        textShadow: '0 0 15px rgba(255, 255, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.9)'
+                      }}
+                    >
+                      {track.title}
+                    </h3>
                   )}
                 </AnimatePresence>
               </div>

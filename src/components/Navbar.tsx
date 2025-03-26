@@ -42,7 +42,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
-const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
+  const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     smoothScrollToSection(targetId);
@@ -177,8 +177,8 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
               <div 
                 className="apply-button" 
                 data-hackathon-slug="spectrum25" 
-                data-button-theme="light"
-                style={{ height: '44px', width: '180px' }}
+                data-button-theme="dark"
+                style={{ height: '44px', width: '312px' }}
               ></div>
             </motion.div>
           </div>
