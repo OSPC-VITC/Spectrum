@@ -31,7 +31,7 @@ export function HeroScrollDemo() {
     <div className="flex flex-col overflow-hidden w-[95%] md:w-[75%] mx-auto">
       <ContainerScroll
         titleComponent={<></>}
-        mobileHeight="200px"
+        mobileHeight="250px"
       >
         <div className="relative w-full h-full flex items-center justify-center bg-black/80 rounded-xl overflow-hidden">
           <iframe

@@ -33,10 +33,10 @@ export const ContainerScroll = ({
   }, []);
 
   const scaleDimensions = () => {
-    return isMobile ? [0.7, 0.9] : [1.05, 1];
+    return isMobile ? [0.9, 1] : [1.05, 1];
   };
 
-  const rotate = useTransform(scrollYProgress, [0, 0.5], [40, 0]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5], isMobile ? [20, 0] : [40, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], scaleDimensions());
 
   const mobileStyle = isMobile && mobileHeight ? { height: mobileHeight } : {};
@@ -44,11 +44,11 @@ export const ContainerScroll = ({
   return (
     <div
       ref={containerRef}
-      className="h-[30rem] md:aspect-[16/8.5] md:h-auto flex items-center justify-center relative p-2 md:p-5 w-full"
+      className="h-[30rem] md:aspect-[16/8.5] md:h-auto flex items-center justify-center relative p-1 md:p-5 w-full"
       style={mobileStyle}
     >
       <div
-        className="py-5 md:py-2 w-full relative"
+        className="py-2 md:py-2 w-full relative"
         style={{
           perspective: "1000px",
         }}
@@ -110,7 +110,7 @@ export const Card = ({
 
   // Calculate appropriate height for the card when in mobile
   const mobileCardHeight = isMobile && mobileHeight ? 
-    { height: `calc(${mobileHeight} - 10px)` } : {};
+    { height: `calc(${mobileHeight} - 5px)` } : {};
 
   return (
     <motion.div
@@ -124,7 +124,7 @@ export const Card = ({
         transformOrigin: "center center", // Important for rotation
         transformStyle: "preserve-3d", // Enable 3D effects
       }}
-      className="max-w-6xl -mt-6 md:-mt-0 mx-auto h-[20rem] md:aspect-[16/8.5] md:h-auto w-full border-2 border-purple-500/30 p-1 md:p-2 bg-black/90 rounded-[20px] shadow-2xl"
+      className="max-w-6xl -mt-3 md:-mt-0 mx-auto h-[22rem] md:aspect-[16/8.5] md:h-auto w-[95%] border-2 border-purple-500/30 p-1 md:p-2 bg-black/90 rounded-[20px] shadow-2xl"
     >
       <div className="h-full w-full overflow-hidden rounded-lg bg-black md:rounded-lg md:p-2">
         {children}
