@@ -134,6 +134,12 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
   );
 };
 
+// Seeded random number generator
+function seededRandom(seed: number) {
+  const x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+
 const TimelineSection: React.FC = () => {
   const events: TimelineEvent[] = [
     { 

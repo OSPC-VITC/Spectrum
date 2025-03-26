@@ -220,7 +220,7 @@ const HeroSection: React.FC = () => {
             </motion.div>
             
             {/* Mobile-only video section with proper spacing */}
-            <div className="w-full h-[300px] mt-8 mb-6">
+            <div className="w-full h-[220px] mt-12 mb-0">
               <HeroScrollDemo />
             </div>
           </div>

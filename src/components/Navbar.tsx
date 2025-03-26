@@ -42,7 +42,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
-  const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
+const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     smoothScrollToSection(targetId);
@@ -174,12 +174,13 @@ export default function Navbar() {
               transition={{ delay: 0.8, duration: 0.3 }}
               className="ml-4"
             >
-              <div 
-                className="apply-button" 
-                data-hackathon-slug="spectrum25" 
-                data-button-theme="dark"
-                style={{ height: '44px', width: '312px' }}
-              ></div>
+              <Button
+                variant="default"
+                className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold px-6 py-2 rounded-md transition-all duration-300 transform hover:scale-105"
+                onClick={() => window.open('https://spectrum25.devfolio.co/', '_blank')}
+              >
+                Apply with Devfolio
+              </Button>
             </motion.div>
           </div>
           
@@ -250,12 +251,13 @@ export default function Navbar() {
                 }}
                 className="px-4 py-4"
               >
-                <div 
-                  className="apply-button" 
-                  data-hackathon-slug="spectrum25" 
-                  data-button-theme="light"
-                  style={{ height: '44px', width: '100%' }}
-                ></div>
+                <Button
+                  variant="default"
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold px-6 py-2 rounded-md transition-all duration-300"
+                  onClick={() => window.open('https://spectrum25.devfolio.co/', '_blank')}
+                >
+                  Apply with Devfolio
+                </Button>
               </motion.div>
             </motion.div>
           </motion.div>

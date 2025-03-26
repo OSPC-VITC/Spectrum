@@ -9,14 +9,21 @@ export function HeroScrollDemo() {
   useEffect(() => {
     // Function to trigger scroll events to ensure animations work properly
     const triggerScrollEvents = () => {
+      // Initial scroll event to calculate positions
       window.dispatchEvent(new Event('scroll'));
+      
+      // Additional scroll events to handle animations during scrolling
       setTimeout(() => {
         window.dispatchEvent(new Event('scroll'));
       }, 200);
     };
     
+    // Trigger on load and resize
     triggerScrollEvents();
     window.addEventListener('resize', triggerScrollEvents);
+    window.addEventListener('scroll', () => {
+      // This helps smooth out the animation during actual scrolling
+    }, { passive: true });
     
     return () => {
       window.removeEventListener('resize', triggerScrollEvents);
@@ -28,10 +35,10 @@ export function HeroScrollDemo() {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden w-[95%] md:w-[75%] mx-auto">
+    <div className="flex flex-col overflow-hidden w-[98%] md:w-[75%] mx-auto">
       <ContainerScroll
         titleComponent={<></>}
-        mobileHeight="250px"
+        mobileHeight="220px"
       >
         <div className="relative w-full h-full flex items-center justify-center bg-black/80 rounded-xl overflow-hidden">
           <iframe
