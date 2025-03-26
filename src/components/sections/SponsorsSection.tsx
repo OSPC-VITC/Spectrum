@@ -4,16 +4,7 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation, Variants } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
-import { 
-  Card, 
-  CardContent 
-} from "@/components/ui/card";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger 
-} from "@/components/ui/tooltip";
+import { Card } from "@/components/ui/card";
 import { ExternalLink } from 'lucide-react';
 
 type SponsorTier = 'kernel' | 'stack' | 'script';
@@ -22,14 +13,6 @@ type Sponsor = {
   tier: SponsorTier;
   logo?: string;
   website?: string;
-  description?: string;
-};
-
-type Partner = {
-  name: string;
-  logo?: string;
-  website?: string;
-  description?: string;
 };
 
 const SponsorsSection: React.FC = () => {
@@ -38,52 +21,6 @@ const SponsorsSection: React.FC = () => {
     triggerOnce: false,
     threshold: 0.1
   });
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const titleVariants: Variants = {
-    hidden: { y: -50, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { 
-        type: 'spring',
-        stiffness: 100,
-        damping: 15
-      }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { 
-        type: 'spring',
-        stiffness: 100,
-        damping: 15
-      }
-    }
-  };
-
-  const hoverVariants: Variants = {
-    initial: { scale: 1 },
-    hover: { 
-      scale: 1.05, 
-      boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
-      transition: { duration: 0.3 } 
-    }
-  };
 
   useEffect(() => {
     if (inView) {
@@ -130,241 +67,433 @@ const SponsorsSection: React.FC = () => {
     },
   ];
 
-  const partners: Partner[] = [
-    { 
-      name: "Vertex", 
-      logo: "/vertex.png", 
-      website: "https://www.instagram.com/vertex_innovate/" 
-    },
-    { 
-      name: "IBM Z", 
-      logo: "/IBMz.jpg", 
-      website: "https://ibm.com/ibmz" 
-    },
-  ];
-
-  const getSponsorsByTier = (tier: SponsorTier): Sponsor[] => {
-    return sponsors.filter(sponsor => sponsor.tier === tier);
-  };
-
   const tierConfigs = {
     kernel: { 
       title: "Kernel 🥇", 
       subtitle: "Gold Sponsors", 
-      titleColor: "from-amber-400 to-orange-500"
+      titleColor: "from-amber-400 to-orange-500",
+      glowColor: "rgba(251, 191, 36, 0.8)" // Amber/gold glow
     },
     stack: { 
       title: "Stack 🥈", 
       subtitle: "Silver Sponsors", 
-      titleColor: "from-slate-300 to-slate-500"
+      titleColor: "from-slate-300 to-slate-500",
+      glowColor: "rgba(203, 213, 225, 0.8)" // Slate/silver glow
     },
     script: { 
       title: "Script 🥉", 
       subtitle: "Bronze Sponsors", 
-      titleColor: "from-rose-400 to-amber-700"
+      titleColor: "from-rose-400 to-amber-700",
+      glowColor: "rgba(251, 113, 133, 0.8)" // Rose/bronze glow
     }
   };
 
-  // Unified card renderer for both sponsors and partners
-  const renderCard = (item: Sponsor | Partner, index: number) => {
-    const hasLogo = !!item.logo;
-    const hasWebsite = !!item.website;
-    
-    // Card content with centered logo and text
-    const renderCardContent = () => (
-      <CardContent className="p-6 h-full flex flex-col items-center justify-center">
-        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full">
-          {hasLogo ? (
-            <div className="relative h-64 w-64 mb-4 flex items-center justify-center">
-              <Image 
-                src={item.logo || '/default-logo.png'}
-                alt={`${item.name} logo`}
-                width={128}
-                height={128}
-                className="rounded-full"
-              />
-            </div>
-          ) : (
-            <div className="h-32 w-32 mb-4 flex items-center justify-center bg-gray-800 rounded-full">
-              <span className="text-2xl font-bold text-gray-400">{item.name.charAt(0)}</span>
-            </div>
-          )}
-          
-          <h3 className="text-lg font-bold text-center text-gray-100">{item.name}</h3>
-          
-          {hasWebsite && (
-            <div className="flex items-center justify-center text-blue-400 text-xs hover:text-blue-300 transition-colors mt-4">
-              <ExternalLink size={14} className="mr-1" />
-              <span>Visit website</span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    );
-
-    return (
-      <motion.div 
-        key={item.name}
-        className="flex justify-center"
-        variants={itemVariants}
-        initial="hidden"
-        animate="visible"
-        custom={index}
-      >
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div
-                variants={hoverVariants}
-                initial="initial"
-                whileHover="hover"
-                className="w-full max-w-xs mx-auto"
-              >
-                <Card className="backdrop-blur-md bg-white/10 border border-white/20 overflow-hidden aspect-square shadow-lg w-full hover:shadow-xl hover:shadow-primary/20 transition-all">
-                  {hasWebsite ? (
-                    <a href={item.website} target="_blank" rel="noopener noreferrer" className="block h-full">
-                      {renderCardContent()}
-                    </a>
-                  ) : renderCardContent()}
-                </Card>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent>
-              {hasWebsite ? `Visit ${item.name}` : `Learn more about ${item.name}`}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </motion.div>
-    );
-  };
-
-  // Function to get the appropriate grid class based on item count
-  const getGridClass = (itemCount: number) => {
-    switch (itemCount) {
-      case 1:
-        return "grid-cols-1 place-items-center";
-      case 2:
-        return "grid-cols-1 md:grid-cols-2 place-items-center";
-      case 3:
-        return "grid-cols-1 md:grid-cols-3 place-items-center";
-      case 4:
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 place-items-center";
-      default:
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center";
-    }
-  };
-
-  const renderTierSection = (tier: SponsorTier) => {
-    const tierSponsors = getSponsorsByTier(tier);
-    if (tierSponsors.length === 0) return null;
-    const config = tierConfigs[tier];
-    const gridClass = getGridClass(tierSponsors.length);
+  const tiers: SponsorTier[] = ['kernel', 'stack', 'script'];
     
     return (
-      <motion.div className="mb-16 w-full" variants={containerVariants}>
+    <section id="sponsors" className="text-white py-20 px-4" ref={ref}>
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          className="relative flex flex-col items-center mb-10"
-          variants={titleVariants}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16 space-y-6"
         >
-          <div className="max-w-4xl w-full text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-2">
-              <span className={`text-transparent bg-clip-text bg-gradient-to-r ${config.titleColor}`}>
-                {config.title}
-              </span>
-            </h3>
-            <p className="text-gray-400 text-sm mb-4">{config.subtitle}</p>
-            <div className="h-px w-32 bg-gray-400 mx-auto"></div>
-          </div>
-        </motion.div>
-        
-        {/* Center align grid with equal spacing */}
-        <div className="flex justify-center w-full">
-          <div className={`${gridClass} grid max-w-5xl w-full gap-8 px-8 mx-auto`}>
-            {tierSponsors.map((sponsor, index) => renderCard(sponsor, index))}
-            {/* Add placeholder divs to ensure centering with odd numbers of items */}
-            {tierSponsors.length === 1 && <div className="hidden md:block"></div>}
-            {tierSponsors.length === 3 && tier !== 'script' && <div className="hidden lg:block"></div>}
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
-  const renderPartnersSection = () => {
-    if (partners.length === 0) return null;
-    const gridClass = getGridClass(partners.length);
-    
-    return (
-      <motion.div className="mb-16 w-full" variants={containerVariants}>
-        <motion.div
-          className="relative flex flex-col items-center mb-10"
-          variants={titleVariants}
-        >
-          <div className="max-w-4xl w-full text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                Our Partners
-              </span>
-            </h3>
-            <p className="text-gray-400 text-sm mb-4">Collaborating to make Spectrum a success</p>
-            <div className="h-px w-32 bg-gray-400 mx-auto"></div>
-          </div>
-        </motion.div>
-        
-        {/* Center align grid with equal spacing */}
-        <div className="flex justify-center w-full">
-          <div className={`${gridClass} grid max-w-5xl w-full gap-8 px-8 mx-auto`}>
-            {partners.map((partner, index) => renderCard(partner, index))}
-            {/* Add placeholder divs to ensure centering with odd numbers of items */}
-            {partners.length === 1 && <div className="hidden md:block"></div>}
-            {partners.length === 3 && <div className="hidden lg:block"></div>}
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
-  return (
-    <motion.section 
-      id="sponsors" 
-      className="py-20 bg-gradient-to-b from-gray-900 via-black to-black text-white relative overflow-hidden"
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={containerVariants}
-    >
-      {/* Background gradient effects */}
-      <div className="absolute top-40 left-1/4 w-64 h-64 rounded-full bg-purple-500/20 blur-3xl -translate-x-1/2"></div>
-      <div className="absolute bottom-40 right-1/4 w-80 h-80 rounded-full bg-blue-500/20 blur-3xl translate-x-1/2"></div>
-      
-      <div className="max-w-7xl mx-auto relative">
-        <motion.div variants={titleVariants} className="text-center mb-16">
-          <div className="max-w-3xl mx-auto px-8">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">
-              OUR SPONSORS
+            
+          <h2 className="mb-10 text-center font-bold tracking-wider leading-tight" style={{ fontSize: "clamp(40px, 10vw, 70px)" }}>
+              <span className="text-white">OUR </span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500">SPONSORS</span>
             </h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-pink-400 to-purple-500 mx-auto mb-6"></div>
-            <p className="text-gray-400 text-lg">
-              Meet the organizations empowering innovation at Spectrum. Our sponsors are the backbone of this hackathon, making incredible prizes and experiences possible.
+            <motion.div 
+              className="h-1 w-32 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-10 rounded-full"
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: "8rem", opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            />
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            We are grateful for the support of our sponsors who make this event possible.
             </p>
-          </div>
         </motion.div>
         
-        <div className="space-y-16 w-full">
-          {renderTierSection('kernel')}
-          {renderTierSection('stack')}
-          {renderTierSection('script')}
-          {renderPartnersSection()}
-        </div>
-
-        <motion.div 
-          className="text-center mt-16"
-          variants={itemVariants}
-        >
+        {tiers.map(tier => {
+          const sponsorsInTier = sponsors.filter(sponsor => sponsor.tier === tier);
           
+          if (sponsorsInTier.length === 0) return null;
+          
+          return (
+            <div key={tier} className="mb-20">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={controls}
+                variants={{
+                  visible: { 
+                    opacity: 1, 
+                    y: 0,
+                    transition: { duration: 0.6 } 
+                  }
+                }}
+                className="text-center mb-12"
+              >
+                <h3 className={`text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${tierConfigs[tier].titleColor}`}>
+                  {tierConfigs[tier].title}
+                </h3>
+                <p className="text-gray-400 mt-1">{tierConfigs[tier].subtitle}</p>
+              </motion.div>
+
+              <div className={`
+                grid gap-6 mx-auto px-3 
+                ${tier === 'kernel' ? 'grid-cols-1 max-w-[320px] md:max-w-[38rem] md:grid-cols-2 justify-items-center' : ''} 
+                ${tier === 'stack' ? 'grid-cols-1 max-w-[320px] md:max-w-[38rem] lg:max-w-[58rem] md:grid-cols-3 justify-items-center' : ''} 
+                ${tier === 'script' ? 'grid-cols-1 max-w-[320px] justify-items-center' : ''}
+              `}>
+                {sponsorsInTier.map((sponsor, index) => (
+                  <motion.div
+                    key={sponsor.name}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={controls}
+                    variants={{
+                      visible: { 
+                        opacity: 1, 
+                        y: 0,
+                        transition: { 
+                          delay: index * 0.1,
+                          duration: 0.5 
+                        } 
+                      }
+                    }}
+                    className={`glow-wrapper glow-${tier} w-full md:w-auto`}
+                    style={{
+                      "--glow-color": tierConfigs[tier].glowColor
+                    } as React.CSSProperties}
+                  >
+                    <Card className={`relative bg-black/20 hover:bg-black/30 transition-colors overflow-hidden 
+                      shadow-xl hover:shadow-2xl card-container !rounded-none aspect-square w-full md:w-[18rem] h-auto
+                      ${sponsor.name === "BlackBoxAI" ? "blackbox-sponsor" : ""}`}>
+                      <div className={`a l ${tier}`}></div>
+                      <div className={`a r ${tier}`}></div>
+                      <div className={`a t ${tier}`}></div>
+                      <div className={`a b ${tier}`}></div>
+                      <div className="p-4 space-y-3">
+                        <div className="relative flex items-center justify-center h-36 w-full">
+                          <div className={`relative ${sponsor.name === "BlackBoxAI" ? "w-full h-full" : "w-[95%] h-full"}`}>
+                            <Image
+                              src={sponsor.logo || '/placeholder-logo.png'}
+                              alt={sponsor.name}
+                              fill
+                              className={`object-contain brightness-200 ${sponsor.name === "BlackBoxAI" ? "scale-90" : ""}`}
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              priority
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="space-y-1">
+                            <h3 className="text-xl font-bold text-white tracking-wide text-center">{sponsor.name}</h3>
+                          </div>
+
+                          <div className="flex justify-center mt-1">
+                            {sponsor.website && (
+                              <a
+                                href={sponsor.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`bg-black/40 px-3 py-1.5 rounded font-medium text-white border border-solid transition-colors flex items-center gap-2 ${
+                                  tier === 'kernel' 
+                                    ? 'border-amber-400 hover:bg-amber-950/40' 
+                                    : tier === 'stack' 
+                                    ? 'border-slate-400 hover:bg-slate-950/40' 
+                                    : 'border-rose-400 hover:bg-rose-950/40'
+                                }`}
+                              >
+                                <span className="text-sm whitespace-nowrap">Visit website</span>
+                                <ExternalLink className="h-4 w-4" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
         </motion.div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </motion.section>
+
+      {/* SVG filter for animated borders */}
+      <svg className="hidden">
+        <filter id="unopaq" width="3000%" x="-1000%" height="3000%" y="-1000%">
+          <feColorMatrix
+            values="1 0 0 0 0 
+                    0 1 0 0 0 
+                    0 0 1 0 0 
+                    0 0 0 2 0"
+          ></feColorMatrix>
+        </filter>
+      </svg>
+
+      <style jsx>{`
+        .glow-wrapper {
+          position: relative;
+        }
+
+        .glow-wrapper::before {
+          content: '';
+          position: absolute;
+          inset: -3px;
+          background: transparent;
+          box-shadow: 0 0 30px 8px var(--glow-color);
+          z-index: -1;
+          transition: opacity 0.3s ease;
+        }
+
+        .card-container {
+          position: relative;
+          transition: all 0.3s ease;
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+        }
+
+        .card-container::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 70%);
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+        }
+
+        .a {
+          pointer-events: none;
+          position: absolute;
+          --w: 2px;
+          z-index: 30;
+          filter: drop-shadow(0 0 5px var(--glow-color));
+          transition: all 0.3s ease;
+        }
+
+        .a::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: inherit;
+          filter: url(#unopaq);
+          z-index: 25;
+        }
+
+        .a::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: inherit;
+          filter: url(#unopaq);
+          opacity: 0;
+          z-index: 25;
+          transition: 0.3s;
+        }
+
+        .card-container:hover .a::after {
+          opacity: 1;
+        }
+
+        .l {
+          left: 0;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+          top: 0;
+          bottom: 0;
+          width: var(--w);
+          box-shadow: 0 0 15px 2px var(--glow-color);
+        }
+
+        .r {
+          right: 0;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+          top: 0;
+          bottom: 0;
+          width: var(--w);
+          box-shadow: 0 0 15px 2px var(--glow-color);
+        }
+
+        .t {
+          top: 0;
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+          left: 0;
+          right: 0;
+          height: var(--w);
+          box-shadow: 0 0 15px 2px var(--glow-color);
+        }
+
+        .b {
+          bottom: 0;
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+          left: 0;
+          right: 0;
+          height: var(--w);
+          box-shadow: 0 0 15px 2px var(--glow-color);
+        }
+
+        .card-container {
+          border-radius: 0 !important;
+        }
+
+        .card-container > div:first-child {
+          border-radius: 0 !important;
+        }
+
+        .card-container:hover {
+          box-shadow: none;
+        }
+        
+        .glow-wrapper:hover::before {
+          opacity: 0;
+        }
+
+        .card-container:hover::before {
+          opacity: 0;
+        }
+
+        .card-container:hover .a {
+          filter: none;
+        }
+
+        .card-container:hover .l,
+        .card-container:hover .r,
+        .card-container:hover .t,
+        .card-container:hover .b {
+          box-shadow: none;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+        }
+
+        .card-container:hover .t,
+        .card-container:hover .b {
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            var(--glow-color) 15%, 
+            var(--glow-color) 85%, 
+            transparent 100%
+          );
+        }
+
+        /* Tier-specific glow colors */
+        .glow-kernel {
+          --glow-color: rgba(251, 191, 36, 0.8); /* Amber/gold */
+        }
+        .glow-stack {
+          --glow-color: rgba(203, 213, 225, 0.8); /* Slate/silver */
+        }
+        .glow-script {
+          --glow-color: rgba(251, 113, 133, 0.8); /* Rose/bronze */
+        }
+      `}</style>
+
+      <style jsx global>{`
+        /* Glow effects for each tier */
+        .glow-kernel:hover {
+          filter: none;
+        }
+        .glow-stack:hover {
+          filter: none;
+        }
+        .glow-script:hover {
+          filter: none;
+        }
+        
+        /* Card container hover effects */
+        .card-container:hover .a::after {
+          opacity: 0 !important;
+        }
+        
+        .card-container:hover .a {
+          filter: none !important;
+          box-shadow: none !important;
+        }
+        
+        .card-container .a::before {
+          filter: blur(2px) url(#unopaq);
+        }
+        
+        .card-container:hover .a::before {
+          filter: none;
+        }
+        
+        /* Special styles for BlackBoxAI sponsor */
+        .blackbox-sponsor img {
+          object-fit: contain !important;
+          padding: 5px;
+        }
+        
+        @media (max-width: 768px) {
+          .blackbox-sponsor {
+            min-height: 280px;
+            max-height: 320px;
+            width: 100% !important;
+          }
+          
+          .blackbox-sponsor .p-4 {
+            padding: 1rem !important;
+          }
+          
+          .blackbox-sponsor img {
+            object-fit: contain !important;
+            max-width: 90% !important;
+            margin: 0 auto;
+            transform: scale(0.9);
+          }
+          
+          .blackbox-sponsor h3 {
+            font-size: 1.5rem !important;
+          }
+          
+          .blackbox-sponsor a {
+            margin-top: 0.5rem;
+          }
+        }
+        
+        /* Animated borders for each tier */
+        .a.kernel::before,
+        .a.kernel::after {
+          background: linear-gradient(var(--g));
+          background-image: linear-gradient(to right, rgba(251, 191, 36, 0) 0%, rgba(251, 191, 36, 0.3) 20%, rgba(251, 191, 36, 0.8) 50%, rgba(251, 191, 36, 0.3) 80%, rgba(251, 191, 36, 0) 100%);
+        }
+        
+        .a.stack::before,
+        .a.stack::after {
+          background: linear-gradient(var(--g));
+          background-image: linear-gradient(to right, rgba(203, 213, 225, 0) 0%, rgba(203, 213, 225, 0.3) 20%, rgba(203, 213, 225, 0.8) 50%, rgba(203, 213, 225, 0.3) 80%, rgba(203, 213, 225, 0) 100%);
+        }
+        
+        .a.script::before,
+        .a.script::after {
+          background: linear-gradient(var(--g));
+          background-image: linear-gradient(to right, rgba(251, 113, 133, 0) 0%, rgba(251, 113, 133, 0.3) 20%, rgba(251, 113, 133, 0.8) 50%, rgba(251, 113, 133, 0.3) 80%, rgba(251, 113, 133, 0) 100%);
+        }
+      `}</style>
+    </section>
   );
 };
 

@@ -238,6 +238,7 @@ section {
   transform: translate3d(0, 0, 0);
   position: relative;
   transition: background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  background-color: black !important; /* Force black background for all sections */
 }
 
 /* Section fade transition classes */
@@ -481,6 +482,11 @@ section > div > h3 {
     margin-bottom: 1.75rem;
     letter-spacing: 0.075em;
   }
+  
+  /* Increase font size for all section headings with clamp in mobile view */
+  [style*="clamp(40px, 10vw, 70px)"] {
+    font-size: clamp(45px, 12vw, 70px) !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -493,6 +499,11 @@ section > div > h3 {
     font-size: 3rem;
     margin-bottom: 1.5rem;
     line-height: 1;
+  }
+  
+  /* Further increase font size for smallest screens */
+  [style*="clamp(40px, 10vw, 70px)"] {
+    font-size: clamp(48px, 13vw, 70px) !important;
   }
 }
 
@@ -632,5 +643,43 @@ section.section-fade-in > * {
   .star-field canvas {
     transform: scale(1.2);
     transform-origin: center;
+  }
+}
+
+/* 3D Carousel Effects */
+.perspective-1000px {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.active-card {
+  position: relative;
+  z-index: 100;
+  isolation: isolate;
+}
+
+.active-card::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(45deg, rgba(124, 58, 237, 0.8), rgba(56, 189, 248, 0.8));
+  z-index: -1;
+  border-radius: inherit;
+  filter: blur(6px);
+  opacity: 0.85;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 0.9;
+    filter: blur(8px);
   }
 }

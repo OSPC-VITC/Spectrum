@@ -114,113 +114,8 @@ const AboutSection: React.FC = () => {
   };
 
   return (
-    <section id="about" className="relative bg-black text-white py-36 overflow-hidden" ref={ref}>
-      {/* Dynamic background elements */}
-      <motion.div 
-        className="absolute top-0 left-0 w-full h-full bg-[url('/noise.png')] opacity-[0.03] pointer-events-none"
-        style={{ y: parallaxY, opacity }}
-      />
-      
-      <motion.div 
-        className="absolute -top-80 -left-80 w-[40rem] h-[40rem] rounded-full bg-purple-600/10 blur-[100px]"
-        style={{ 
-          y: useTransform(scrollYProgress, [0, 1], ['-50px', '50px']),
-          opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.7, 0.3])
-        }}
-      />
-      
-      <motion.div 
-        className="absolute -bottom-80 -right-80 w-[40rem] h-[40rem] rounded-full bg-blue-600/10 blur-[100px]"
-        style={{ 
-          y: useTransform(scrollYProgress, [0, 1], ['50px', '-50px']),
-          opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.7, 0.3])
-        }}
-      />
-      
-      {/* Animated particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <AnimatePresence>
-          {isInView && (
-            <>
-              {[...Array(20)].map((_, index) => (
-                <motion.div
-                  key={index}
-                  className="absolute rounded-full bg-white opacity-20"
-                  style={{
-                    width: Math.random() * 6 + 2,
-                    height: Math.random() * 6 + 2,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ 
-                    y: [0, -100 - Math.random() * 100],
-                    opacity: [0, 0.3, 0],
-                    scale: [0, 1, 0.5]
-                  }}
-                  transition={{
-                    duration: 5 + Math.random() * 10,
-                    repeat: Infinity,
-                    delay: Math.random() * 5,
-                    ease: "linear"
-                  }}
-                />
-              ))}
-            </>
-          )}
-        </AnimatePresence>
-      </div>
-      
-      {/* Grid pattern overlay with parallax */}
-      <motion.div 
-        className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.03] pointer-events-none"
-        style={{ 
-          y: useTransform(scrollYProgress, [0, 1], ['0px', '30px']),
-          scale: useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1])
-        }}
-      />
-      
-      {/* Glowing orbital lines */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <motion.ellipse
-            cx="50"
-            cy="50"
-            rx="45"
-            ry="20"
-            fill="none"
-            stroke="url(#gradientLine1)"
-            strokeWidth="0.2"
-            initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.3, rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.ellipse
-            cx="50"
-            cy="50"
-            rx="35"
-            ry="30"
-            fill="none"
-            stroke="url(#gradientLine2)"
-            strokeWidth="0.2"
-            initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.2, rotate: -360 }}
-            transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
-          />
-          <defs>
-            <linearGradient id="gradientLine1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#6366F1" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.5" />
-            </linearGradient>
-            <linearGradient id="gradientLine2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="#6366F1" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.5" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+    <section id="about" className="relative text-white py-36 overflow-hidden" ref={ref}>
+      {/* Dynamic background elements removed */}
       
       <div className="relative z-10 container mx-auto px-4 md:px-8">
         <motion.div 
@@ -249,8 +144,9 @@ const AboutSection: React.FC = () => {
             </motion.div>
             </motion.div>
             
-            <h2 className="text-4xl md:text-6xl lg:text-7xl mb-6 text-center font-bold tracking-wider leading-tight">
-              <span className="text-white">ABOUT </span>
+            
+          <h2 className="mb-10 text-center font-bold tracking-wider leading-tight" style={{ fontSize: "clamp(40px, 10vw, 70px)" }}>
+            <span className="text-white">ABOUT </span>
               <motion.span 
                 className="relative inline-block"
                 variants={titleVariants}
@@ -298,22 +194,24 @@ const AboutSection: React.FC = () => {
           </motion.div>
           
           {/* Featured highlight cards with animations */}
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 px-3 md:px-0 mx-auto max-w-lg md:max-w-none mb-16"
+          <motion.div
             variants={cardContainerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 px-3"
           >
-            <motion.div 
+            {/* First Card */}
+            <motion.div
               variants={cardVariants}
               whileHover="hover"
-              className="group"
+              className="relative"
             >
-              <Card className="relative rounded-xl border-0 bg-gradient-to-br from-purple-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-purple-900/20 h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 border border-purple-500/10 group-hover:border-purple-500/20 rounded-xl transition-colors duration-300"></div>
-                <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full group-hover:bg-purple-500/10 transition-all duration-300"></div>
-                <CardContent className="p-8">
+              <Card className="relative bg-gradient-to-br from-purple-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-purple-900/20 h-full card-container !rounded-none">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <CardContent className="p-8 !rounded-none">
                   <div className="flex items-center mb-5">
                     <motion.span 
                       className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-500/20 to-purple-900/20 backdrop-blur-sm group-hover:from-purple-500/30 group-hover:to-purple-900/30 transition-all duration-300 shadow-md overflow-hidden"
@@ -342,17 +240,19 @@ const AboutSection: React.FC = () => {
                 </CardContent>
               </Card>
             </motion.div>
-              
-            <motion.div 
+
+            {/* Second Card */}
+            <motion.div
               variants={cardVariants}
               whileHover="hover"
-              className="group"
+              className="relative"
             >
-              <Card className="relative rounded-xl border-0 bg-gradient-to-br from-blue-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-blue-900/20 h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 border border-blue-500/10 group-hover:border-blue-500/20 rounded-xl transition-colors duration-300"></div>
-                <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full group-hover:bg-blue-500/10 transition-all duration-300"></div>
-                <CardContent className="p-8">
+              <Card className="relative bg-gradient-to-br from-blue-950/30 to-black/60 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-blue-900/20 h-full card-container !rounded-none">
+                <div className="a l"></div>
+                <div className="a r"></div>
+                <div className="a t"></div>
+                <div className="a b"></div>
+                <CardContent className="p-8 !rounded-none">
                   <div className="flex items-center mb-5">
                     <motion.span 
                       className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-900/20 backdrop-blur-sm group-hover:from-blue-500/30 group-hover:to-blue-900/30 transition-all duration-300 shadow-md overflow-hidden"
@@ -384,6 +284,151 @@ const AboutSection: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* SVG filter for animated borders */}
+      <svg className="hidden">
+        <filter id="unopaq" width="3000%" x="-1000%" height="3000%" y="-1000%">
+          <feColorMatrix
+            values="1 0 0 0 0 
+                    0 1 0 0 0 
+                    0 0 1 0 0 
+                    0 0 0 2 0"
+          ></feColorMatrix>
+        </filter>
+      </svg>
+
+      <style jsx>{`
+        .card-container {
+          position: relative;
+          transition: all 0.3s ease;
+        }
+
+        .a {
+          pointer-events: none;
+          position: absolute;
+          --w: 2px;
+          --glow-color: rgba(168, 85, 247, 0.8);
+          z-index: 30;
+          filter: drop-shadow(0 0 5px var(--glow-color));
+          transition: all 0.3s ease;
+        }
+
+        .a::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: inherit;
+          filter: url(#unopaq);
+          z-index: 25;
+        }
+
+        .a::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: inherit;
+          filter: url(#unopaq);
+          opacity: 0;
+          z-index: 25;
+          transition: 0.3s;
+        }
+
+        .card-container:hover .a::after {
+          opacity: 1;
+        }
+
+        .l {
+          left: 0;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+          top: 0;
+          bottom: 0;
+          width: var(--w);
+          box-shadow: 0 0 15px 2px rgba(168, 85, 247, 0.8);
+        }
+
+        .r {
+          right: 0;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+          top: 0;
+          bottom: 0;
+          width: var(--w);
+          box-shadow: 0 0 15px 2px rgba(168, 85, 247, 0.8);
+        }
+
+        .t {
+          top: 0;
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+          left: 0;
+          right: 0;
+          height: var(--w);
+          box-shadow: 0 0 15px 2px rgba(168, 85, 247, 0.8);
+        }
+
+        .b {
+          bottom: 0;
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+          left: 0;
+          right: 0;
+          height: var(--w);
+          box-shadow: 0 0 15px 2px rgba(168, 85, 247, 0.8);
+        }
+
+        .card-container {
+          border-radius: 0 !important;
+        }
+
+        .card-container > div:first-child {
+          border-radius: 0 !important;
+        }
+
+        .card-container:hover .a {
+          filter: none;
+          box-shadow: none;
+        }
+
+        .card-container:hover .l,
+        .card-container:hover .r,
+        .card-container:hover .t,
+        .card-container:hover .b {
+          box-shadow: none;
+          background: linear-gradient(to bottom, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+        }
+
+        .card-container:hover .t,
+        .card-container:hover .b {
+          background: linear-gradient(to right, 
+            transparent 0%, 
+            rgba(168, 85, 247, 0.8) 15%, 
+            rgba(168, 85, 247, 0.8) 85%, 
+            transparent 100%
+          );
+        }
+      `}</style>
     </section>
   );
 };

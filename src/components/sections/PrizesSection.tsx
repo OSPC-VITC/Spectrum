@@ -7,9 +7,8 @@ import { Badge } from "@/components/ui/badge";
 
 export default function PrizesSection() {
   return (
-    <section id="prizes" className="min-h-screen py-16 bg-gradient-to-b from-black to-indigo-950 text-white relative overflow-hidden">
-      {/* Simple background with subtle gradient */}
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+    <section id="prizes" className="min-h-screen py-16 text-white relative overflow-hidden bg-black">
+      {/* All background gradients removed */}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
@@ -18,8 +17,17 @@ export default function PrizesSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-['Megrim'] text-white text-6xl md:text-7xl mb-2">INTERSTELLAR PRIZES</h2>
-          <div className="h-1 w-32 bg-gradient-to-r from-purple-400 via-blue-500 to-cyan-400 mx-auto"></div>
+          
+          <h2 className="mb-10 text-center font-bold tracking-wider leading-tight" style={{ fontSize: "clamp(40px, 10vw, 70px)" }}>
+             <span className="text-white">INTERSTELLAR </span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500">PRIZES</span>
+          </h2>
+          <motion.div 
+            className="h-1 w-32 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-10 rounded-full"
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "8rem", opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          />
         </motion.div>
         
         <motion.div
@@ -27,7 +35,7 @@ export default function PrizesSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md mb-12 max-w-3xl mx-auto shadow-lg">
+          <Card className="bg-black border-indigo-800/30 backdrop-blur-md mb-12 max-w-3xl mx-auto shadow-lg">
             <CardContent className="pt-6">
               <p className="text-center text-gray-200 text-base sm:text-lg mb-2">
                 Get ready for an <span className="text-cyan-300">out-of-this-world</span> prize pool! Our sponsors are preparing something extraordinary for the most innovative and impactful projects.
@@ -48,16 +56,9 @@ export default function PrizesSection() {
             className="group"
           >
             <motion.div
-              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+              whileHover={{ y: -5, boxShadow: "0 0 0 0 transparent" }}
             >
-              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
-                {/* Prize gradient overlay */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                
+              <Card className="bg-black border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
                 {/* Border glow */}
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
@@ -87,16 +88,9 @@ export default function PrizesSection() {
             className="group"
           >
             <motion.div
-              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+              whileHover={{ y: -5, boxShadow: "0 0 0 0 transparent" }}
             >
-              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
-                {/* Prize gradient overlay */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                
+              <Card className="bg-black border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
                 {/* Border glow */}
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
@@ -126,16 +120,9 @@ export default function PrizesSection() {
             className="group"
           >
             <motion.div
-              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.4)" }}
+              whileHover={{ y: -5, boxShadow: "0 0 0 0 transparent" }}
             >
-              <Card className="bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
-                {/* Prize gradient overlay */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 opacity-0"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                
+              <Card className="bg-black border-indigo-800/30 backdrop-blur-md aspect-square w-full max-w-xs mx-auto overflow-hidden relative shadow-lg">
                 {/* Border glow */}
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
@@ -164,7 +151,7 @@ export default function PrizesSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Card className="inline-block bg-indigo-950/20 border-indigo-800/30 backdrop-blur-md shadow-lg">
+          <Card className="inline-block bg-black border-indigo-800/30 backdrop-blur-md shadow-lg">
             <CardContent className="py-4">
               <p className="text-base sm:text-lg text-cyan-100">
                 More exciting prizes and <span className="text-cyan-300">cosmic surprises</span> to be announced!

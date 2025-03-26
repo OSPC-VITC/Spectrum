@@ -228,6 +228,8 @@ export const ParallaxStars: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const rect = canvas.getBoundingClientRect();
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
 

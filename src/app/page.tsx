@@ -3,6 +3,7 @@ import AboutSection from '@/components/sections/AboutSection';
 import TracksSection from '@/components/sections/TracksSection';
 import TimelineSection from '@/components/sections/TimelineSection';
 import PrizesSection from '@/components/sections/PrizesSection';
+import JudgesSection from '@/components/sections/JudgesSection';
 import SponsorsSection from '@/components/sections/SponsorsSection';
 import OrganisersSection from '@/components/sections/OrganisersSection';
 import FAQsSection from '@/components/sections/FAQsSection';
@@ -20,6 +21,7 @@ export default function Home() {
         <TracksSection />
         <TimelineSection />
         <PrizesSection />
+        <JudgesSection />
         <OrganisersSection />
         <SponsorsSection />
         <FAQsSection />

@@ -49,7 +49,7 @@ const HeroSection: React.FC = () => {
   }, []);
 
   return (
-    <AuroraBackground className="w-full overflow-hidden bg-black pt-4 pb-0 md:py-12 md:pt-4 md:pb-0 h-auto min-h-[100vh] md:min-h-[140vh] flex flex-col justify-start md:justify-between">
+    <section className="w-full overflow-hidden bg-black pt-4 pb-0 md:py-12 md:pt-4 md:pb-0 h-auto min-h-[100vh] md:min-h-[140vh] flex flex-col justify-start md:justify-between">
       {/* Parallax Stars Background - Visible on all devices */}
       <div className="star-field">
         <ParallaxStars />
@@ -80,7 +80,7 @@ const HeroSection: React.FC = () => {
           
           <h1 className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block mb-0">
             <Image
-              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 -mt-4 md:mt-0"
+              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-6 md:mt-0"
               src="/logo.png"
               alt="Hackathon Logo"
               width={1000}
@@ -91,7 +91,7 @@ const HeroSection: React.FC = () => {
           </h1>
           
           {/* Tagline with animation */}
-          <p className="text-white mt-2 md:mt-0 lg:-mt-15 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
+          <p className="text-white -mt-6 md:-mt-12 lg:-mt-16 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
         </div>
         
         {/* Main container with evenly distributed elements */}
@@ -486,7 +486,7 @@ const HeroSection: React.FC = () => {
           height: var(--w);
         }
       `}</style>
-    </AuroraBackground>
+    </section>
   );
 };
 

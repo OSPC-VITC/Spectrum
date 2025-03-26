@@ -19,6 +19,7 @@ const navItems = [
   { name: 'Tracks', href: '#tracks' },
   { name: 'Timeline', href: '#timeline' },
   { name: 'Prizes', href: '#prizes' },
+  { name: 'Judges', href: '#judges' },
   { name: 'Organisers', href: '#organisers' },
   { name: 'Sponsors', href: '#sponsors' },
   { name: 'FAQs', href: '#faqs' },
