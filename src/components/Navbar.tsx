@@ -178,7 +178,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
                 className="apply-button" 
                 data-hackathon-slug="spectrum25" 
                 data-button-theme="light"
-                style={{ height: '48px', width: '340px' }}
+                style={{ height: '44px', width: '312px' }}
               ></div>
             </motion.div>
           </div>
@@ -254,7 +254,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
                   className="apply-button" 
                   data-hackathon-slug="spectrum25" 
                   data-button-theme="light"
-                  style={{ height: '48px', width: '100%', maxWidth: '360px' }}
+                  style={{ height: '44px', width: '312px' }}
                 ></div>
               </motion.div>
             </motion.div>

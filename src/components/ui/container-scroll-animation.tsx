@@ -38,7 +38,7 @@ export const ContainerScroll = ({
   };
 
   // More pronounced initial tilt (40 degrees) that ends at 0 degrees when scrolled
-  const rotate = useTransform(scrollYProgress, [0, 0.5], [40, 0]);
+  const rotate = useTransform(scrollYProgress, [0, 0.5], isMobile ? [5, 0] : [40, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], scaleDimensions());
   const translate = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
 
@@ -102,7 +102,7 @@ export const Card = ({
 }) => {
   // Calculate appropriate height for the card when in mobile
   const mobileCardHeight = isMobile && mobileHeight ? 
-    { height: `calc(${mobileHeight} - 10px)` } : {};
+    { height: `calc(${mobileHeight})` } : {};
 
   return (
     <motion.div
@@ -112,10 +112,10 @@ export const Card = ({
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
         ...mobileCardHeight,
-        transformOrigin: "center center", // Important for rotation
+        transformOrigin: isMobile ? "center bottom" : "center center", // Changed origin point for mobile
         transformStyle: "preserve-3d", // Enable 3D effects
       }}
-      className="max-w-6xl -mt-6 md:-mt-0 mx-auto h-[20rem] md:aspect-[16/8.5] md:h-auto w-[98%] border-2 border-purple-500/30 p-1 md:p-2 bg-black/90 rounded-[20px] shadow-2xl"
+      className="max-w-6xl mt-0 md:-mt-0 mx-auto h-[20rem] md:aspect-[16/8.5] md:h-auto w-[98%] border-2 border-purple-500/30 p-1 md:p-2 bg-black/90 rounded-[20px] shadow-2xl"
     >
       <div className="h-full w-full overflow-hidden rounded-lg bg-black md:rounded-lg md:p-2">
         {children}

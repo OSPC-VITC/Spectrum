@@ -80,7 +80,7 @@ const HeroSection: React.FC = () => {
           
           <h1 className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block mb-0">
             <Image
-              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-6 md:mt-0"
+              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 -mt-4 md:mt-0"
               src="/logo.png"
               alt="Hackathon Logo"
               width={1000}
@@ -91,7 +91,7 @@ const HeroSection: React.FC = () => {
           </h1>
           
           {/* Tagline with animation */}
-          <p className="text-white -mt-6 md:-mt-12 lg:-mt-16 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
+          <p className="text-white mt-2 md:mt-0 lg:-mt-15 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
         </div>
         
         {/* Main container with evenly distributed elements */}
@@ -220,7 +220,7 @@ const HeroSection: React.FC = () => {
             </motion.div>
             
             {/* Mobile-only video section with proper spacing */}
-            <div className="w-full h-[220px] mt-12 mb-0">
+            <div className="w-full mt-12 mb-6">
               <HeroScrollDemo />
             </div>
           </div>
@@ -353,7 +353,7 @@ const HeroSection: React.FC = () => {
             </div>
             
             {/* Hero Scroll Video Demo */}
-            <div className="w-full mt-0 mb-0">
+            <div className="w-full mt-4 mb-8">
               <HeroScrollDemo />
             </div>
           </div>
