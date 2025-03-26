@@ -42,6 +42,7 @@ src: url('../../public/fonts/Xeroda.otf') format('truetype');
 body {
 scroll-behavior: smooth;
 font-family: 'Xeroda', sans-serif;
+background-color: #000; /* Add a solid black background color */
 }
 
 /* ==========================================================================
@@ -189,7 +190,7 @@ font-family: 'Xeroda', sans-serif;
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
   }
 }
 
@@ -238,7 +239,8 @@ section {
   transform: translate3d(0, 0, 0);
   position: relative;
   transition: background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-  background-color: black !important; /* Force black background for all sections */
+  background-color: transparent !important; /* Changed from black to transparent */
+  z-index: 10; /* Added z-index to ensure content stays above background */
 }
 
 /* Section fade transition classes */

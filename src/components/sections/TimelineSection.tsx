@@ -63,16 +63,16 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
           duration-500 
           rounded-2xl
           ${highlight 
-            ? 'bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-purple-500/50' 
-            : 'bg-white/10 border-white/20'}
-          ${highlight ? 'shadow-2xl shadow-purple-500/40' : 'hover:shadow-xl hover:shadow-purple-500/30'}
+            ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-purple-500/30' 
+            : 'bg-black/30 border-white/10'}
+          ${highlight ? 'shadow-xl shadow-purple-500/20' : 'hover:shadow-lg hover:shadow-purple-500/20'}
           h-full
         `}
       >
         {/* Background Image Layer */}
         {backgroundImage && (
           <div 
-            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-500"
+            className="absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500"
             style={{
               backgroundImage: `url(${backgroundImage})`,
               backgroundSize: 'cover',
@@ -82,7 +82,7 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
         )}
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/60 to-purple-900/60 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 to-purple-900/40 mix-blend-overlay"></div>
       
       <CardContent className="p-6 relative z-10">
         <div className={`flex flex-col ${isLeft ? "items-end text-right" : "items-start text-left"}`}>
@@ -206,7 +206,7 @@ const TimelineSection: React.FC = () => {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="min-h-screen py-24 bg-gradient-to-br from-black via-black to-purple-950 text-white overflow-hidden relative"
+      className="min-h-screen py-24 text-white overflow-hidden relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -215,8 +215,9 @@ const TimelineSection: React.FC = () => {
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-center mb-20"
         >
-          <h2 className="font-['Megrim'] text-6xl md:text-7xl lg:text-8xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 mb-4 tracking-tight">
-            EVENT TIMELINE
+          <h2 className="mb-10 text-center font-bold tracking-wider leading-tight" style={{ fontSize: "clamp(40px, 10vw, 70px)" }}>
+            <span className="text-white">EVENT</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500"> TIMELINE</span>
           </h2>
           <div className="h-1 w-32 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full"></div>
           <p className="mt-6 text-blue-100/80 max-w-2xl mx-auto text-lg">

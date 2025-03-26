@@ -4,7 +4,8 @@ import { GeistMono } from 'geist/font/mono';
 import { Megrim } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/next';
-
+import { BeamsBackground } from '@/components/ui/beams-background';
+import AnimatedStars from '@/components/AnimatedStars';
 
 import "./globals.css";
 import ClientWrapper from '@/components/ClientWrapper'
@@ -21,6 +22,7 @@ const Xeroda = localFont({
   variable: '--font-Xeroda',
   display: 'swap',
 });
+
 // Metadata configuration based on comprehensive SEO strategy
 export const metadata: Metadata = {
   metadataBase: new URL('https://spectrum25.tech'),
@@ -173,11 +175,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>
-        <ClientWrapper>
-          {children}
-          <Analytics />
-        </ClientWrapper>
+      <body className="bg-black min-h-screen">
+        {/* Site-wide Parallax Stars - Using a separate client component */}
+        <AnimatedStars />
+        
+        <BeamsBackground intensity="strong">
+          <ClientWrapper>
+            {children}
+            <Analytics />
+          </ClientWrapper>
+        </BeamsBackground>
       </body>
     </html>
   );

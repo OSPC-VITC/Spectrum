@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import AboutSection from '@/components/sections/AboutSection';
 import TracksSection from '@/components/sections/TracksSection';
@@ -13,9 +16,19 @@ import HeroSection from '@/components/sections/Hero';
 
 export default function Home() {
   return (
-    <main className="bg-black min-h-screen overflow-x-hidden">
+    <motion.main 
+      className="min-h-screen overflow-x-hidden relative z-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
       <Navbar />
-      <div className="space-y-0 pt-16">
+      <motion.div 
+        className="space-y-0 pt-16"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+      >
         <HeroSection />
         <AboutSection />
         <TracksSection />
@@ -27,7 +40,7 @@ export default function Home() {
         <FAQsSection />
         <ContactSection />
         <Footer />
-      </div>
-    </main>
+      </motion.div>
+    </motion.main>
   );
 }

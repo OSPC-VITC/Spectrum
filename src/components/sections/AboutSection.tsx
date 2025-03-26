@@ -1,19 +1,18 @@
 "use client"
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Shield } from "lucide-react"; // Only keep the icons you use
 
 const AboutSection: React.FC = () => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
-  
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ['-50px', '50px']);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   
   // Animation variants
   const containerVariants = {

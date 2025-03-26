@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { AuroraBackground } from '@/components/ui/aurora-background';
-import { ParallaxStars } from '@/components/ui/parallax-stars';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { HeroScrollDemo } from './HeroScrollDemo';
@@ -50,11 +48,6 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="w-full overflow-hidden bg-black pt-4 pb-0 md:py-12 md:pt-4 md:pb-0 h-auto min-h-[100vh] md:min-h-[140vh] flex flex-col justify-start md:justify-between">
-      {/* Parallax Stars Background - Visible on all devices */}
-      <div className="star-field">
-        <ParallaxStars />
-      </div>
-      
       {/* SVG filter for timer containers */}
       <svg className="hidden">
         <filter id="unopaq" width="3000%" x="-1000%" height="3000%" y="-1000%">

@@ -67,8 +67,11 @@ export const ParallaxStars: React.FC = () => {
     // Initialize stars with deterministic values
     const initStars = () => {
       const stars: Star[] = [];
-      // Increase the number of stars and adjust density for better coverage
-      const numStars = Math.min(350, Math.floor((canvas.width * canvas.height) / 3000));
+      // Adjust number of stars based on device type
+      const numStars = isTouchDevice.current 
+        ? Math.min(250, Math.floor((canvas.width * canvas.height) / 4000)) // Fewer stars for mobile
+        : Math.min(350, Math.floor((canvas.width * canvas.height) / 3000)); // More stars for desktop
+      
       const seed = 12345; // Fixed seed for deterministic values
 
       // Create a grid-based distribution for more even coverage
@@ -102,19 +105,25 @@ export const ParallaxStars: React.FC = () => {
           
           const colorIndex = Math.floor(r8 * starColors.length);
           
-          // Variable star sizes with more small stars
-          const sizeMultiplier = r3 < 0.8 ? r3 * 1.5 : r3 * 3;
+          // Adjust star properties based on device type
+          const sizeMultiplier = isTouchDevice.current
+            ? (r3 < 0.85 ? r3 * 1.2 : r3 * 2.5) // Slightly larger stars on average for mobile
+            : (r3 < 0.8 ? r3 * 1.5 : r3 * 3);   // Size distribution for desktop
+          
+          // Speed adjustments for different devices - make desktop stars much faster
+          const speedFactor = isTouchDevice.current ? 0.15 : 0.35; // Significantly increased speed factor for desktop
+          const speedBase = isTouchDevice.current ? 0.1 : 0.25;   // Significantly increased base speed for desktop
           
           stars.push({
             x: cellX + xOffset,
             y: cellY + yOffset,
             size: sizeMultiplier + 1, // Ensure minimum size
-            speed: r4 * 0.2 + 0.05,
+            speed: r4 * speedFactor + speedBase,
             opacity: r5 * 0.5 + 0.3,
             rotation: r6 * Math.PI * 2,
-            rotationSpeed: (r7 - 0.5) * 0.01,
+            rotationSpeed: (r7 - 0.5) * (isTouchDevice.current ? 0.02 : 0.015), // Increased rotation for desktop
             color: starColors[colorIndex],
-            twinkleSpeed: r8 * 0.02 + 0.01,
+            twinkleSpeed: r8 * (isTouchDevice.current ? 0.03 : 0.025) + (isTouchDevice.current ? 0.02 : 0.015), // Increased twinkling for desktop
             twinklePhase: r9 * Math.PI * 2
           });
           
@@ -156,6 +165,30 @@ export const ParallaxStars: React.FC = () => {
       const event = e instanceof MouseEvent ? e : e.touches[0];
       
       if (!event) return;
+      
+      // For desktop, apply an immediate small movement to make the effect more responsive
+      if (!isTouchDevice.current && starsRef.current.length > 0) {
+        const oldMouseX = mouseRef.current.x;
+        const oldMouseY = mouseRef.current.y;
+        const newMouseX = event.clientX - rect.left;
+        const newMouseY = event.clientY - rect.top;
+        
+        // Calculate the movement vector
+        const moveX = newMouseX - oldMouseX;
+        const moveY = newMouseY - oldMouseY;
+        
+        // Apply a small immediate movement to stars for extra responsiveness
+        // Only do this for significant mouse movements
+        if (Math.abs(moveX) > 5 || Math.abs(moveY) > 5) {
+          const normalizedMoveX = moveX / rect.width * 2;
+          const normalizedMoveY = moveY / rect.height * 2;
+          
+          starsRef.current.forEach(star => {
+            star.x += normalizedMoveX * star.speed * 10; // Immediate small shift
+            star.y += normalizedMoveY * star.speed * 10;
+          });
+        }
+      }
       
       mouseRef.current = {
         x: event.clientX - rect.left,
@@ -241,36 +274,52 @@ export const ParallaxStars: React.FC = () => {
         // Update rotation
         star.rotation += star.rotationSpeed;
 
-        // Apply a gentle movement to all stars regardless of device
-        const time = timeRef.current * 0.0001;
-        star.x += Math.sin(time + star.twinklePhase) * 0.1;
-        star.y += Math.cos(time + star.twinklePhase * 2) * 0.1;
-
-        // Only apply additional parallax effect on non-touch devices
-        if (!isTouchDevice.current) {
-          // Calculate parallax effect based on pointer position
-          // Use relative values for better scaling across screen sizes
-          const relativeMouseX = mouseX / rect.width;
-          const relativeMouseY = mouseY / rect.height;
-          const centerXRatio = 0.5;
-          const centerYRatio = 0.5;
+        // Different movement behavior based on device type
+        if (isTouchDevice.current) {
+          // For mobile: faster random movement for a more dynamic effect
+          const time = timeRef.current * 0.0003; // Increased speed for mobile
+          star.x += Math.sin(time + star.twinklePhase * 3) * 0.5;
+          star.y += Math.cos(time + star.twinklePhase * 2) * 0.5;
           
-          const parallaxX = (relativeMouseX - centerXRatio) * 0.5;
-          const parallaxY = (relativeMouseY - centerYRatio) * 0.5;
-
-          // Update star position with parallax, scaled by canvas dimensions
-          star.x += parallaxX * star.speed * (canvas.width * 0.01);
-          star.y += parallaxY * star.speed * (canvas.height * 0.01);
+          // Ensure stars wrap around screen
+          if (star.x < -star.size * 2) star.x = canvas.width + star.size;
+          if (star.x > canvas.width + star.size * 2) star.x = -star.size;
+          if (star.y < -star.size * 2) star.y = canvas.height + star.size;
+          if (star.y > canvas.height + star.size * 2) star.y = -star.size;
+        } else {
+          // For desktop: parallax effect based on mouse position
+          // Apply a gentle base movement regardless of mouse
+          const time = timeRef.current * 0.0006; // Further increased speed for desktop
+          star.x += Math.sin(time + star.twinklePhase) * 0.4; // Further increased base movement
+          star.y += Math.cos(time + star.twinklePhase * 2) * 0.4;
+          
+          // Calculate parallax based on mouse position
+          const distanceFromCenter = {
+            x: (mouseX - centerX) / centerX,
+            y: (mouseY - centerY) / centerY
+          };
+          
+          // Apply stronger parallax movement with increased responsiveness
+          star.x += distanceFromCenter.x * star.speed * 5.0; // Further increased multiplier for faster response
+          star.y += distanceFromCenter.y * star.speed * 5.0;
+          
+          // Ensure stars wrap around screen
+          if (star.x < -star.size * 2) star.x = canvas.width + star.size;
+          if (star.x > canvas.width + star.size * 2) star.x = -star.size;
+          if (star.y < -star.size * 2) star.y = canvas.height + star.size;
+          if (star.y > canvas.height + star.size * 2) star.y = -star.size;
         }
 
-        // Wrap around screen with proper boundaries
-        if (star.x < 0) star.x = canvas.width;
-        if (star.x > canvas.width) star.x = 0;
-        if (star.y < 0) star.y = canvas.height;
-        if (star.y > canvas.height) star.y = 0;
-
-        // Draw star
-        drawStar(ctx, star.x, star.y, star.size, star.rotation, star.color, currentOpacity);
+        // Draw the star
+        drawStar(
+          ctx,
+          star.x,
+          star.y,
+          star.size,
+          star.rotation,
+          star.color,
+          currentOpacity
+        );
       });
 
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -297,7 +346,7 @@ export const ParallaxStars: React.FC = () => {
     <canvas
       ref={canvasRef}
       className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: isTouchDevice.current ? 0.5 : 0.7 }} // Increased opacity for better visibility
+      style={{ opacity: isTouchDevice.current ? 0.5 : 0.8 }} // Increased opacity for better visibility on desktop
     />
   );
 }; 

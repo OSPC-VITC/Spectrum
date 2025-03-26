@@ -255,8 +255,8 @@ export default function TracksSection() {
                     >
                       <Badge className="bg-purple-600/80 hover:bg-purple-600 mb-3">Track {index + 1}</Badge>
                       <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
-                      <p className="text-sm leading-tight text-gray-300 italic">
-                        <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
+                      <p className="text-sm leading-tight text-purple-300">
+                        <span className="font-semibold">Outcome:</span> {track.outcome}
                       </p>
                     </motion.div>
                   )}
@@ -286,7 +286,9 @@ export default function TracksSection() {
               <div className="a t"></div>
               <div className="a b"></div>
 
-              <div className="relative z-10 p-6">
+              {/* Content layer */}
+              <div className="relative z-10 p-6 flex flex-col h-full">
+                {/* Title always at top */}
                 <h3 className="font-['Megrim'] text-base sm:text-lg uppercase tracking-wider font-medium text-white mb-2"
                   style={{
                     textShadow: '0 0 15px rgba(255, 255, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.9)'
@@ -295,6 +297,7 @@ export default function TracksSection() {
                   {track.title}
                 </h3>
 
+                {/* Expandable content */}
                 <AnimatePresence>
                   {index === activeIndex && (
                     <motion.div
@@ -302,13 +305,16 @@ export default function TracksSection() {
                       initial="hidden"
                       animate="visible"
                       exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                      className="mt-4"
+                      className="flex-grow flex flex-col justify-end"
                     >
-                      <Badge className="bg-purple-600/80 hover:bg-purple-600 w-fit mb-3">Track {index + 1}</Badge>
-                      <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
-                      <p className="text-sm leading-tight text-gray-300 italic">
-                        <span className="text-purple-300 font-semibold">Outcome:</span> {track.outcome}
-                      </p>
+                      {/* All content at bottom */}
+                      <div className="mt-auto">
+                        <Badge className="bg-purple-600/80 hover:bg-purple-600 w-fit mb-3">Track {index + 1}</Badge>
+                        <p className="text-sm leading-tight text-gray-200 mb-3">{track.description}</p>
+                        <p className="text-sm leading-tight text-purple-300">
+                          <span className="font-semibold">Outcome:</span> {track.outcome}
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

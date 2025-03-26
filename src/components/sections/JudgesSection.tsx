@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Linkedin } from 'lucide-react';
 
 // Image URLs from your request
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const COVERS = [
   "https://i.scdn.co/image/ab67616d00001e020ecc8c4fd215d9eb83cbfdb3",
   "https://i.scdn.co/image/ab67616d00001e02d9194aa18fa4c9362b47464f",
@@ -131,12 +132,12 @@ export default function JudgesSection() {
     
     // Define styles with proper TypeScript typing for Framer Motion
     const styles: React.CSSProperties = {
-      position: 'absolute' as 'absolute',
+      position: 'absolute',
       transformOrigin: 'center center',
       perspective: 1200,
       willChange: 'transform, opacity, z-index',
-      pointerEvents: 'auto' as 'auto',
-      isolation: isActive ? 'isolate' as 'isolate' : 'auto' as 'auto',
+      pointerEvents: 'auto',
+      isolation: isActive ? 'isolate' : 'auto',
       filter: isActive ? 'none' : (isMobile ? 'brightness(0.7) blur(1px)' : 'brightness(0.8)')
     };
     
@@ -195,8 +196,11 @@ export default function JudgesSection() {
                       "0 20px 25px -5px rgba(0, 0, 0, 0.8)",
                     WebkitBoxReflect: index === activeIndex ? 
                       "below 0.5vmin linear-gradient(transparent 0 70%, rgba(0,0,0,0.1) 85%, rgba(0,0,0,0.3) 100%)" :
-                      "none"
-                  }}
+                      "none",
+                    textAlign: "center",
+                    objectPosition: judge.role === "Head of Product, DevOps, IBM Z" ? "85% center" : 
+                                  judge.role === "Senior Specialist, PayPal" ? "center center" : "center"
+                   }}
                 >
                   <div className="a l"></div>
                   <div className="a r"></div>
