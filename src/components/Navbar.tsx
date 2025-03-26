@@ -174,13 +174,12 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
               transition={{ delay: 0.8, duration: 0.3 }}
               className="ml-4"
             >
-              <Button
-                variant="default"
-                className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold px-6 py-2 rounded-md transition-all duration-300 transform hover:scale-105"
-                onClick={() => window.open('https://spectrum25.devfolio.co/', '_blank')}
-              >
-                Apply with Devfolio
-              </Button>
+              <div 
+                className="apply-button" 
+                data-hackathon-slug="spectrum25" 
+                data-button-theme="light"
+                style={{ height: '48px', width: '340px' }}
+              ></div>
             </motion.div>
           </div>
           
@@ -251,13 +250,12 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
                 }}
                 className="px-4 py-4"
               >
-                <Button
-                  variant="default"
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold px-6 py-2 rounded-md transition-all duration-300"
-                  onClick={() => window.open('https://spectrum25.devfolio.co/', '_blank')}
-                >
-                  Apply with Devfolio
-                </Button>
+                <div 
+                  className="apply-button" 
+                  data-hackathon-slug="spectrum25" 
+                  data-button-theme="light"
+                  style={{ height: '48px', width: '100%', maxWidth: '360px' }}
+                ></div>
               </motion.div>
             </motion.div>
           </motion.div>
