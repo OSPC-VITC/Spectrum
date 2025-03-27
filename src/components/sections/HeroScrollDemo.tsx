@@ -5,9 +5,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 // Preserving the original implementation with the tilt effect, but fixing the cutting issue 
 export function HeroScrollDemo() {
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -43,15 +44,37 @@ export function HeroScrollDemo() {
   const rotate = useTransform(scrollYProgress, [0, 0.5], isMobile ? [35, 0] : [30, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1.05]);
 
+  // Improved toggleMute function that uses the iframe's contentWindow
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    try {
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        // Send postMessage to the YouTube iframe to mute/unmute
+        const newMuteState = !isMuted;
+        const iframe = iframeRef.current;
+        const contentWindow = iframe.contentWindow;
+        
+        if (contentWindow) {
+          const command = newMuteState ? 'mute' : 'unmute';
+          
+          contentWindow.postMessage(
+            `{"event":"command","func":"${command}","args":""}`, 
+            '*'
+          );
+          
+          setIsMuted(newMuteState);
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling mute state:", error);
+    }
   };
 
   // Common iframe and mute button for both mobile and desktop
   const videoContent = (
     <div className="relative w-full h-full video-content">
       <iframe
-        src={`https://www.youtube.com/embed/YzFK7x_LGKk?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&controls=0&showinfo=0&rel=0&playlist=YzFK7x_LGKk&enablejsapi=1`}
+        ref={iframeRef}
+        src={`https://www.youtube.com/embed/YzFK7x_LGKk?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=YzFK7x_LGKk&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`}
         title="Hackathon Showcase"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         className="w-full h-full"
@@ -59,10 +82,10 @@ export function HeroScrollDemo() {
       ></iframe>
       <button
         onClick={toggleMute}
-        className="absolute bottom-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+        className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white p-2 md:p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
         aria-label={isMuted ? "Unmute video" : "Mute video"}
       >
-        {isMuted ? <FaVolumeMute size={24} /> : <FaVolumeUp size={24} />}
+        {isMuted ? <FaVolumeMute size={isMobile ? 18 : 24} /> : <FaVolumeUp size={isMobile ? 18 : 24} />}
       </button>
     </div>
   );

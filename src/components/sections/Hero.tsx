@@ -83,8 +83,8 @@ const HeroSection: React.FC = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 via-blue-500/40 to-cyan-400/40 rounded-lg blur-3xl opacity-70 animate-pulse"></div>
           </h1>
           
-          {/* Tagline with animation */}
-          <p className="text-white -mt-6 md:-mt-12 lg:-mt-16 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
+          {/* Tagline with animation - smaller text on mobile */}
+          <p className="text-white -mt-6 md:-mt-12 lg:-mt-16 font-light tracking-wider text-sm md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
         </div>
         
         {/* Main container with evenly distributed elements */}
@@ -160,16 +160,16 @@ const HeroSection: React.FC = () => {
               </div>
             </div>
             
-            {/* Calendar and Location Container for mobile - with spacing */}
-            <div className="flex flex-col items-center gap-3">
+            {/* Calendar and Location Container for mobile - smaller text and tighter spacing */}
+            <div className="flex flex-col items-center gap-2">
               <motion.div 
                 className="flex items-center justify-center space-x-2"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <FaCalendarAlt className="text-purple-400 text-2xl" />
-                <span className="text-white text-xl font-medium">
+                <FaCalendarAlt className="text-purple-400 text-lg" />
+                <span className="text-white text-sm md:text-xl font-medium">
                   April 11-12, 2025
                 </span>
               </motion.div>
@@ -179,14 +179,14 @@ const HeroSection: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                <FaMapMarkerAlt className="text-purple-400 text-2xl" />
-                <span className="text-white text-xl font-medium">
+                <FaMapMarkerAlt className="text-purple-400 text-lg" />
+                <span className="text-white text-sm md:text-xl font-medium">
                   MG Auditorium, VIT Chennai
                 </span>
               </motion.div>
             </div>
             
-            {/* Register Button for mobile - with spacing */}
+            {/* Register Button for mobile - smaller size */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,15 +196,15 @@ const HeroSection: React.FC = () => {
                 href="https://spectrum25.devfolio.co/" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block relative group"
+                className="inline-block relative group scale-90 md:scale-100"
               >
                 <div className="timer-container register-btn">
                   <div className="a l"></div>
                   <div className="a r"></div>
                   <div className="a t"></div>
                   <div className="a b"></div>
-                  <div className="timer-content p-4 flex items-center justify-center">
-                    <span className="text-xl text-gray-200">
+                  <div className="timer-content p-3 md:p-4 flex items-center justify-center">
+                    <span className="text-base md:text-xl text-gray-200">
                       REGISTER NOW
                     </span>
                   </div>
