@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -173,7 +173,7 @@ export default function TracksSection() {
               {'images' in track ? (
                 <div className="absolute inset-0 w-full h-full">
                   <div className="absolute inset-0 w-1/2 h-full">
-                    <Image
+                    <OptimizedImage
                       src={track.images!.left}
                       alt={`${track.title} - Left`}
                       fill
@@ -184,11 +184,13 @@ export default function TracksSection() {
                         objectPosition: track.title === "AgriTech & MedTech" ? '85% center' : 
                                        track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
                       }}
+                      mobileQuality={60}
+                      desktopQuality={85}
                       priority={index === 0}
                     />
                   </div>
                   <div className="absolute right-0 w-1/2 h-full">
-                    <Image
+                    <OptimizedImage
                       src={track.images!.right}
                       alt={`${track.title} - Right`}
                       fill
@@ -199,12 +201,14 @@ export default function TracksSection() {
                         objectPosition: track.title === "AgriTech & MedTech" ? '95% center' : 
                                      track.title === "Sustainability & Social Well-Being" ? 'center center' : 'center'
                       }}
+                      mobileQuality={60}
+                      desktopQuality={85}
                       priority={index === 0}
                     />
                   </div>
                 </div>
               ) : (
-                <Image
+                <OptimizedImage
                   src={track.image}
                   alt={track.title}
                   fill
@@ -213,6 +217,8 @@ export default function TracksSection() {
                     opacity: index === activeIndex ? 0.9 : 0.7,
                     filter: index === activeIndex ? 'brightness(0.9)' : 'brightness(0.7)'
                   }}
+                  mobileQuality={60}
+                  desktopQuality={85}
                   priority={index === 0}
                 />
               )}
@@ -325,7 +331,7 @@ export default function TracksSection() {
                 {'images' in track ? (
                   <div className="absolute inset-0 w-full h-full">
                     <div className="absolute inset-0 w-1/2 h-full">
-                      <Image
+                      <OptimizedImage
                         src={track.images!.left}
                         alt={`${track.title} - Left`}
                         fill
@@ -334,10 +340,12 @@ export default function TracksSection() {
                           opacity: 0.7,
                           filter: 'brightness(0.7)'
                         }}
+                        mobileQuality={60}
+                        desktopQuality={85}
                       />
                     </div>
                     <div className="absolute right-0 w-1/2 h-full">
-                      <Image
+                      <OptimizedImage
                         src={track.images!.right}
                         alt={`${track.title} - Right`}
                         fill
@@ -346,11 +354,13 @@ export default function TracksSection() {
                           opacity: 0.7,
                           filter: 'brightness(0.7)'
                         }}
+                        mobileQuality={60}
+                        desktopQuality={85}
                       />
                     </div>
                   </div>
                 ) : (
-                  <Image
+                  <OptimizedImage
                     src={track.image}
                     alt={track.title}
                     fill
@@ -359,6 +369,8 @@ export default function TracksSection() {
                       opacity: 0.7,
                       filter: 'brightness(0.7)'
                     }}
+                    mobileQuality={60}
+                    desktopQuality={85}
                   />
                 )}
                 

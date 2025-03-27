@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import { Megrim } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/next';
-import { BeamsBackground } from '@/components/ui/beams-background';
+import dynamic from 'next/dynamic';
 import AnimatedStars from '@/components/AnimatedStars';
 
 import "./globals.css";
@@ -22,6 +22,12 @@ const Xeroda = localFont({
   variable: '--font-Xeroda',
   display: 'swap',
 });
+
+// Dynamically import BeamsBackground with client-side detection
+const ConditionalBeamsBackground = dynamic(
+  () => import('@/components/ConditionalBeamsBackground'),
+  { ssr: false }
+);
 
 // Metadata configuration based on comprehensive SEO strategy
 export const metadata: Metadata = {
@@ -179,12 +185,12 @@ export default function RootLayout({
         {/* Site-wide Parallax Stars - Using a separate client component */}
         <AnimatedStars />
         
-        <BeamsBackground intensity="strong">
+        <ConditionalBeamsBackground>
           <ClientWrapper>
             {children}
             <Analytics />
           </ClientWrapper>
-        </BeamsBackground>
+        </ConditionalBeamsBackground>
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Linkedin } from 'lucide-react';
-import Image from 'next/image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 // Image URLs from your request
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -207,12 +207,15 @@ export default function JudgesSection() {
                   <div className="a r"></div>
                   <div className="a t"></div>
                   <div className="a b"></div>
-                  <Image 
+                  <OptimizedImage 
                     src={judge.image} 
                     alt={judge.name}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    mobileQuality={60}
+                    desktopQuality={85}
+                    loading="lazy"
                   />
                   
                   {/* Judge Info Overlay */}

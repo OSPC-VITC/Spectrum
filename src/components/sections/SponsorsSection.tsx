@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import Image from 'next/image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 import { Card } from "@/components/ui/card";
 import { ExternalLink } from 'lucide-react';
 
@@ -175,13 +175,15 @@ const SponsorsSection: React.FC = () => {
                       <div className="p-4 space-y-3">
                         <div className="relative flex items-center justify-center h-36 w-full">
                           <div className={`relative ${sponsor.name === "BlackBoxAI" ? "w-full h-full" : "w-[95%] h-full"}`}>
-                            <Image
+                            <OptimizedImage
                               src={sponsor.logo || '/placeholder-logo.png'}
                               alt={sponsor.name}
                               fill
                               className={`object-contain brightness-200 ${sponsor.name === "BlackBoxAI" ? "scale-90" : ""}`}
-                              sizes="(max-width: 768px) 100vw, 33vw"
-                              priority
+                              mobileQuality={60}
+                              desktopQuality={85}
+                              mobileSizes="(max-width: 768px) 100vw, 33vw"
+                              priority={tier === 'kernel'}
                             />
                           </div>
                         </div>
