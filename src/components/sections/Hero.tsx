@@ -72,19 +72,21 @@ const HeroSection: React.FC = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-96 bg-gradient-radial from-purple-600/30 via-blue-500/15 to-transparent rounded-full blur-3xl animate-pulse"></div>
           
           <h1 className="text-7xl md:text-9xl lg:text-9xl font-black tracking-tight relative inline-block mb-0">
-            <Image
-              className="w-[95vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-6 md:mt-0"
-              src="/logo.png"
-              alt="Hackathon Logo"
-              width={1000}
-              height={1000}
-            />
+            <div className="flex justify-center mb-2">
+              <Image
+                className="w-[90vw] max-w-[500px] md:max-w-none md:w-[650px] lg:w-[750px] drop-shadow-2xl transform transition-all duration-700 hover:scale-105 mt-1 md:mt-0"
+                src="/logo.png"
+                alt="Hackathon Logo"
+                width={1000}
+                height={1000}
+              />
+            </div>
             {/* Enhanced animated glow effect */}
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/40 via-blue-500/40 to-cyan-400/40 rounded-lg blur-3xl opacity-70 animate-pulse"></div>
           </h1>
           
           {/* Tagline with animation */}
-          <p className="text-white -mt-6 md:-mt-12 lg:-mt-16 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
+          <p className="text-white -mt-5 md:-mt-12 lg:-mt-16 font-light tracking-wider text-xl md:text-xl animate-fadeIn">Not Your Average Hackathon! <br />Innovate Through Dimensions!</p>
         </div>
         
         {/* Main container with evenly distributed elements */}
