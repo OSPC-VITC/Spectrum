@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Image, { ImageProps } from 'next/image';
 
-interface OptimizedImageProps extends Omit<ImageProps, 'quality'> {
+interface OptimizedImageProps extends Omit<ImageProps, 'quality' | 'loading'> {
   desktopQuality?: number;
   mobileQuality?: number;
   mobileSizes?: string;
   desktopSizes?: string;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
 }
 
 export function OptimizedImage({ 
@@ -16,11 +18,17 @@ export function OptimizedImage({
   mobileSizes = "(max-width: 768px) 100vw, 50vw",
   desktopSizes = "(max-width: 1200px) 50vw, 33vw",
   sizes,
-  loading = 'lazy',
+  loading,
+  priority,
   ...props 
 }: OptimizedImageProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
+
+  // Determine the correct loading value
+  // If priority is true, don't set loading (Next.js will use 'eager')
+  // Otherwise use the provided loading value or default to 'lazy'
+  const loadingValue = priority ? undefined : (loading || 'lazy');
 
   useEffect(() => {
     setIsClient(true);
@@ -42,7 +50,8 @@ export function OptimizedImage({
         {...props}
         quality={desktopQuality}
         sizes={sizes || desktopSizes}
-        loading={loading}
+        priority={priority}
+        loading={loadingValue}
       />
     );
   }
@@ -52,7 +61,8 @@ export function OptimizedImage({
       {...props}
       quality={isMobile ? mobileQuality : desktopQuality}
       sizes={sizes || (isMobile ? mobileSizes : desktopSizes)}
-      loading={loading}
+      priority={priority}
+      loading={loadingValue}
     />
   );
 } 
