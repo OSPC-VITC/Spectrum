@@ -18,6 +18,12 @@ export function smoothScrollToSection(sectionId: string, offset: number = 64) {
   // Get all sections
   const allSections = document.querySelectorAll('section[id]');
   
+  // Check if we're on a mobile device
+  const isMobile = window.innerWidth <= 768;
+  
+  // Use a smaller offset on mobile to account for the smaller navbar
+  const effectiveOffset = isMobile ? 48 : offset;
+  
   // First, remove any existing target from all sections
   allSections.forEach(section => {
     if (section.id !== sectionId) {
@@ -40,13 +46,18 @@ export function smoothScrollToSection(sectionId: string, offset: number = 64) {
   targetSection.classList.add('scrolling-to');
   
   // Scroll to the section
-  const top = targetSection.offsetTop - offset;
+  const top = targetSection.offsetTop - effectiveOffset;
+  
+  // On mobile, use a shorter, snappier animation
   window.scrollTo({
     top,
     behavior: 'smooth'
   });
   
   // After scrolling completes, mark the target section to apply the blend effect
+  // Adjust the timeout based on device - faster on mobile
+  const scrollCompleteDelay = isMobile ? 500 : 700;
+  
   setTimeout(() => {
     // Add the target pseudo class
     targetSection.setAttribute('id', `${sectionId}-target`);
@@ -54,5 +65,5 @@ export function smoothScrollToSection(sectionId: string, offset: number = 64) {
       targetSection.setAttribute('id', sectionId);
       targetSection.classList.remove('scrolling-to');
     }, 50);
-  }, 700); // This timing should match the scroll duration
+  }, scrollCompleteDelay); // This timing should match the scroll duration
 }

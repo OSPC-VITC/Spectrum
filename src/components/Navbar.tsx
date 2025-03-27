@@ -42,14 +42,34 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
-const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
+  // Desktop navigation handler
+  const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
-    smoothScrollToSection(targetId);
-    setIsOpen(false);
-    setActiveSection(targetId);
+    
+    // Small delay to allow UI to update
+    setTimeout(() => {
+      smoothScrollToSection(targetId);
+      setActiveSection(targetId);
+    }, 10);
   };
 
+  // Dedicated mobile navigation handler with longer delay
+  const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    
+    // First close the mobile menu
+    setIsOpen(false);
+    
+    // Then scroll to the section after a delay to allow menu animation to complete
+    setTimeout(() => {
+      smoothScrollToSection(targetId);
+      setActiveSection(targetId);
+    }, 300);
+  };
+
+  // Load Devfolio script
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://apply.devfolio.co/v2/sdk.js';
@@ -61,6 +81,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     }
   }, []);
 
+  // Handle scroll spy logic
   const handleScrollSpy = useCallback(() => {
     // Check if scrolled past a threshold to change navbar style
     if (window.scrollY > 10) {
@@ -97,6 +118,27 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
     window.addEventListener('scroll', throttledScrollSpy, { passive: true });
     return () => window.removeEventListener('scroll', throttledScrollSpy);
   }, [handleScrollSpy]);
+
+  // Animation variants for the mobile menu
+  const menuVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const menuItemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0 }
+  };
+
+  const menuButtonVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 }
+  };
 
   return (
     <motion.nav 
@@ -177,7 +219,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
               <div 
                 className="apply-button" 
                 data-hackathon-slug="spectrum25" 
-                data-button-theme="light"
+                data-button-theme="dark"
                 style={{ height: '44px', width: '312px' }}
               ></div>
             </motion.div>
@@ -190,7 +232,7 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-400 hover:text-white hover:bg-purple-900/20 focus:outline-none"
-              aria-expanded="false"
+              aria-expanded={isOpen}
             >
               <span className="sr-only">Open main menu</span>
               {!isOpen ? <Menu className="h-6 w-6" /> : <X className="h-6 w-6" />}
@@ -202,63 +244,61 @@ const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
       {/* Mobile menu with Framer Motion */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden fixed inset-x-0 top-16 bg-black/90 backdrop-blur-lg z-50 border-t border-purple-900/30"
-          >
-            <motion.div 
-              className="px-2 pt-2 pb-3 space-y-1 sm:px-3"
-              variants={{
-                hidden: { opacity: 0 },
-                show: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-              initial="hidden"
-              animate="show"
+          <>
+            {/* Add a touch-friendly overlay to close the menu */}
+            <motion.div
+              key="mobile-menu-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+              onClick={() => setIsOpen(false)}
+            />
+            <motion.div
+              key="mobile-menu"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden fixed inset-x-0 top-16 bg-black/90 backdrop-blur-lg z-50 border-t border-purple-900/30 max-h-[80vh] overflow-y-auto"
             >
-              {navItems.map((item) => (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleScroll(e, item.href)}
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    show: { opacity: 1, x: 0 }
-                  }}
-                  className={cn(
-                    "block w-full text-left px-4 py-3 rounded-md text-base font-medium transition-colors duration-200",
-                    activeSection === item.href.replace('#', '')
-                      ? "text-white bg-purple-900/30 border-l-2 border-purple-400"
-                      : "text-gray-300 hover:bg-black/40 hover:text-white"
-                  )}
-                >
-                  {item.name}
-                </motion.a>
-              ))}
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, y: 10 },
-                  show: { opacity: 1, y: 0 }
-                }}
-                className="px-4 py-4"
+              <motion.div 
+                className="px-2 pt-2 pb-3 space-y-1 sm:px-3"
+                variants={menuVariants}
+                initial="hidden"
+                animate="show"
               >
-                <div 
-                  className="apply-button" 
-                  data-hackathon-slug="spectrum25" 
-                  data-button-theme="light"
-                  style={{ height: '44px', width: '312px' }}
-                ></div>
+                {navItems.map((item) => (
+                  <motion.a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => handleMobileNavClick(e, item.href)}
+                    variants={menuItemVariants}
+                    className={cn(
+                      "block w-full text-left px-4 py-3 rounded-md text-base font-medium transition-colors duration-200",
+                      activeSection === item.href.replace('#', '')
+                        ? "text-white bg-purple-900/30 border-l-2 border-purple-400"
+                        : "text-gray-300 hover:bg-black/40 hover:text-white"
+                    )}
+                  >
+                    {item.name}
+                  </motion.a>
+                ))}
+                <motion.div
+                  variants={menuButtonVariants}
+                  className="px-4 py-4"
+                >
+                  <div 
+                    className="apply-button" 
+                    data-hackathon-slug="spectrum25" 
+                    data-button-theme="light"
+                    style={{ height: '44px', width: '312px' }}
+                  ></div>
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>
