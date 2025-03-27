@@ -42,6 +42,12 @@ const SponsorsSection: React.FC = () => {
       website: "https://devfolio.co/"
     },
     { 
+      name: "BlackBoxAI", 
+      tier: "kernel", 
+      logo: "/BlackBoxAI.png", 
+      website: "https://www.blackbox.ai/"
+    },
+    { 
       name: "EthIndia", 
       tier: "stack", 
       logo: "/ethindia.svg",
@@ -58,12 +64,6 @@ const SponsorsSection: React.FC = () => {
       tier: "stack", 
       logo: "/polygon.png",
       website: "https://polygon.technology/"
-    },
-    { 
-      name: "BlackBoxAI", 
-      tier: "script", 
-      logo: "/BlackBoxAI.png", 
-      website: "https://www.blackbox.ai/"
     },
   ];
 
@@ -141,7 +141,7 @@ const SponsorsSection: React.FC = () => {
 
               <div className={`
                 grid gap-6 mx-auto px-3 
-                ${tier === 'kernel' ? 'grid-cols-1 max-w-[320px] md:max-w-[38rem] md:grid-cols-2 justify-items-center' : ''} 
+                ${tier === 'kernel' ? 'grid-cols-1 max-w-[320px] md:max-w-[38rem] lg:max-w-[58rem] md:grid-cols-3 justify-items-center' : ''} 
                 ${tier === 'stack' ? 'grid-cols-1 max-w-[320px] md:max-w-[38rem] lg:max-w-[58rem] md:grid-cols-3 justify-items-center' : ''} 
                 ${tier === 'script' ? 'grid-cols-1 max-w-[320px] justify-items-center' : ''}
               `}>
