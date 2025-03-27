@@ -27,7 +27,7 @@ const Xeroda = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://spectrum25.tech'),
   title: {
-    default: "Spectrum Hackathon 2025 | VIT Chennai's Premier Coding Event",
+    default: "Spectrum'25",
     template: "%s | Spectrum Hackathon 2025"
   },
   description: "Join VIT Chennai's flagship hackathon on April 11-12, 2025. Organized by OSPC and CSED with sponsors including Devfolio, Polygon, and Radisson BLU.",

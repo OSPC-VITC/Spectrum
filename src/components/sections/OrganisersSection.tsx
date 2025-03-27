@@ -133,7 +133,7 @@ const OrganisersSection: React.FC = () => {
                         fill
                         className="object-contain brightness-200"
                         sizes="(max-width: 768px) 100vw, 50vw"
-                        priority
+                        priority={false}
                       />
                     </div>
                   </div>

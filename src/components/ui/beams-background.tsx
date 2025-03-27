@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
@@ -50,11 +50,12 @@ export function BeamsBackground({
     const animationFrameRef = useRef<number>(0);
     const MINIMUM_BEAMS = 20;
 
-    const opacityMap = {
+    // Use useMemo for opacityMap to prevent it from changing on every render
+    const opacityMap = useMemo(() => ({
         subtle: 0.7,
         medium: 0.85,
         strong: 1,
-    };
+    }), []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -143,12 +144,19 @@ export function BeamsBackground({
             ctx.filter = "blur(35px)";
 
             const totalBeams = beamsRef.current.length;
+            
+            // Check if it's a mobile device
+            const isMobileDevice = window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
             beamsRef.current.forEach((beam, index) => {
-                beam.y -= beam.speed;
+                // Only move beams on desktop devices
+                if (!isMobileDevice) {
+                    beam.y -= beam.speed;
+                }
                 beam.pulse += beam.pulseSpeed;
 
-                // Reset beam when it goes off screen
-                if (beam.y + beam.length < -100) {
+                // Reset beam when it goes off screen (only for desktop)
+                if (!isMobileDevice && beam.y + beam.length < -100) {
                     resetBeam(beam, index, totalBeams);
                 }
 
@@ -166,7 +174,7 @@ export function BeamsBackground({
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };
-    }, [intensity]);
+    }, [intensity, opacityMap]);
 
     useEffect(() => {
         const particlesArray = Array.from(document.querySelectorAll('.beam-particle'));

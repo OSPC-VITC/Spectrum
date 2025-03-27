@@ -29,7 +29,7 @@ export default function Footer() {
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            © 2025 Spectrum Hackathon. All rights reserved.
+            © 2025 Spectrumm Hackathon. All rights reserved.
           </motion.p>
         </motion.div>
       </div>
