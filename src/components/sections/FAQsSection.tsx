@@ -22,7 +22,7 @@ export default function FAQsSection() {
     },
     {
       question: "Who all can attend?",
-      answer: "Spectrum'25 welcomes students and technology enthusiasts eager to explore innovation and solve complex problems. Whether you're just starting your journey or an experienced developer looking to push boundaries, this hackathon provides an inclusive platform for individuals and teams of all backgrounds to collaborate and create."
+      answer: "Students from colleges all over India are eligible to attend. Spectrum’25 welcomes students and technology enthusiasts eager to explore innovation and solve complex problems. Whether you're just starting your journey or an experienced developer looking to push boundaries, this hackathon provides an inclusive platform for individuals and teams of all backgrounds to collaborate and create."
     },
     {
       question: "Will sleeping arrangements be provided?",
