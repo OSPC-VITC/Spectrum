@@ -17,7 +17,6 @@ import Image from 'next/image';
 const navItems = [
   { name: 'About Us', href: '#about' },
   { name: 'Tracks', href: '#tracks' },
-  { name: 'Timeline', href: '#timeline' },
   { name: 'Prizes', href: '#prizes' },
   { name: 'Judges', href: '#judges' },
   { name: 'Organisers', href: '#organisers' },
