@@ -22,7 +22,7 @@ export default function FAQsSection() {
     },
     {
       question: "Who all can attend?",
-      answer: "Students from colleges all over India are eligible to attend. Spectrum’25 welcomes students and technology enthusiasts eager to explore innovation and solve complex problems. Whether you're just starting your journey or an experienced developer looking to push boundaries, this hackathon provides an inclusive platform for individuals and teams of all backgrounds to collaborate and create."
+      answer: "Students from colleges all over India are eligible to attend. Spectrum'25 welcomes students and technology enthusiasts eager to explore innovation and solve complex problems. Whether you're just starting your journey or an experienced developer looking to push boundaries, this hackathon provides an inclusive platform for individuals and teams of all backgrounds to collaborate and create."
     },
     {
       question: "Will sleeping arrangements be provided?",
@@ -76,13 +76,15 @@ export default function FAQsSection() {
               <div className="faq-content">
                 <button 
                   onClick={() => toggleFaq(index)}
-                  className="w-full text-left p-6 flex justify-between items-center"
+                  className="w-full text-left p-6 flex justify-between items-start"
                   aria-expanded={openIndex === index}
                 >
                   <h3 className="text-xl md:text-2xl font-bold text-white pr-8">{faq.question}</h3>
-                  <FiChevronDown 
-                    className={`text-2xl text-purple-400 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`} 
-                  />
+                  <div className="chevron-container">
+                    <FiChevronDown 
+                      className={`chevron-icon text-purple-400 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`} 
+                    />
+                  </div>
                 </button>
                 
                 <div 
@@ -130,6 +132,21 @@ export default function FAQsSection() {
           z-index: 1;
           color: rgba(255, 255, 255, 0.85);
           width: 100%;
+        }
+        
+        /* Ensure consistent icon sizing */
+        .faq-content .chevron-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          width: 2rem;
+          height: 2rem;
+        }
+        
+        .faq-content .chevron-icon {
+          width: 1.25rem;
+          height: 1.25rem;
         }
 
         .faq-container::before {
@@ -227,6 +244,20 @@ export default function FAQsSection() {
             margin-left: auto;
             margin-right: auto;
             max-width: none;
+          }
+          
+          .faq-content h3 {
+            font-size: 1.125rem;
+            line-height: 1.5;
+          }
+          
+          .faq-content button {
+            padding: 1rem;
+            align-items: flex-start;
+          }
+          
+          .faq-content button > div {
+            margin-top: 0.125rem;
           }
         }
       `}</style>

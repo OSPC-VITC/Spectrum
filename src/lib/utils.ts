@@ -31,39 +31,108 @@ export function smoothScrollToSection(sectionId: string, offset: number = 64) {
     }
   });
   
-  // Create a subtle background transition by applying fade classes
-  allSections.forEach(section => {
-    if (section.id !== sectionId) {
-      section.classList.add('section-fade-out');
-      section.classList.remove('section-fade-in');
-    } else {
-      section.classList.add('section-fade-in');
-      section.classList.remove('section-fade-out');
-    }
-  });
+  // Apply class changes in a requestAnimationFrame for better performance
+  requestAnimationFrame(() => {
+    // Create a subtle background transition by applying fade classes
+    allSections.forEach(section => {
+      if (section.id !== sectionId) {
+        section.classList.add('section-fade-out');
+        section.classList.remove('section-fade-in');
+      } else {
+        section.classList.add('section-fade-in');
+        section.classList.remove('section-fade-out');
+      }
+    });
 
-  // Apply a temporary class to the target section that will be removed after scrolling completes
-  targetSection.classList.add('scrolling-to');
-  
-  // Scroll to the section
-  const top = targetSection.offsetTop - effectiveOffset;
-  
-  // On mobile, use a shorter, snappier animation
-  window.scrollTo({
-    top,
-    behavior: 'smooth'
-  });
-  
-  // After scrolling completes, mark the target section to apply the blend effect
-  // Adjust the timeout based on device - faster on mobile
-  const scrollCompleteDelay = isMobile ? 500 : 700;
-  
-  setTimeout(() => {
-    // Add the target pseudo class
-    targetSection.setAttribute('id', `${sectionId}-target`);
+    // Apply a temporary class to the target section that will be removed after scrolling completes
+    targetSection.classList.add('scrolling-to');
+    
+    // Calculate position once before scrolling
+    const top = targetSection.getBoundingClientRect().top + window.pageYOffset - effectiveOffset;
+    
+    // Use native scroll with performance optimizations
+    window.scrollTo({
+      top,
+      behavior: 'smooth'
+    });
+    
+    // After scrolling completes, mark the target section to apply the blend effect
+    // Adjust the timeout based on device - faster on mobile
+    const scrollCompleteDelay = isMobile ? 500 : 700;
+    
     setTimeout(() => {
-      targetSection.setAttribute('id', sectionId);
-      targetSection.classList.remove('scrolling-to');
-    }, 50);
-  }, scrollCompleteDelay); // This timing should match the scroll duration
+      // Use requestAnimationFrame for smoother callback handling
+      requestAnimationFrame(() => {
+        // Add the target pseudo class
+        targetSection.setAttribute('id', `${sectionId}-target`);
+        
+        // Second RAF to handle the ID restoration
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            targetSection.setAttribute('id', sectionId);
+            targetSection.classList.remove('scrolling-to');
+          }, 50);
+        });
+      });
+    }, scrollCompleteDelay);
+  });
+}
+
+/**
+ * Creates a performant intersection observer for lazy loading content
+ * This improves scroll performance by only rendering what's visible
+ */
+export function createLazyObserver(options: IntersectionObserverInit = {}) {
+  // Default options optimized for performance
+  const defaultOptions: IntersectionObserverInit = {
+    rootMargin: '200px 0px',
+    threshold: 0.01,
+    ...options
+  };
+  
+  // Observer instance that will be reused
+  let observer: IntersectionObserver | null = null;
+  
+  // Map to track elements that have already been processed
+  const processedElements = new WeakMap<Element, boolean>();
+  
+  // Function to observe elements
+  const observe = (
+    element: Element | null, 
+    onIntersect: () => void,
+    onlyOnce = true
+  ) => {
+    if (!element) return () => {};
+    
+    // Don't re-observe elements that have already been processed
+    if (onlyOnce && processedElements.get(element)) return () => {};
+    
+    // Lazy initialize the observer
+    if (!observer) {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            onIntersect();
+            
+            // Mark as processed and unobserve if only once
+            if (onlyOnce) {
+              processedElements.set(el, true);
+              observer?.unobserve(el);
+            }
+          }
+        });
+      }, defaultOptions);
+    }
+    
+    // Start observing
+    observer.observe(element);
+    
+    // Return cleanup function
+    return () => {
+      observer?.unobserve(element);
+    };
+  };
+  
+  return { observe };
 }

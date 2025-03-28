@@ -337,8 +337,9 @@ export default function TracksSection() {
                         fill
                         className="object-cover"
                         style={{
-                          opacity: 0.7,
-                          filter: 'brightness(0.7)'
+                          opacity: index === activeIndex ? 0.9 : 0.7,
+                          filter: index === activeIndex ? 'brightness(0.8)' : 'brightness(0.7)',
+                          objectPosition: track.title === "AgriTech & MedTech" ? '80% center' : 'center'
                         }}
                         mobileQuality={60}
                         desktopQuality={85}
@@ -351,8 +352,9 @@ export default function TracksSection() {
                         fill
                         className="object-cover"
                         style={{
-                          opacity: 0.7,
-                          filter: 'brightness(0.7)'
+                          opacity: index === activeIndex ? 0.9 : 0.7,
+                          filter: index === activeIndex ? 'brightness(0.8)' : 'brightness(0.7)',
+                          objectPosition: track.title === "AgriTech & MedTech" ? '95% center' : 'center'
                         }}
                         mobileQuality={60}
                         desktopQuality={85}
@@ -366,8 +368,9 @@ export default function TracksSection() {
                     fill
                     className="object-cover"
                     style={{
-                      opacity: 0.7,
-                      filter: 'brightness(0.7)'
+                      opacity: index === activeIndex ? 0.9 : 0.7,
+                      filter: index === activeIndex ? 'brightness(0.8)' : 'brightness(0.7)',
+                      objectPosition: track.title === "IoT & Smart Technologies" ? '65% center' : 'center'
                     }}
                     mobileQuality={60}
                     desktopQuality={85}
@@ -375,7 +378,14 @@ export default function TracksSection() {
                 )}
                 
                 {/* Overlay */}
-                <div className="absolute inset-0 bg-black/50"></div>
+                <div 
+                  className="absolute inset-0" 
+                  style={{
+                    background: index === activeIndex
+                      ? 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%)'
+                      : 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 100%)'
+                  }}
+                ></div>
               </div>
             </motion.div>
           ))}

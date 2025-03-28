@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, smoothScrollToSection } from '@/lib/utils';
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import { useScrollPosition } from '@/lib/scroll-manager';
 
 const navItems = [
   { name: 'About Us', href: '#about' },
@@ -25,14 +26,23 @@ const navItems = [
   { name: 'Contact Us', href: '#contact' },
 ];
 
-// Throttle function to limit the rate at which a function can fire
+// Throttle function - keeping for future use but suppressing the unused variable warning
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const throttle = <T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, limit: number) => {
-  let inThrottle = false;
+  let lastFunc: number;
+  let lastRan: number;
   return ((...args: Parameters<T>) => {
-    if (!inThrottle) {
+    if (!lastRan) {
       func(...args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = window.setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          func(...args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
     }
   }) as T;
 };
@@ -41,21 +51,67 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const inThrottle = useRef<boolean>(false);
 
-  // Desktop navigation handler
-  const handleScroll = (e: React.MouseEvent<HTMLElement>, href: string) => {
+  // Use the optimized scroll position hook instead of window event listeners
+  useScrollPosition((scrollY) => {
+    // Update navbar background
+    setScrolled(scrollY > 20);
+    
+    // Throttle section checks to improve performance
+    requestAnimationFrame(() => {
+      checkActiveSection();
+    });
+  });
+  
+  // Function to determine active section
+  const checkActiveSection = useCallback(() => {
+    if (!inThrottle.current) {
+      inThrottle.current = true;
+      
+      // Check section positions safely
+      try {
+        const sections = document.querySelectorAll('section[id]');
+        const scrollPosition = window.scrollY + 150;
+        
+        let activeId = '';
+        for (const section of sections) {
+          const htmlSection = section as HTMLElement;
+          if (htmlSection.offsetTop <= scrollPosition && 
+              htmlSection.offsetTop + htmlSection.offsetHeight > scrollPosition) {
+            activeId = section.id;
+            break;
+          }
+        }
+        
+        if (activeId && activeId !== activeSection) {
+          setActiveSection(activeId);
+        }
+      } catch (error) {
+        console.error('Error checking active section:', error);
+      }
+      
+      // Reset throttle flag after delay
+      setTimeout(() => { 
+        inThrottle.current = false;
+      }, 100);
+    }
+  }, [activeSection]);
+  
+  // Desktop navigation handler - optimized version
+  const handleScroll = useCallback((e: React.MouseEvent<HTMLElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     
     // Small delay to allow UI to update
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       smoothScrollToSection(targetId);
       setActiveSection(targetId);
-    }, 10);
-  };
+    });
+  }, []);
 
-  // Dedicated mobile navigation handler with longer delay
-  const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  // Dedicated mobile navigation handler with longer delay - optimized version
+  const handleMobileNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
     
@@ -64,10 +120,12 @@ export default function Navbar() {
     
     // Then scroll to the section after a delay to allow menu animation to complete
     setTimeout(() => {
-      smoothScrollToSection(targetId);
-      setActiveSection(targetId);
+      requestAnimationFrame(() => {
+        smoothScrollToSection(targetId);
+        setActiveSection(targetId);
+      });
     }, 300);
-  };
+  }, []);
 
   // Load Devfolio script
   useEffect(() => {
@@ -80,44 +138,6 @@ export default function Navbar() {
       document.body.removeChild(script);
     }
   }, []);
-
-  // Handle scroll spy logic
-  const handleScrollSpy = useCallback(() => {
-    // Check if scrolled past a threshold to change navbar style
-    if (window.scrollY > 10) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-    
-    // Skip scroll spy if menu is open or on mobile
-    if (isOpen || window.innerWidth <= 768) return;
-
-    const sections = navItems.map(item => item.href.replace('#', ''));
-    let currentSection = '';
-
-    // Find the current section
-    for (const section of sections) {
-      const element = document.getElementById(section);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 100) {
-          currentSection = section;
-          break;
-        }
-      }
-    }
-    
-    if (currentSection !== activeSection) {
-      setActiveSection(currentSection);
-    }
-  }, [activeSection, isOpen]);
-
-  useEffect(() => {
-    const throttledScrollSpy = throttle(handleScrollSpy, 200);
-    window.addEventListener('scroll', throttledScrollSpy, { passive: true });
-    return () => window.removeEventListener('scroll', throttledScrollSpy);
-  }, [handleScrollSpy]);
 
   // Animation variants for the mobile menu
   const menuVariants = {

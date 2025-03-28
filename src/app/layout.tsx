@@ -6,6 +6,7 @@ import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/next';
 import AnimatedStars from '@/components/AnimatedStars';
 import BackgroundWrapper from '@/components/background/BackgroundWrapper';
+import { PerformanceOptimizer } from '@/components/PerformanceOptimizer';
 
 import "./globals.css";
 import ClientWrapper from '@/components/ClientWrapper'
@@ -176,6 +177,9 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-black min-h-screen">
+        {/* Performance Optimizer - Apply site-wide scroll optimizations */}
+        <PerformanceOptimizer />
+        
         {/* Site-wide Parallax Stars - Using a separate client component */}
         <AnimatedStars />
         

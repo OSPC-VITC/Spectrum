@@ -81,6 +81,7 @@ export function BeamsBackground({
         updateCanvasSize();
         window.addEventListener("resize", updateCanvasSize);
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         function resetBeam(beam: Beam, index: number, totalBeams: number) {
             if (!canvas) return beam;
             
@@ -143,23 +144,12 @@ export function BeamsBackground({
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = "blur(35px)";
 
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const totalBeams = beamsRef.current.length;
             
-            // Check if it's a mobile device
-            const isMobileDevice = window.innerWidth < 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-            beamsRef.current.forEach((beam, index) => {
-                // Only move beams on desktop devices
-                if (!isMobileDevice) {
-                    beam.y -= beam.speed;
-                }
+            beamsRef.current.forEach((beam) => {
+                // Remove movement code and only handle pulse animation
                 beam.pulse += beam.pulseSpeed;
-
-                // Reset beam when it goes off screen (only for desktop)
-                if (!isMobileDevice && beam.y + beam.length < -100) {
-                    resetBeam(beam, index, totalBeams);
-                }
-
                 drawBeam(ctx, beam);
             });
 
@@ -181,28 +171,21 @@ export function BeamsBackground({
         
         particlesArray.forEach((particle) => {
             const randomPos = Math.random() * 100;
-            const randomDelay = Math.random() * 0.5;
-            const randomDuration = 2 + Math.random() * 2;
             const randomOpacity = opacityMap[intensity];
             
             gsap.set(particle, {
                 top: `${randomPos}%`,
+                left: `${Math.random() * 100}%`, // Static random position
                 opacity: randomOpacity
             });
             
+            // Remove animation and just create a static pulse effect if needed
             gsap.to(particle, {
-                left: '100%',
-                duration: randomDuration,
-                delay: randomDelay,
-                ease: 'none',
+                opacity: randomOpacity * 0.7,
+                duration: 3 + Math.random() * 2,
                 repeat: -1,
-                onRepeat: () => {
-                    gsap.set(particle, {
-                        left: '-5%',
-                        top: `${Math.random() * 100}%`,
-                        opacity: opacityMap[intensity]
-                    });
-                }
+                yoyo: true,
+                ease: 'sine.inOut'
             });
         });
         
@@ -230,12 +213,7 @@ export function BeamsBackground({
                 <motion.div
                     className="absolute inset-0 bg-neutral-950/5"
                     animate={{
-                        opacity: [0.05, 0.15, 0.05],
-                    }}
-                    transition={{
-                        duration: 10,
-                        ease: "easeInOut",
-                        repeat: Number.POSITIVE_INFINITY,
+                        opacity: 0.1,
                     }}
                     style={{
                         backdropFilter: "blur(50px)",

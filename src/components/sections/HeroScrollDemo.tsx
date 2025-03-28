@@ -1,21 +1,41 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { motion, useScroll, useTransform } from "framer-motion";
 
-// Preserving the original implementation with the tilt effect, but fixing the cutting issue 
+// Simplified version without problematic framer-motion hooks
 export function HeroScrollDemo() {
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [scrollRatio, setScrollRatio] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
+  // Calculate scroll ratio manually
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      const offsetTop = rect.top;
+      const windowHeight = window.innerHeight;
+      
+      // Calculate progress (0 to 1 as element transitions from bottom to top of viewport)
+      let progress = 1 - (offsetTop / windowHeight);
+      progress = Math.max(0, Math.min(0.5, progress));
+      
+      setScrollRatio(progress);
+    };
+    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial calculation
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
+    // Check if the device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -40,53 +60,68 @@ export function HeroScrollDemo() {
     };
   }, []);
 
-  // Increased tilt for both mobile and desktop
-  const rotate = useTransform(scrollYProgress, [0, 0.5], isMobile ? [35, 0] : [30, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1.05]);
+  // Setup YouTube API
+  useEffect(() => {
+    // Add YouTube API script if it doesn't exist
+    const windowWithYT = window as unknown as { YT?: unknown };
+    if (!windowWithYT.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+    
+    // Ensure iframe has correct API initialization
+    const iframe = iframeRef.current;
+    if (iframe && iframe.src.indexOf('enablejsapi=1') === -1) {
+      iframe.src += iframe.src.indexOf('?') === -1 ? '?enablejsapi=1' : '&enablejsapi=1';
+    }
+  }, []);
 
-  // Improved toggleMute function that uses the iframe's contentWindow
+  // Calculate transform values based on scroll ratio
+  const getTransformValues = () => {
+    // Map scroll ratio (0-0.5) to rotation (35/30-0)
+    const rotateValue = isMobile 
+      ? 35 * (1 - (scrollRatio * 2)) 
+      : 30 * (1 - (scrollRatio * 2));
+    
+    // Map scroll ratio to scale
+    const scaleValue = 0.95 + (scrollRatio * 2 * 0.1); // 0.95 to 1.05
+    
+    return { rotateValue, scaleValue };
+  };
+
+  const { rotateValue, scaleValue } = getTransformValues();
+
   const toggleMute = () => {
-    try {
-      if (iframeRef.current && iframeRef.current.contentWindow) {
-        // Send postMessage to the YouTube iframe to mute/unmute
-        const newMuteState = !isMuted;
-        const iframe = iframeRef.current;
-        const contentWindow = iframe.contentWindow;
-        
-        if (contentWindow) {
-          const command = newMuteState ? 'mute' : 'unmute';
-          
-          contentWindow.postMessage(
-            `{"event":"command","func":"${command}","args":""}`, 
-            '*'
-          );
-          
-          setIsMuted(newMuteState);
-        }
+    setIsMuted(!isMuted);
+    if (iframeRef.current) {
+      const iframe = iframeRef.current as HTMLIFrameElement;
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            event: "command",
+            func: !isMuted ? "mute" : "unMute",
+          }),
+          "*"
+        );
       }
-    } catch (error) {
-      console.error("Error toggling mute state:", error);
     }
   };
 
-  // Common iframe and mute button for both mobile and desktop
   const videoContent = (
-    <div className="relative w-full h-full video-content">
+    <div className="relative overflow-hidden w-full h-full">
       <iframe
         ref={iframeRef}
-        src={`https://www.youtube.com/embed/YzFK7x_LGKk?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=YzFK7x_LGKk&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`}
-        title="Hackathon Showcase"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        className="w-full h-full"
-        style={{ border: 'none' }}
+        className="absolute inset-0 w-full h-full"
+        src={`https://www.youtube.com/embed/YzFK7x_LGKk?autoplay=1&mute=0&controls=0&loop=1&modestbranding=1&showinfo=0&enablejsapi=1&playlist=YzFK7x_LGKk&playsinline=1`}
+        allow="autoplay; encrypted-media; microphone; camera; fullscreen"
+        allowFullScreen
       ></iframe>
-      <button
-        onClick={toggleMute}
-        className="absolute bottom-4 right-4 z-10 bg-black/60 hover:bg-black/80 text-white p-2 md:p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
-        aria-label={isMuted ? "Unmute video" : "Mute video"}
-      >
-        {isMuted ? <FaVolumeMute size={isMobile ? 18 : 24} /> : <FaVolumeUp size={isMobile ? 18 : 24} />}
-      </button>
+      <div className="absolute bottom-2 right-2 text-2xl bg-black/50 p-2 rounded-full backdrop-blur-sm cursor-pointer z-10"
+        onClick={toggleMute}>
+        {isMuted ? <FaVolumeMute className="text-white" /> : <FaVolumeUp className="text-white" />}
+      </div>
     </div>
   );
 
@@ -98,26 +133,22 @@ export function HeroScrollDemo() {
         className="w-[90%] mx-auto"
         style={{ perspective: "1000px" }}
       >
-        <motion.div 
+        <div 
           className="w-full bg-black/80 overflow-hidden video-container"
           style={{
             aspectRatio: "16/9", 
-            maxHeight: "220px",
-            rotateX: rotate,
-            scale: scale,
+            maxHeight: "180px",
+            transform: `rotateX(${rotateValue}deg) scale(${scaleValue})`,
             transformOrigin: "center 15%",
             transformStyle: "preserve-3d",
           }}
-          initial={{ opacity: 0.6, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
         >
           <div className="a l"></div>
           <div className="a r"></div>
           <div className="a t"></div>
           <div className="a b"></div>
           {videoContent}
-        </motion.div>
+        </div>
         
         {/* SVG filter for animated borders */}
         <svg className="hidden">
@@ -130,17 +161,12 @@ export function HeroScrollDemo() {
             ></feColorMatrix>
           </filter>
         </svg>
-
+        
         <style jsx>{`
           .video-container {
             position: relative;
             transition: all 0.3s ease;
             box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.9);
-          }
-
-          .video-content {
-            position: relative;
-            z-index: 1;
           }
 
           .a {
@@ -215,32 +241,29 @@ export function HeroScrollDemo() {
     );
   }
 
-  // Desktop view - reduced size but maintaining ratio and preventing cutting
+  // Desktop view - large immersive view with tilt
   return (
     <div 
       ref={containerRef}
-      className="w-full mx-auto pt-8 pb-16" // Added padding top and bottom to prevent cutting
+      className="w-full py-6"
       style={{ perspective: "1000px" }}
     >
-      <motion.div
+      <div
+        className="mx-auto w-full max-w-5xl overflow-hidden video-container"
         style={{
-          rotateX: rotate,
-          scale: scale,
-          transformOrigin: "center 35%",
-          transformStyle: "preserve-3d",
-          width: "78%", // Increased from 68%
-          margin: "0 auto",
           aspectRatio: "16/9",
-          maxHeight: "566px", // Increased from 500px
+          transform: `rotateX(${rotateValue}deg) scale(${scaleValue})`,
+          transformOrigin: "center 15%",
+          transformStyle: "preserve-3d",
+          maxHeight: "80vh",
         }}
-        className="bg-black/80 overflow-hidden video-container"
       >
         <div className="a l"></div>
         <div className="a r"></div>
         <div className="a t"></div>
         <div className="a b"></div>
         {videoContent}
-      </motion.div>
+      </div>
       
       {/* SVG filter for animated borders */}
       <svg className="hidden">
@@ -253,17 +276,12 @@ export function HeroScrollDemo() {
           ></feColorMatrix>
         </filter>
       </svg>
-
+      
       <style jsx>{`
         .video-container {
           position: relative;
           transition: all 0.3s ease;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
-        }
-
-        .video-content {
-          position: relative;
-          z-index: 1;
         }
 
         .a {

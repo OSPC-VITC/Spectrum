@@ -1,7 +1,10 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
+// Keeping this import for component registration, but not using motion features directly
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { motion } from "framer-motion";
 
+// Simplified version without useTransform which is causing issues
 export const ContainerScroll = ({
   titleComponent,
   children,
@@ -12,13 +15,32 @@ export const ContainerScroll = ({
   mobileHeight?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"] 
-  });
-  
+  const [scrollRatio, setScrollRatio] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Calculate scroll ratio manually instead of using useScroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      const offsetTop = rect.top;
+      const windowHeight = window.innerHeight;
+      
+      // Calculate progress (0 to 1 as element transitions from bottom to top of viewport)
+      let progress = 1 - (offsetTop / windowHeight);
+      progress = Math.max(0, Math.min(0.5, progress));
+      
+      setScrollRatio(progress);
+    };
+    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial calculation
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -32,14 +54,25 @@ export const ContainerScroll = ({
     };
   }, []);
 
-  const scaleDimensions = () => {
-    return isMobile ? [0.7, 0.9] : [1.05, 1];
+  // Calculate values directly from scroll ratio
+  const calculateValues = () => {
+    // Map scroll ratio (0-0.5) to rotation (15/30-0)
+    const rotateValue = isMobile 
+      ? 15 * (1 - (scrollRatio * 2)) 
+      : 30 * (1 - (scrollRatio * 2));
+    
+    // Map scroll ratio to scale
+    const scaleValue = isMobile
+      ? 0.7 + (scrollRatio * 2 * 0.2) // 0.7 to 0.9
+      : 1.05 - (scrollRatio * 2 * 0.05); // 1.05 to 1
+    
+    // Map scroll ratio to translateY
+    const translateValue = -50 * scrollRatio * 2; // 0 to -50
+    
+    return { rotateValue, scaleValue, translateValue };
   };
 
-  const rotate = useTransform(scrollYProgress, [0, 0.5], isMobile ? [15, 0] : [30, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], scaleDimensions());
-  const translate = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
-
+  const { rotateValue, scaleValue, translateValue } = calculateValues();
   const mobileStyle = isMobile && mobileHeight ? { height: mobileHeight } : {};
 
   return (
@@ -54,85 +87,52 @@ export const ContainerScroll = ({
           perspective: "1000px",
         }}
       >
-        <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} translate={translate} scale={scale} mobileHeight={mobileHeight}>
+        <div 
+          className="max-w-5xl mx-auto text-center"
+          style={{ transform: `translateY(${translateValue}px)` }}
+        >
+          {titleComponent}
+        </div>
+        <div
+          className="w-full h-[30rem] md:h-auto md:aspect-[16/9] bg-[#222222] rounded-[30px] p-2 md:p-8 overflow-hidden"
+          style={{
+            transform: `rotateX(${rotateValue}deg) scale(${scaleValue})`,
+            boxShadow: "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
+          }}
+        >
           {children}
-        </Card>
+        </div>
       </div>
     </div>
   );
 };
 
+// Keep these interfaces for compatibility, but implement them without the problematic hooks
 export const Header = ({ 
-  translate, 
   titleComponent 
 }: {
-  translate: MotionValue<number>;
+  translate?: unknown; // Marked as optional but kept for compatibility
   titleComponent: string | React.ReactNode;
 }) => {
   return (
-    <motion.div
-      style={{
-        translateY: translate,
-      }}
-      className="max-w-5xl mx-auto text-center"
-    >
+    <div className="max-w-5xl mx-auto text-center">
       {titleComponent}
-    </motion.div>
+    </div>
   );
 };
 
-export const Card = ({
-  rotate,
-  scale,
-  translate,
+export const Card = ({ 
   children,
-  mobileHeight,
-}: {
-  rotate: MotionValue<number>;
-  scale: MotionValue<number>;
-  translate: MotionValue<number>;
+}: { 
+  rotate?: unknown; // All made optional but kept for compatibility
+  scale?: unknown;
+  translate?: unknown;
   children: React.ReactNode;
   mobileHeight?: string;
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, []);
-
-  // Calculate appropriate height for the card when in mobile
-  const mobileCardHeight = isMobile && mobileHeight ? 
-    { height: `calc(${mobileHeight})` } : {};
-
-  // Move transform origin higher for straight view to avoid cutting content
-  const transformOrigin = isMobile ? "center 40%" : "center 40%";
-
   return (
-    <motion.div
-      style={{
-        rotateX: rotate, // This controls the tilting effect
-        scale,
-        translateY: translate,
-        boxShadow:
-          "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
-        ...mobileCardHeight,
-        transformOrigin, // Adjusted for better straight view
-        transformStyle: "preserve-3d", // Enable 3D effects
-      }}
-      className="max-w-6xl -mt-6 md:-mt-0 mx-auto h-[20rem] md:aspect-[16/8.5] md:h-auto w-full border-2 border-purple-500/30 p-1 md:p-2 bg-black/90 rounded-[20px] shadow-2xl"
-    >
-      <div className="h-full w-full overflow-hidden rounded-lg bg-black md:rounded-lg md:p-2">
-        {children}
-      </div>
-    </motion.div>
+    <div className="w-full h-[30rem] md:h-auto md:aspect-[16/9] bg-[#222222] rounded-[30px] p-2 md:p-8 overflow-hidden">
+      {children}
+    </div>
   );
 }; 

@@ -56,8 +56,8 @@ export function PyramidLoader({ onLoadComplete, duration = 2000 }: PyramidLoader
         }
         
         .pyramid-loader-mobile {
-          width: 200px;
-          height: 200px;
+          width: 240px;
+          height: 240px;
         }
         
         .wrapper {
@@ -74,6 +74,16 @@ export function PyramidLoader({ onLoadComplete, duration = 2000 }: PyramidLoader
           }
         }
         
+        @keyframes spin-mobile {
+          100% {
+            transform: rotateY(360deg);
+          }
+        }
+        
+        .pyramid-loader-mobile .wrapper {
+          animation: spin-mobile 100s linear infinite;
+        }
+        
         .pyramid-loader .wrapper .side {
           width: 70px;
           height: 70px;
@@ -88,8 +98,8 @@ export function PyramidLoader({ onLoadComplete, duration = 2000 }: PyramidLoader
         }
         
         .pyramid-loader-mobile .wrapper .side {
-          width: 50px;
-          height: 50px;
+          width: 65px;
+          height: 65px;
         }
         
         .pyramid-loader .wrapper .side1 {
@@ -127,9 +137,9 @@ export function PyramidLoader({ onLoadComplete, duration = 2000 }: PyramidLoader
         }
         
         .pyramid-loader-mobile .wrapper .shadow {
-          width: 40px;
-          height: 40px;
-          transform: rotateX(90deg) translateZ(-30px);
+          width: 55px;
+          height: 55px;
+          transform: rotateX(90deg) translateZ(-35px);
         }
       `}</style>
     </div>

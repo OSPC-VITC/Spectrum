@@ -179,7 +179,7 @@ const SponsorsSection: React.FC = () => {
                               src={sponsor.logo || '/placeholder-logo.png'}
                               alt={sponsor.name}
                               fill
-                              className={`object-contain brightness-200 ${sponsor.name === "BlackBoxAI" ? "scale-90" : ""}`}
+                              className={`object-contain ${sponsor.name === "BlackBoxAI" ? "scale-90" : ""}`}
                               mobileQuality={60}
                               desktopQuality={85}
                               mobileSizes="(max-width: 768px) 100vw, 33vw"

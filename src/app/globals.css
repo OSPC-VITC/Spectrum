@@ -232,15 +232,21 @@ html {
   --white: white;
   --black: black;
   --transparent: transparent;
+  /* Don't use content-visibility as it can interfere with animations */
+  /* content-visibility: auto; */
+  /* contain-intrinsic-size: 1px 5000px; */
 }
 
 section {
-  will-change: auto;
-  transform: translate3d(0, 0, 0);
+  /* Don't use will-change by default - only when needed */
+  /* will-change: transform, opacity; */
+  transform: translateZ(0);
   position: relative;
   transition: background-color 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
   background-color: transparent !important; /* Changed from black to transparent */
   z-index: 10; /* Added z-index to ensure content stays above background */
+  /* Use contain layout only - style and paint can break animations */
+  contain: layout;
 }
 
 /* Section fade transition classes */
@@ -267,6 +273,7 @@ section::before {
   transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   z-index: -1;
+  will-change: opacity;
 }
 
 /* Gradient overlay for smooth transitions */
@@ -282,6 +289,7 @@ section::after {
   transition: opacity 1s ease;
   pointer-events: none;
   z-index: 0;
+  will-change: opacity;
 }
 
 section:target::before {
@@ -446,20 +454,22 @@ section > div > h3 {
   html, body {
     scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
   }
 
   * {
-    transition-duration: 0.5s !important;
-    animation-duration: 0.5s !important;
+    transition-duration: 0.4s !important;
+    animation-duration: 0.4s !important;
   }
 
   section {
-    transform: translate3d(0, 0, 0);
-    transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transform: translateZ(0);
+    transition: background-color 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    contain: layout style paint;
   }
 
   .section-fade-in, .section-fade-out {
-    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
   }
 
   .nav-link, .border-glow {
@@ -467,7 +477,8 @@ section > div > h3 {
   }
 
   img {
-    transform: translate3d(0, 0, 0);
+    transform: translateZ(0);
+    content-visibility: auto;
   }
 
   .animate-blob {
